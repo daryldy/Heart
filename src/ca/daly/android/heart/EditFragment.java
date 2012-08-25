@@ -53,7 +53,7 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     super.onPause();
   }
 
-  public void adjustRec(Long id) {
+  public void changeRec(Long id) {
     this.id = id;
     DatabaseHelper.getInstance(getActivity()).getRecordAsync(id, this);
   }

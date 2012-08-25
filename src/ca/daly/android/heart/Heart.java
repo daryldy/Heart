@@ -58,11 +58,11 @@ public class Heart extends SherlockFragmentActivity {
     if (requestCode == REC_REQUEST && resultCode == SherlockFragmentActivity.RESULT_OK) {
       Log.d ("debug", "got activity result: " + data.getExtras().get("ca.daly.android.heart.REC_ID"));
       EditFragment editfrag = (EditFragment)getSupportFragmentManager().findFragmentById(R.id.editfrag);
-      editfrag.adjustRec(data.getLongExtra("ca.daly.android.heart.REC_ID",0));
+      editfrag.changeRec(data.getLongExtra("ca.daly.android.heart.REC_ID",0));
     }
   }
 
   interface EditListener {
-    void adjustRec(Long id);
+    void changeRec(Long id);
   }
 }

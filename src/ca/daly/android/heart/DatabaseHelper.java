@@ -20,7 +20,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     if (singleton == null) {
       singleton=new DatabaseHelper(ctxt.getApplicationContext());
     }
-
     return(singleton);
   }
 
@@ -79,18 +78,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onPostExecute(Void nothing) {
       SimpleCursorAdapter adapter;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-	adapter=new SimpleCursorAdapter(ctxt, R.layout.row,
-					heartCursor, new String[] {
-					       "_id",
-					       "notes" },
-					new int[] { R.id.key, R.id.notes },
+	adapter=new SimpleCursorAdapter(ctxt, 
+	                                R.layout.row,
+					heartCursor, 
+					new String[] {"_id","notes"},
+					new int[] {R.id.key,R.id.notes},
 					0);
       } else {
-	adapter=new SimpleCursorAdapter(ctxt, R.layout.row,
-					heartCursor, new String[] {
-					       "_id",
-					       "notes" },
-					new int[] { R.id.key, R.id.notes });
+	adapter=new SimpleCursorAdapter(ctxt, 
+				        R.layout.row,
+					heartCursor, 
+					new String[] {"_id","notes"},
+					new int[] {R.id.key,R.id.notes});
       }
       listener.setListAdapter(adapter);
     }
@@ -98,16 +97,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   void getRecordAsync(Long id, RecordListener listener) {
     new GetRecordTask(listener).execute(id);
-  }
-
-  void saveRecordAsync(Long id, String notes) {
-    String id_str;
-    if (id == null) {
-      id_str = "new";
-    } else {
-      id_str = String.valueOf(id);
-    }
-    new SaveRecordTask().execute(id_str,notes);
   }
 
   private class GetRecordTask extends AsyncTask<Long, Void, String> {
@@ -127,9 +116,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       if (c.isAfterLast()) {
 	return(null);
       }
-
       String result=c.getString(0);
-
       c.close();
 
       Log.d ("debug","doInBackground returning: " + result);
@@ -142,12 +129,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
   }
 
-  private class SaveRecordTask extends AsyncTask<String, Void, Void> {
-    //SaveRecordTask(int id, String notes) {
-      //this.id = id;
-      //this.notes = notes;
-    //}
+  void saveRecordAsync(Long id, String notes) {
+    String id_str;
+    if (id == null) {
+      id_str = "new";
+    } else {
+      id_str = String.valueOf(id);
+    }
+    new SaveRecordTask().execute(id_str,notes);
+  }
 
+  private class SaveRecordTask extends AsyncTask<String, Void, Void> {
     @Override
     protected Void doInBackground(String... params) {
       String[] args;

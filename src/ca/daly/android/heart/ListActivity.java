@@ -14,9 +14,6 @@ public class ListActivity extends SherlockFragmentActivity
   }
 
   public void RecordSelect(long id) {
-    //Intent edit = new Intent(this, Heart.class);
-    ////edit.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-    //startActivity (edit);
     Intent result=new Intent();
 
     result.putExtra("ca.daly.android.heart.REC_ID",id);
