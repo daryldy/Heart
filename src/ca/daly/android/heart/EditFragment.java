@@ -22,6 +22,7 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   TextView date_field;
   TextView time_field;
   TextView notes_field;
+  String notes_orig;
   Long id = null;  // current record's id
 
   @Override
@@ -53,14 +54,13 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   }
 
   public void setRecord(String notes) {
-    notes_field.setText(notes);
+    notes_orig = notes;
+    notes_field.setText(notes_orig);
   }
 
   @Override
   public void onPause() {
-    // TODO -- probably want some conditions on when to save -- i.e. don't save if there is no valid data entered
-    Log.d ("debug","saving id: " + id);
-    DatabaseHelper.getInstance(getActivity()).saveRecordAsync(id, notes_field.getText().toString());
+    doSave();
 
     super.onPause();
   }
@@ -91,7 +91,8 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     date_field.setText(DateUtils.formatDateTime(getActivity(), now, DateUtils.FORMAT_SHOW_DATE));
     time_field.setText(DateUtils.formatDateTime(getActivity(), now, DateUtils.FORMAT_SHOW_TIME));
 
-    notes_field.setText("");
+    notes_orig = "";
+    notes_field.setText(notes_orig);
     id = null;
   }
 
@@ -102,4 +103,17 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     }
     doReset();
   }
+  
+  private void doSave() {
+    if (isDirty()) {
+      Log.d ("debug","saving id: " + id);
+      DatabaseHelper.getInstance(getActivity()).saveRecordAsync(id, notes_field.getText().toString());
+    }
+  }
+
+  private boolean isDirty() {
+    // TODO -- need to enhance this -- what about other fields???
+    return (! notes_field.getText().toString().equals(notes_orig));
+  }
+
 }
