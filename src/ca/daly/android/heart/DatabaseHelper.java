@@ -157,4 +157,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       return(null);
     }
   }
+
+  void deleteRecordAsync(Long id) {
+    new DeleteRecordTask().execute(id);
+  }
+
+  private class DeleteRecordTask extends AsyncTask<Long, Void, Void> {
+    @Override
+    protected Void doInBackground(Long... params) {
+      String[] args={params[0].toString()};
+
+      getWritableDatabase().execSQL("DELETE from heart where _id = ?", args);
+      return(null);
+    }
+  }
 }
