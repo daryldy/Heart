@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.Cursor;
 import android.content.Context;
+import android.content.ContentValues;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.widget.SimpleCursorAdapter;
@@ -15,6 +16,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   private static final int SCHEMA_VERSION=1;
   private static DatabaseHelper singleton=null;
   private Context ctxt=null;
+  static final String TABLE="heart";
+  static final String ID="_id";
+  static final String NOTES="notes";
 
   synchronized static DatabaseHelper getInstance(Context ctxt) {
     if (singleton == null) {
@@ -47,6 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   interface RecordListener{
     void setRecord(String notes); // TODO -- other fields
+    void setId(Long id);
   }
 
   interface ListAdapterListener {
@@ -81,14 +86,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	adapter=new SimpleCursorAdapter(ctxt, 
 	                                R.layout.row,
 					heartCursor, 
-					new String[] {"_id","notes"},
+					new String[] {ID,NOTES},
 					new int[] {R.id.key,R.id.notes},
 					0);
       } else {
 	adapter=new SimpleCursorAdapter(ctxt, 
 				        R.layout.row,
 					heartCursor, 
-					new String[] {"_id","notes"},
+					new String[] {ID,NOTES},
 					new int[] {R.id.key,R.id.notes});
       }
       listener.setListAdapter(adapter);
@@ -129,32 +134,44 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
   }
 
-  void saveRecordAsync(Long id, String notes) {
-    String id_str;
-    if (id == null) {
-      id_str = "new";
-    } else {
-      id_str = String.valueOf(id);
-    }
-    new SaveRecordTask().execute(id_str,notes);
+  void saveRecordAsync(RecordListener listener,Long id, String notes) {
+    ContentValues vals = new ContentValues();
+
+    vals.put(ID, id);
+    vals.put(NOTES, notes);
+    new SaveRecordTask(listener).execute(vals);
+
   }
 
-  private class SaveRecordTask extends AsyncTask<String, Void, Void> {
-    @Override
-    protected Void doInBackground(String... params) {
-      String[] args;
+  private class SaveRecordTask extends AsyncTask<ContentValues, Void, Long> {
+    private RecordListener listener = null;
+    
+    SaveRecordTask(RecordListener listener) {
+      this.listener=listener;
+    }
 
-      Log.d ("debug", "SaveRecordTask: doInBackground params: " + params[0] + " " + params[1]);
-      if (params[0].equals("new")) {
+    @Override
+    protected Long doInBackground(ContentValues... params) {
+      ContentValues vals;
+      Long result;
+
+      vals = params[0];
+
+      if (vals.getAsLong(ID) == null) {
         Log.d ("debug", "SaveRecordTask: new record");
-        args = new String[] {params[1]};
-        getWritableDatabase().execSQL("INSERT into heart (notes) values (?)", args);
+	result = getWritableDatabase().insert(TABLE,null,vals);
       } else {
         Log.d ("debug", "SaveRecordTask: update record");
-	args = new String[] {params[0],params[1]};
-        getWritableDatabase().execSQL("INSERT OR REPLACE into heart (_id,notes) values (?,?)", args);
+	result = getWritableDatabase().replace(TABLE,null,vals);
       }
-      return(null);
+
+      Log.d("debug","Finished insert/replace: result = " + result.toString());
+      return(result);
+    }
+
+    @Override
+    public void onPostExecute(Long id) {
+      listener.setId(id);
     }
   }
 
@@ -165,9 +182,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   private class DeleteRecordTask extends AsyncTask<Long, Void, Void> {
     @Override
     protected Void doInBackground(Long... params) {
-      String[] args={params[0].toString()};
+      String[] arg={params[0].toString()};
 
-      getWritableDatabase().execSQL("DELETE from heart where _id = ?", args);
+      getWritableDatabase().delete(TABLE,"_id = ?",arg);
       return(null);
     }
   }

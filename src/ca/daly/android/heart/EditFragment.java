@@ -58,11 +58,23 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     notes_field.setText(notes_orig);
   }
 
+  public void setId(Long id) {
+    this.id = id;
+  }
+
   @Override
   public void onPause() {
     doSave();
 
+    Log.d("debug","onPause: id = " + id);
+
     super.onPause();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    Log.d("debug","onResume: id = " + id);
   }
 
   public void changeRec(Long id) {
@@ -107,7 +119,7 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   private void doSave() {
     if (isDirty()) {
       Log.d ("debug","saving id: " + id);
-      DatabaseHelper.getInstance(getActivity()).saveRecordAsync(id, notes_field.getText().toString());
+      DatabaseHelper.getInstance(getActivity()).saveRecordAsync(this, id, notes_field.getText().toString());
     }
   }
 
@@ -115,5 +127,4 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     // TODO -- need to enhance this -- what about other fields???
     return (! notes_field.getText().toString().equals(notes_orig));
   }
-
 }
