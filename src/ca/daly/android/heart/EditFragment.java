@@ -4,9 +4,14 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
+import android.widget.Button;
 import android.text.format.DateUtils;
 import android.content.Intent;
 import android.content.DialogInterface;
@@ -15,15 +20,18 @@ import android.view.ViewGroup;
 import android.view.View;
 import android.util.Log;
 import java.util.Date;
+import java.util.Calendar;
 
 public class EditFragment extends SherlockFragment implements DatabaseHelper.RecordListener,
                                                               Heart.EditListener,
-							      DialogInterface.OnClickListener {
+							      DialogInterface.OnClickListener,
+							      View.OnClickListener {
   TextView date_field;
   TextView time_field;
   TextView notes_field;
   String notes_orig;
   Long id = null;  // current record's id
+  Calendar date_time = Calendar.getInstance();
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
@@ -39,8 +47,10 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   			   Bundle savedInstanceState) {
     View result = inflater.inflate(R.layout.editfrag, container);
 
-    date_field = (TextView)result.findViewById(R.id.date);
+    date_field = (Button)result.findViewById(R.id.date);
+    date_field.setOnClickListener(this);
     time_field = (TextView)result.findViewById(R.id.time);
+    time_field.setOnClickListener(this);
     notes_field = (TextView)result.findViewById(R.id.notes);
     doReset();
     return(result);
@@ -98,10 +108,20 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     doDelete();
   }
 
+  @Override
+  public void onClick(View v) {
+    if (v.getId() == R.id.date) {
+      chooseDate(v);
+    } else {
+      chooseTime(v);
+    }
+  }
+
   private void doReset() {
-    long now = new Date().getTime();
-    date_field.setText(DateUtils.formatDateTime(getActivity(), now, DateUtils.FORMAT_SHOW_DATE));
-    time_field.setText(DateUtils.formatDateTime(getActivity(), now, DateUtils.FORMAT_SHOW_TIME));
+    //long now = new Date().getTime();
+    date_time.setTime(new Date());
+    date_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_DATE));
+    time_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
 
     notes_orig = "";
     notes_field.setText(notes_orig);
@@ -127,4 +147,41 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     // TODO -- need to enhance this -- what about other fields???
     return (! notes_field.getText().toString().equals(notes_orig));
   }
+
+  public void chooseDate(View v) {
+    new DatePickerDialog(getActivity(),dateListener,date_time.get(Calendar.YEAR),
+                                                    date_time.get(Calendar.MONTH),
+						    date_time.get(Calendar.DAY_OF_MONTH))
+			  .show();
+  }
+
+  DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
+    public void onDateSet(DatePicker view, 
+                          int year, 
+			  int monthOfYear,
+                          int dayOfMonth) {
+       date_time.set(Calendar.YEAR, year);
+       date_time.set(Calendar.MONTH, monthOfYear);
+       date_time.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+       date_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_DATE));
+    }
+  };
+  
+  public void chooseTime(View v) {
+    new TimePickerDialog(getActivity(),timeListener,date_time.get(Calendar.HOUR_OF_DAY),
+                                                    date_time.get(Calendar.MINUTE),
+						    true)
+			  .show();
+  }
+
+  TimePickerDialog.OnTimeSetListener timeListener = new TimePickerDialog.OnTimeSetListener() {
+    public void onTimeSet(TimePicker view, 
+                          int hourOfDay, 
+                          int minute) {
+       date_time.set(Calendar.HOUR_OF_DAY, hourOfDay);
+       date_time.set(Calendar.MINUTE, minute);
+       time_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
+    }
+  };
+
 }
