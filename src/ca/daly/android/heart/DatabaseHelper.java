@@ -13,11 +13,17 @@ import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
   private static final String DATABASE_NAME="heart.db";
-  private static final int SCHEMA_VERSION=1;
+  private static final int SCHEMA_VERSION=2;
   private static DatabaseHelper singleton=null;
   private Context ctxt=null;
   static final String TABLE="heart";
   static final String ID="_id";
+  static final String DATE="date";
+  static final String SYSTOLIC="systolic";
+  static final String DIASTOLIC="diastolic";
+  static final String RATE="heart_rate";
+  static final String UPPER_ARM="upper_arm";
+  static final String LEFT="left";
   static final String NOTES="notes";
 
   synchronized static DatabaseHelper getInstance(Context ctxt) {
@@ -36,7 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   public void onCreate(SQLiteDatabase db) {
     try {
       db.beginTransaction();
-      db.execSQL("create table heart (_id integer primary key autoincrement, date datetime, systolic integer, notes varchar(50));");
+      db.execSQL("create table heart (_id integer primary key autoincrement, date datetime, systolic integer, notes varchar(50), diastolic integer, heart_rate integer, upper_arm boolean, left boolean);");
       db.setTransactionSuccessful();
     }
     finally {
@@ -46,11 +52,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-    throw new RuntimeException(ctxt.getString(R.string.on_upgrade_error));
+    if (newVersion == 2) {
+      try {
+	db.beginTransaction();
+	db.execSQL("alter table heart add column diastolic integer;");
+	db.execSQL("alter table heart add column heart_rate integer;");
+	db.execSQL("alter table heart add column upper_arm boolean;");
+	db.execSQL("alter table heart add column left boolean;");
+	db.setTransactionSuccessful();
+      }
+      finally {
+	db.endTransaction();
+      }
+    }
   }
 
   interface RecordListener{
-    void setRecord(String notes); // TODO -- other fields
+    void setRecord(ContentValues rec);
     void setId(Long id);
   }
 
@@ -104,7 +122,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     new GetRecordTask(listener).execute(id);
   }
 
-  private class GetRecordTask extends AsyncTask<Long, Void, String> {
+  private class GetRecordTask extends AsyncTask<Long, Void, ContentValues> {
     private RecordListener listener = null;
     
     GetRecordTask(RecordListener listener) {
@@ -112,35 +130,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    protected String doInBackground (Long... params) {
+    protected ContentValues doInBackground (Long... params) {
       String[] args={params[0].toString()};
 
       Log.d ("debug", "GetRecordTask: doInBackground args[0]: " + args[0]);
-      Cursor c = getReadableDatabase().rawQuery("select notes from heart where _id = ?", args);
+      Cursor c = getReadableDatabase().rawQuery("select date,systolic,notes,diastolic,heart_rate,upper_arm,left from heart where _id = ?", args);
       c.moveToFirst();
       if (c.isAfterLast()) {
 	return(null);
       }
-      String result=c.getString(0);
+      ContentValues rec = new ContentValues();
+      rec.put(DATE,c.getLong(0));
+      rec.put(SYSTOLIC,c.getInt(1));
+      rec.put(NOTES,c.getString(2));
+      rec.put(DIASTOLIC,c.getInt(3));
+      rec.put(RATE,c.getInt(4));
+      rec.put(UPPER_ARM,c.getInt(5));
+      rec.put(LEFT,c.getInt(6));
       c.close();
 
-      Log.d ("debug","doInBackground returning: " + result);
-      return (result);
+      Log.d ("debug","doInBackground returning: " + rec.getAsString(SYSTOLIC) + " " + rec.getAsString(NOTES));
+      return (rec);
     }
 
     @Override
-    public void onPostExecute(String notes) {
-      listener.setRecord(notes);
+    public void onPostExecute(ContentValues rec) {
+      listener.setRecord(rec);
     }
   }
 
-  void saveRecordAsync(RecordListener listener,Long id, String notes) {
-    ContentValues vals = new ContentValues();
-
-    vals.put(ID, id);
-    vals.put(NOTES, notes);
-    new SaveRecordTask(listener).execute(vals);
-
+  void saveRecordAsync(RecordListener listener,ContentValues rec) {
+    new SaveRecordTask(listener).execute(rec);
   }
 
   private class SaveRecordTask extends AsyncTask<ContentValues, Void, Long> {

@@ -46,7 +46,7 @@
     </TableRow>
     <TableRow>
       <EditText
-	android:id="@+id/sysolic"
+	android:id="@+id/systolic"
 	android:layout_weight="1"
 	android:gravity="center"
 	android:inputType="number"

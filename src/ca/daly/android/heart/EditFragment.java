@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.text.format.DateUtils;
 import android.content.Intent;
 import android.content.DialogInterface;
+import android.content.ContentValues;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.View;
@@ -29,7 +30,10 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   TextView date_field;
   TextView time_field;
   TextView notes_field;
-  String notes_orig;
+  TextView systolic_field;
+  TextView diastolic_field;
+  TextView rate_field;
+  ContentValues rec_orig;
   Long id = null;  // current record's id
   Calendar date_time = Calendar.getInstance();
 
@@ -52,6 +56,9 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     time_field = (TextView)result.findViewById(R.id.time);
     time_field.setOnClickListener(this);
     notes_field = (TextView)result.findViewById(R.id.notes);
+    systolic_field = (TextView)result.findViewById(R.id.systolic);
+    diastolic_field = (TextView)result.findViewById(R.id.diastolic);
+    rate_field = (TextView)result.findViewById(R.id.rate);
     doReset();
     return(result);
   }
@@ -63,9 +70,14 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     super.onCreateOptionsMenu(menu, inflater);
   }
 
-  public void setRecord(String notes) {
-    notes_orig = notes;
-    notes_field.setText(notes_orig);
+  public void setRecord(ContentValues rec) {
+    rec_orig = rec;
+    date_time.setTimeInMillis(rec_orig.getAsLong(DatabaseHelper.DATE));
+    showDateTime();
+    systolic_field.setText(rec_orig.getAsString(DatabaseHelper.SYSTOLIC));
+    diastolic_field.setText(rec_orig.getAsString(DatabaseHelper.DIASTOLIC));
+    rate_field.setText(rec_orig.getAsString(DatabaseHelper.RATE));
+    notes_field.setText(rec_orig.getAsString(DatabaseHelper.NOTES));
   }
 
   public void setId(Long id) {
@@ -119,12 +131,18 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
 
   private void doReset() {
     //long now = new Date().getTime();
-    date_time.setTime(new Date());
-    date_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_DATE));
-    time_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
+    showDateTime();
 
-    notes_orig = "";
-    notes_field.setText(notes_orig);
+    rec_orig = new ContentValues();
+    rec_orig.put(DatabaseHelper.DATE,date_time.getTimeInMillis());
+    rec_orig.put(DatabaseHelper.SYSTOLIC,"0");
+    rec_orig.put(DatabaseHelper.DIASTOLIC,"0");
+    rec_orig.put(DatabaseHelper.RATE,"0");
+    rec_orig.put(DatabaseHelper.NOTES,"");
+    notes_field.setText("");
+    systolic_field.setText("0");
+    diastolic_field.setText("0");
+    rate_field.setText("0");
     id = null;
   }
 
@@ -139,13 +157,26 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   private void doSave() {
     if (isDirty()) {
       Log.d ("debug","saving id: " + id);
-      DatabaseHelper.getInstance(getActivity()).saveRecordAsync(this, id, notes_field.getText().toString());
+      ContentValues rec = new ContentValues();
+      rec.put(DatabaseHelper.ID,id);
+      rec.put(DatabaseHelper.DATE,date_time.getTimeInMillis());
+      rec.put(DatabaseHelper.SYSTOLIC,Integer.parseInt(systolic_field.getText().toString()));
+      rec.put(DatabaseHelper.DIASTOLIC,Integer.parseInt(diastolic_field.getText().toString()));
+      rec.put(DatabaseHelper.RATE,Integer.parseInt(rate_field.getText().toString()));
+      rec.put(DatabaseHelper.NOTES,notes_field.getText().toString());
+      DatabaseHelper.getInstance(getActivity()).saveRecordAsync(this, rec);
     }
   }
 
   private boolean isDirty() {
     // TODO -- need to enhance this -- what about other fields???
-    return (! notes_field.getText().toString().equals(notes_orig));
+    return (! (notes_field.getText().toString().equals(rec_orig.getAsString(DatabaseHelper.NOTES))
+               && systolic_field.getText().toString().equals(rec_orig.getAsString(DatabaseHelper.SYSTOLIC))
+               && diastolic_field.getText().toString().equals(rec_orig.getAsString(DatabaseHelper.DIASTOLIC))
+               && rate_field.getText().toString().equals(rec_orig.getAsString(DatabaseHelper.RATE))
+	       && rec_orig.getAsLong(DatabaseHelper.DATE) == date_time.getTimeInMillis()
+	       ));
+    //return (notes_field.isDirty());  // TODO this requires API Level 11 -- probably need to make more generic
   }
 
   public void chooseDate(View v) {
@@ -163,7 +194,8 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
        date_time.set(Calendar.YEAR, year);
        date_time.set(Calendar.MONTH, monthOfYear);
        date_time.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-       date_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_DATE));
+       showDateTime();
+       //date_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_DATE));
     }
   };
   
@@ -180,8 +212,13 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
                           int minute) {
        date_time.set(Calendar.HOUR_OF_DAY, hourOfDay);
        date_time.set(Calendar.MINUTE, minute);
-       time_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
+       showDateTime();
+       //time_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
     }
   };
-
+  
+  private void showDateTime() {
+    date_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_DATE));
+    time_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
+  }
 }
