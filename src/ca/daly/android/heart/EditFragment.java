@@ -12,6 +12,7 @@ import android.widget.Toast;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.Button;
+import android.widget.RadioGroup;
 import android.text.format.DateUtils;
 import android.content.Intent;
 import android.content.DialogInterface;
@@ -33,6 +34,8 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   TextView systolic_field;
   TextView diastolic_field;
   TextView rate_field;
+  RadioGroup location;
+  RadioGroup side;
   ContentValues rec_orig;
   Long id = null;  // current record's id
   Calendar date_time = Calendar.getInstance();
@@ -59,6 +62,8 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     systolic_field = (TextView)result.findViewById(R.id.systolic);
     diastolic_field = (TextView)result.findViewById(R.id.diastolic);
     rate_field = (TextView)result.findViewById(R.id.rate);
+    location = (RadioGroup)result.findViewById(R.id.location);
+    side = (RadioGroup)result.findViewById(R.id.side);
     doReset();
     return(result);
   }
@@ -78,6 +83,8 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     diastolic_field.setText(rec_orig.getAsString(DatabaseHelper.DIASTOLIC));
     rate_field.setText(rec_orig.getAsString(DatabaseHelper.RATE));
     notes_field.setText(rec_orig.getAsString(DatabaseHelper.NOTES));
+    location.check(rec_orig.getAsBoolean(DatabaseHelper.LOCATION) ? R.id.upperarm : R.id.forearm);
+    side.check(rec_orig.getAsBoolean(DatabaseHelper.SIDE) ? R.id.left : R.id.right);
   }
 
   public void setId(Long id) {
@@ -130,7 +137,6 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   }
 
   private void doReset() {
-    //long now = new Date().getTime();
     showDateTime();
 
     rec_orig = new ContentValues();
@@ -139,10 +145,14 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     rec_orig.put(DatabaseHelper.DIASTOLIC,"0");
     rec_orig.put(DatabaseHelper.RATE,"0");
     rec_orig.put(DatabaseHelper.NOTES,"");
-    notes_field.setText("");
-    systolic_field.setText("0");
-    diastolic_field.setText("0");
-    rate_field.setText("0");
+    rec_orig.put(DatabaseHelper.LOCATION,true);   // TRUE = upperarm, FALSE = forearm
+    rec_orig.put(DatabaseHelper.SIDE,true);       // TRUE = left, FALSE = right
+    notes_field.setText("");   // TODO - s/b getting value from rec_orig
+    systolic_field.setText("0");   // TODO - s/b getting value from rec_orig
+    diastolic_field.setText("0");   // TODO - s/b getting value from rec_orig
+    rate_field.setText("0");   // TODO - s/b getting value from rec_orig
+    location.check(rec_orig.getAsBoolean(DatabaseHelper.LOCATION) ? R.id.upperarm : R.id.forearm);
+    side.check(rec_orig.getAsBoolean(DatabaseHelper.SIDE) ? R.id.left : R.id.right);
     id = null;
   }
 
@@ -164,6 +174,8 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
       rec.put(DatabaseHelper.DIASTOLIC,Integer.parseInt(diastolic_field.getText().toString()));
       rec.put(DatabaseHelper.RATE,Integer.parseInt(rate_field.getText().toString()));
       rec.put(DatabaseHelper.NOTES,notes_field.getText().toString());
+      rec.put(DatabaseHelper.LOCATION,location.getCheckedRadioButtonId() == R.id.upperarm);
+      rec.put(DatabaseHelper.SIDE,side.getCheckedRadioButtonId() == R.id.left);
       DatabaseHelper.getInstance(getActivity()).saveRecordAsync(this, rec);
     }
   }
@@ -175,6 +187,8 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
                && diastolic_field.getText().toString().equals(rec_orig.getAsString(DatabaseHelper.DIASTOLIC))
                && rate_field.getText().toString().equals(rec_orig.getAsString(DatabaseHelper.RATE))
 	       && rec_orig.getAsLong(DatabaseHelper.DATE) == date_time.getTimeInMillis()
+               && rec_orig.getAsBoolean(DatabaseHelper.LOCATION) == (location.getCheckedRadioButtonId() == R.id.upperarm)
+               && rec_orig.getAsBoolean(DatabaseHelper.SIDE) == (side.getCheckedRadioButtonId() == R.id.left)
 	       ));
     //return (notes_field.isDirty());  // TODO this requires API Level 11 -- probably need to make more generic
   }

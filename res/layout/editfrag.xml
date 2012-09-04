@@ -76,6 +76,7 @@
 	android:text="Location"
 	/>
       <RadioGroup
+        android:id="@+id/location"
 	android:orientation="horizontal"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
@@ -86,7 +87,6 @@
 	  android:layout_width="wrap_content"
 	  android:layout_height="wrap_content"
 	  android:text="Upper Arm"
-	  android:checked="true"
 	  />
 	<RadioButton
 	  android:id="@+id/forearm"
@@ -103,6 +103,7 @@
 	android:text="Side"
 	/>
       <RadioGroup
+        android:id="@+id/side"
 	android:orientation="horizontal"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
@@ -113,7 +114,6 @@
 	  android:layout_width="wrap_content"
 	  android:layout_height="wrap_content"
 	  android:text="Left"
-	  android:checked="true"
 	  />
 	<RadioButton
 	  android:id="@+id/right"

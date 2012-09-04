@@ -13,7 +13,7 @@ import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
   private static final String DATABASE_NAME="heart.db";
-  private static final int SCHEMA_VERSION=2;
+  private static final int SCHEMA_VERSION=3;
   private static DatabaseHelper singleton=null;
   private Context ctxt=null;
   static final String TABLE="heart";
@@ -22,9 +22,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   static final String SYSTOLIC="systolic";
   static final String DIASTOLIC="diastolic";
   static final String RATE="heart_rate";
-  static final String UPPER_ARM="upper_arm";
-  static final String LEFT="left";
   static final String NOTES="notes";
+  static final String LOCATION="location";
+  static final String SIDE="side";
 
   synchronized static DatabaseHelper getInstance(Context ctxt) {
     if (singleton == null) {
@@ -40,9 +40,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   @Override
   public void onCreate(SQLiteDatabase db) {
+          // location : True = upper_arm, False = forearm
+	  // side     : True = left, False = right
     try {
       db.beginTransaction();
-      db.execSQL("create table heart (_id integer primary key autoincrement, date datetime, systolic integer, notes varchar(50), diastolic integer, heart_rate integer, upper_arm boolean, left boolean);");
+      db.execSQL("create table heart (_id integer primary key autoincrement, date datetime, systolic integer, notes varchar(50), diastolic integer, heart_rate integer, location boolean, side boolean);");
       db.setTransactionSuccessful();
     }
     finally {
@@ -59,6 +61,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	db.execSQL("alter table heart add column heart_rate integer;");
 	db.execSQL("alter table heart add column upper_arm boolean;");
 	db.execSQL("alter table heart add column left boolean;");
+	db.setTransactionSuccessful();
+      }
+      finally {
+	db.endTransaction();
+      }
+    }
+    if (newVersion == 3) {
+      // not a good conversion -- okay for now because versions prior to 3 were never deployed
+      try {
+	db.beginTransaction();
+	db.execSQL("alter table heart rename to heart_v2;");
+        db.execSQL("create table heart (_id integer primary key autoincrement, date datetime, systolic integer, notes varchar(50), diastolic integer, heart_rate integer, location boolean, side boolean);");
 	db.setTransactionSuccessful();
       }
       finally {
@@ -134,7 +148,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       String[] args={params[0].toString()};
 
       Log.d ("debug", "GetRecordTask: doInBackground args[0]: " + args[0]);
-      Cursor c = getReadableDatabase().rawQuery("select date,systolic,notes,diastolic,heart_rate,upper_arm,left from heart where _id = ?", args);
+      Cursor c = getReadableDatabase().rawQuery("select date,systolic,notes,diastolic,heart_rate,location,side from heart where _id = ?", args);
       c.moveToFirst();
       if (c.isAfterLast()) {
 	return(null);
@@ -145,8 +159,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       rec.put(NOTES,c.getString(2));
       rec.put(DIASTOLIC,c.getInt(3));
       rec.put(RATE,c.getInt(4));
-      rec.put(UPPER_ARM,c.getInt(5));
-      rec.put(LEFT,c.getInt(6));
+      rec.put(LOCATION,c.getInt(5));
+      rec.put(SIDE,c.getInt(6));
       c.close();
 
       Log.d ("debug","doInBackground returning: " + rec.getAsString(SYSTOLIC) + " " + rec.getAsString(NOTES));
