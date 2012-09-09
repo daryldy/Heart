@@ -9,7 +9,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.widget.SimpleCursorAdapter;
 import android.widget.ListAdapter;
+import android.widget.TextView;
 import android.util.Log;
+import android.text.format.DateUtils;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
   private static final String DATABASE_NAME="heart.db";
@@ -104,7 +106,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     protected Void doInBackground(Void... params) {
-      heartCursor = getReadableDatabase().rawQuery("select * from heart",null);
+      heartCursor = getReadableDatabase().rawQuery("select * from heart order by date desc",null);
       heartCursor.getCount();  // force query to execute
 
       return(null);
@@ -118,17 +120,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	adapter=new SimpleCursorAdapter(ctxt, 
 	                                R.layout.row,
 					heartCursor, 
-					new String[] {ID,NOTES},
-					new int[] {R.id.key,R.id.notes},
-					0);
+					new String[] {SYSTOLIC,DIASTOLIC,RATE,DATE},
+					new int[] {R.id.systolic,R.id.diastolic,R.id.heart_rate,R.id.date}
+					, 0) {
+			    @Override
+			    public void setViewText(TextView v, String text) {
+			      super.setViewText(v, convText(v, text));
+			    }    
+			  };
       } else {
 	adapter=new SimpleCursorAdapter(ctxt, 
 				        R.layout.row,
 					heartCursor, 
-					new String[] {ID,NOTES},
-					new int[] {R.id.key,R.id.notes});
+					new String[] {SYSTOLIC,DIASTOLIC,RATE,DATE},
+					new int[] {R.id.systolic,R.id.diastolic,R.id.heart_rate,R.id.date}
+					) {
+			    @Override
+			    public void setViewText(TextView v, String text) {
+			      super.setViewText(v, convText(v, text));
+			    }    
+			  };
       }
       listener.setListAdapter(adapter);
+    }
+
+    private String convText(TextView v, String text) {
+
+      switch (v.getId()) {
+        case R.id.date:
+		String formatedText = text;
+                formatedText = DateUtils.formatDateTime(ctxt, Long.parseLong(text), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME);
+		 //do format
+		return formatedText;
+      }
+      return text;
     }
   }
 
