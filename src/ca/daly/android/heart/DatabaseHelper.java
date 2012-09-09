@@ -99,6 +99,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   private class LoadListTask extends AsyncTask<Void, Void, Void> {
     private Cursor heartCursor = null;
     private ListAdapterListener listener = null;
+    private String[] columns = {SYSTOLIC,DIASTOLIC,RATE,DATE};
 
     LoadListTask (ListAdapterListener listener) {
       this.listener = listener;
@@ -106,7 +107,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     protected Void doInBackground(Void... params) {
-      heartCursor = getReadableDatabase().rawQuery("select * from heart order by date desc",null);
+      heartCursor = getReadableDatabase().query(TABLE,new String[] {ID,SYSTOLIC,DIASTOLIC,RATE,DATE},null,null,null,null,"date desc");
+                                        // TODO -- should really be using columns value plus ID
+				        //         -- java seems make this harder then it should be!!!!
       heartCursor.getCount();  // force query to execute
 
       return(null);
@@ -120,7 +123,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	adapter=new SimpleCursorAdapter(ctxt, 
 	                                R.layout.row,
 					heartCursor, 
-					new String[] {SYSTOLIC,DIASTOLIC,RATE,DATE},
+					columns,
 					new int[] {R.id.systolic,R.id.diastolic,R.id.heart_rate,R.id.date}
 					, 0) {
 			    @Override
@@ -132,7 +135,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	adapter=new SimpleCursorAdapter(ctxt, 
 				        R.layout.row,
 					heartCursor, 
-					new String[] {SYSTOLIC,DIASTOLIC,RATE,DATE},
+					columns,
 					new int[] {R.id.systolic,R.id.diastolic,R.id.heart_rate,R.id.date}
 					) {
 			    @Override
@@ -150,7 +153,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         case R.id.date:
 		String formatedText = text;
                 formatedText = DateUtils.formatDateTime(ctxt, Long.parseLong(text), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME);
-		 //do format
 		return formatedText;
       }
       return text;
@@ -173,7 +175,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       String[] args={params[0].toString()};
 
       Log.d ("debug", "GetRecordTask: doInBackground args[0]: " + args[0]);
-      Cursor c = getReadableDatabase().rawQuery("select date,systolic,notes,diastolic,heart_rate,location,side from heart where _id = ?", args);
+      //Cursor c = getReadableDatabase().rawQuery("select date,systolic,notes,diastolic,heart_rate,location,side from heart where _id = ?", args);
+      Cursor c = getReadableDatabase().query(TABLE,new String[] {DATE,SYSTOLIC,NOTES,DIASTOLIC,RATE,LOCATION,SIDE},"_id = ?",args,null,null,null,"1");
       c.moveToFirst();
       if (c.isAfterLast()) {
 	return(null);
