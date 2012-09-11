@@ -6,10 +6,12 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.text.format.DateUtils;
 import android.content.Intent;
+import android.view.View;
 import android.util.Log;
-import java.util.Date;
+import android.net.Uri;
+import android.content.ContentResolver;
+import java.util.ArrayList;
 
 public class Heart extends SherlockFragmentActivity {
   static final int REC_REQUEST=5001;
@@ -64,5 +66,21 @@ public class Heart extends SherlockFragmentActivity {
 
   interface EditListener {
     void changeRec(Long id);
+  }
+
+  public void graphMe(View v) {
+    Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
+                               .authority("ca.daly.android.heart")
+			       .build();
+    Intent i = new Intent(Intent.ACTION_VIEW,uri);
+    i.putExtra(Intent.EXTRA_TITLE, "Test Title");
+    i.putExtra("com.googlecode.chartdroid.intent.extra.SERIES_LABELS",new String[] {"Systolic"});
+
+    ArrayList<String> axisTitles = new ArrayList<String>();
+    axisTitles.add(""); // date
+    axisTitles.add("value");
+    i.putExtra("com.googlecode.chartdroid.intent.extra.AXIS_TITLES",axisTitles);
+    i.putExtra("com.googlecode.chartdroid.intent.extra.FORMAT_STRING_Y","%.0f");
+    startActivity(i);
   }
 }
