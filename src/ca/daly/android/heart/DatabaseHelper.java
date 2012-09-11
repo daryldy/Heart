@@ -175,7 +175,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       String[] args={params[0].toString()};
 
       Log.d ("debug", "GetRecordTask: doInBackground args[0]: " + args[0]);
-      //Cursor c = getReadableDatabase().rawQuery("select date,systolic,notes,diastolic,heart_rate,location,side from heart where _id = ?", args);
       Cursor c = getReadableDatabase().query(TABLE,new String[] {DATE,SYSTOLIC,NOTES,DIASTOLIC,RATE,LOCATION,SIDE},"_id = ?",args,null,null,null,"1");
       c.moveToFirst();
       if (c.isAfterLast()) {

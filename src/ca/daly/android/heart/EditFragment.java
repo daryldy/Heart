@@ -209,7 +209,6 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
        date_time.set(Calendar.MONTH, monthOfYear);
        date_time.set(Calendar.DAY_OF_MONTH, dayOfMonth);
        showDateTime();
-       //date_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_DATE));
     }
   };
   
@@ -227,7 +226,6 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
        date_time.set(Calendar.HOUR_OF_DAY, hourOfDay);
        date_time.set(Calendar.MINUTE, minute);
        showDateTime();
-       //time_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
     }
   };
   
