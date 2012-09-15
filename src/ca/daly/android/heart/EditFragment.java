@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
+import android.widget.NumberPicker;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.text.format.DateUtils;
@@ -31,9 +32,9 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   TextView date_field;
   TextView time_field;
   TextView notes_field;
-  TextView systolic_field;
-  TextView diastolic_field;
-  TextView rate_field;
+  NumberPicker systolic_field;
+  NumberPicker diastolic_field;
+  NumberPicker rate_field;
   RadioGroup location;
   RadioGroup side;
   ContentValues rec_orig;
@@ -59,12 +60,19 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     time_field = (TextView)result.findViewById(R.id.time);
     time_field.setOnClickListener(this);
     notes_field = (TextView)result.findViewById(R.id.notes);
-    systolic_field = (TextView)result.findViewById(R.id.systolic);
-    diastolic_field = (TextView)result.findViewById(R.id.diastolic);
-    rate_field = (TextView)result.findViewById(R.id.rate);
+    systolic_field = (NumberPicker)result.findViewById(R.id.systolic);
+    systolic_field.setMaxValue(200);   // TODO -- what is a reasonable max?
+    systolic_field.setMinValue(80);    // TODO -- what is a reasonable min?
+    diastolic_field = (NumberPicker)result.findViewById(R.id.diastolic);
+    diastolic_field.setMaxValue(200);   // TODO -- what is a reasonable max?
+    diastolic_field.setMinValue(80);    // TODO -- what is a reasonable min?
+    rate_field = (NumberPicker)result.findViewById(R.id.rate);
+    rate_field.setMaxValue(150);   // TODO -- what is a reasonable max?
+    rate_field.setMinValue(40);    // TODO -- what is a reasonable min?
     location = (RadioGroup)result.findViewById(R.id.location);
     side = (RadioGroup)result.findViewById(R.id.side);
     doReset();
+
     return(result);
   }
 
@@ -79,9 +87,9 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     rec_orig = rec;
     date_time.setTimeInMillis(rec_orig.getAsLong(DatabaseHelper.DATE));
     showDateTime();
-    systolic_field.setText(rec_orig.getAsString(DatabaseHelper.SYSTOLIC));
-    diastolic_field.setText(rec_orig.getAsString(DatabaseHelper.DIASTOLIC));
-    rate_field.setText(rec_orig.getAsString(DatabaseHelper.RATE));
+    systolic_field.setValue(rec_orig.getAsInteger(DatabaseHelper.SYSTOLIC).intValue());
+    diastolic_field.setValue(rec_orig.getAsInteger(DatabaseHelper.DIASTOLIC).intValue());
+    rate_field.setValue(rec_orig.getAsInteger(DatabaseHelper.RATE).intValue());
     notes_field.setText(rec_orig.getAsString(DatabaseHelper.NOTES));
     location.check(rec_orig.getAsBoolean(DatabaseHelper.LOCATION) ? R.id.upperarm : R.id.forearm);
     side.check(rec_orig.getAsBoolean(DatabaseHelper.SIDE) ? R.id.left : R.id.right);
@@ -129,10 +137,13 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
 
   @Override
   public void onClick(View v) {
-    if (v.getId() == R.id.date) {
-      chooseDate(v);
-    } else {
-      chooseTime(v);
+    switch (v.getId()) {
+      case R.id.date:
+        chooseDate(v);
+	break;
+      case R.id.time:
+        chooseTime(v);
+	break;
     }
   }
 
@@ -141,16 +152,16 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
 
     rec_orig = new ContentValues();
     rec_orig.put(DatabaseHelper.DATE,date_time.getTimeInMillis());
-    rec_orig.put(DatabaseHelper.SYSTOLIC,"0");
-    rec_orig.put(DatabaseHelper.DIASTOLIC,"0");
-    rec_orig.put(DatabaseHelper.RATE,"0");
+    rec_orig.put(DatabaseHelper.SYSTOLIC,120);
+    rec_orig.put(DatabaseHelper.DIASTOLIC,80);
+    rec_orig.put(DatabaseHelper.RATE,70);     // TODO -- what is a reasonable init value?
     rec_orig.put(DatabaseHelper.NOTES,"");
     rec_orig.put(DatabaseHelper.LOCATION,true);   // TRUE = upperarm, FALSE = forearm
     rec_orig.put(DatabaseHelper.SIDE,true);       // TRUE = left, FALSE = right
     notes_field.setText("");   // TODO - s/b getting value from rec_orig
-    systolic_field.setText("0");   // TODO - s/b getting value from rec_orig
-    diastolic_field.setText("0");   // TODO - s/b getting value from rec_orig
-    rate_field.setText("0");   // TODO - s/b getting value from rec_orig
+    systolic_field.setValue(120);   // TODO - s/b getting value from rec_orig
+    diastolic_field.setValue(80);   // TODO - s/b getting value from rec_orig
+    rate_field.setValue(70);   // TODO - s/b getting value from rec_orig
     location.check(rec_orig.getAsBoolean(DatabaseHelper.LOCATION) ? R.id.upperarm : R.id.forearm);
     side.check(rec_orig.getAsBoolean(DatabaseHelper.SIDE) ? R.id.left : R.id.right);
     id = null;
@@ -170,9 +181,9 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
       ContentValues rec = new ContentValues();
       rec.put(DatabaseHelper.ID,id);
       rec.put(DatabaseHelper.DATE,date_time.getTimeInMillis());
-      rec.put(DatabaseHelper.SYSTOLIC,Integer.parseInt(systolic_field.getText().toString()));
-      rec.put(DatabaseHelper.DIASTOLIC,Integer.parseInt(diastolic_field.getText().toString()));
-      rec.put(DatabaseHelper.RATE,Integer.parseInt(rate_field.getText().toString()));
+      rec.put(DatabaseHelper.SYSTOLIC,new Integer(systolic_field.getValue()));
+      rec.put(DatabaseHelper.DIASTOLIC,new Integer(diastolic_field.getValue()));
+      rec.put(DatabaseHelper.RATE,new Integer(rate_field.getValue()));
       rec.put(DatabaseHelper.NOTES,notes_field.getText().toString());
       rec.put(DatabaseHelper.LOCATION,location.getCheckedRadioButtonId() == R.id.upperarm);
       rec.put(DatabaseHelper.SIDE,side.getCheckedRadioButtonId() == R.id.left);
@@ -183,9 +194,9 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   private boolean isDirty() {
     // TODO -- need to enhance this -- what about other fields???
     return (! (notes_field.getText().toString().equals(rec_orig.getAsString(DatabaseHelper.NOTES))
-               && systolic_field.getText().toString().equals(rec_orig.getAsString(DatabaseHelper.SYSTOLIC))
-               && diastolic_field.getText().toString().equals(rec_orig.getAsString(DatabaseHelper.DIASTOLIC))
-               && rate_field.getText().toString().equals(rec_orig.getAsString(DatabaseHelper.RATE))
+               && systolic_field.getValue() == rec_orig.getAsInteger(DatabaseHelper.SYSTOLIC).intValue()
+               && diastolic_field.getValue() == rec_orig.getAsInteger(DatabaseHelper.DIASTOLIC).intValue()
+               && rate_field.getValue() == rec_orig.getAsInteger(DatabaseHelper.RATE).intValue()
 	       && rec_orig.getAsLong(DatabaseHelper.DATE) == date_time.getTimeInMillis()
                && rec_orig.getAsBoolean(DatabaseHelper.LOCATION) == (location.getCheckedRadioButtonId() == R.id.upperarm)
                && rec_orig.getAsBoolean(DatabaseHelper.SIDE) == (side.getCheckedRadioButtonId() == R.id.left)

@@ -45,23 +45,20 @@
 	/>
     </TableRow>
     <TableRow>
-      <EditText
+      <NumberPicker
 	android:id="@+id/systolic"
 	android:layout_weight="1"
 	android:gravity="center"
-	android:inputType="number"
 	/>
-      <EditText
+      <NumberPicker
 	android:id="@+id/diastolic"
 	android:layout_weight="1"
 	android:gravity="center"
-	android:inputType="number"
 	/>
-      <EditText
+      <NumberPicker
 	android:id="@+id/rate"
 	android:layout_weight="1"
 	android:gravity="center"
-	android:inputType="number"
 	/>
     </TableRow>
   </TableLayout>
