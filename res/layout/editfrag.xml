@@ -39,7 +39,7 @@
 	android:gravity="center"
 	/>
       <TextView 
-        android:text="Heart Rate"
+        android:text="Pulse"
 	android:layout_weight="1"
 	android:gravity="center"
 	/>
@@ -130,11 +130,5 @@
     android:layout_height="wrap_content"
     android:hint="notes"
     />
-  <Button
-    android:id="@+id/graph"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:onClick="graphMe"
-    android:text="Graph"/>
 </LinearLayout>
 

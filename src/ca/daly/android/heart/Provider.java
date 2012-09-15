@@ -33,28 +33,45 @@ public class Provider extends ContentProvider {
     if ("axes".equals(url.getQueryParameter("aspect") )) {
       // serve the axes metadata
       Log.d("debug","query:axes");
+
+      // TODO -- continue to try to get heart rate to display correctly as a secondary Y axis
+      //MatrixCursor c = new MatrixCursor(new String[] {"_id","COLUMN_AXIS_LABEL","COLUMN_AXIS_ROLE","COLUMN_AXIS_MIN","COLUMN_AXIS_MAX"});
+      //c.newRow().add(1).add("").add(0).add(null).add(null);
+      //c.newRow().add(2).add("mmHg").add(1).add(null).add(null);
+      //c.newRow().add(3).add("Rate").add(1).add(50).add(90);
+
+      //MatrixCursor c = new MatrixCursor(new String[] {"_id","COLUMN_AXIS_LABEL"});
+      //c.newRow().add(1).add("");
+      //c.newRow().add(2).add("mmHg");
+
+      //return (c);
+
       return (null);
     } else if ("series".equals(url.getQueryParameter("aspect") )) {
       // serve the series metadata
       Log.d("debug","query:series");
+
+      // TODO -- continue to try to get heart rate to display correctly as a secondary Y axis
+
+      //MatrixCursor c = new MatrixCursor(new String[] {"_id","COLUMN_SERIES_LABEL","COLUMN_SERIES_AXIS_SELECT"});
+      //c.newRow().add(1).add("Systolic").add(1);
+      //c.newRow().add(2).add("Diastolic").add(1);
+      //c.newRow().add(3).add("Pulse").add(1);
+
+      //MatrixCursor c = new MatrixCursor(new String[] {"_id","COLUMN_SERIES_LABEL"});
+      //c.newRow().add(1).add("Systolic");
+      //c.newRow().add(2).add("Diastolic");
+
+      //return (c);
+
       return (null);
     } else {
       Log.d("debug","query:data");
-      //SQLiteQueryBuilder qBuilder = new SQLiteQueryBuilder();
-      //qBuilder.setTables(DatabaseHelper.TABLE);
 
-      // ignoring sort 
+      // TODO -- continue to try to get heart rate to display correctly as a secondary Y axis
+      //Cursor c = DatabaseHelper.getInstance(getContext()).getReadableDatabase().rawQuery("Select _id,1 as COLUMN_SERIES_INDEX,date as AXIS_A, systolic as AXIS_B from heart union all select _id,2 as COLUMN_SERIES_INDEX,date as AXIS_A, diastolic as AXIS_B from heart union all select _id,3 as COLUMN_SERIES_INDEX,date as AXIS_A, heart_rate as AXIS_C from heart",null);
 
-      //Cursor c = qBuilder.query(DatabaseHelper.getInstance(getContext()).getReadableDatabase(),projection,selection,selectionArgs,null,null,null);
-
-      // c.setNotificationUri(getContext().getContentResolver(),url);  TODO -- not needed ???
-
-      //MatrixCursor c = new MatrixCursor(new String[] {"_id","COLUMN_SERIES_INDEX","AXIS_A","AXIS_B"});
-      //c.newRow().add(1).add(1).add(System.currentTimeMillis()).add(6);
-      //c.newRow().add(1).add(1).add(System.currentTimeMillis()+ 5000).add(50);
-      //c.newRow().add(1).add(1).add(System.currentTimeMillis() - 1000).add(95);
-
-      Cursor c = DatabaseHelper.getInstance(getContext()).getReadableDatabase().rawQuery("Select _id,1 as COLUMN_SERIES_INDEX,date as AXIS_A, systolic as AXIS_B from heart",null);
+      Cursor c = DatabaseHelper.getInstance(getContext()).getReadableDatabase().rawQuery("Select _id,1 as COLUMN_SERIES_INDEX,date as AXIS_A, systolic as AXIS_B from heart union all select _id,2 as COLUMN_SERIES_INDEX,date as AXIS_A, diastolic as AXIS_B from heart ",null);
       return (c);
     }
   }

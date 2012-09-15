@@ -6,6 +6,7 @@
     <string name="add">Add</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
+    <string name="graph">Graph</string>
     <string name="on_upgrade_error">This should not be called</string>
     <string name="delete_dlg_title">Delete Record?</string>
 </resources>

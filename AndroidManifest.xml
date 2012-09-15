@@ -6,11 +6,12 @@
 
   <uses-sdk android:minSdkVersion="8"
 	    android:targetSdkVersion="11"/>
+  <!--  android:uiOptions="splitActionBarWhenNarrow" -->
   <application 
     android:label="@string/app_name" 
     android:icon="@drawable/ic_launcher"
     android:theme="@style/Theme.Sherlock"
-    android:uiOptions="splitActionBarWhenNarrow">
+    >
     <provider
       android:name=".Provider"
       android:authorities="ca.daly.android.heart"/>

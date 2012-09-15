@@ -50,6 +50,8 @@ public class Heart extends SherlockFragmentActivity {
         i=new Intent(this, SimpleContentActivity.class);
 	startActivity(i);
 	return (true);
+      case R.id.graph:
+        startGraph();
     }
 
     return(super.onOptionsItemSelected(item));
@@ -68,19 +70,26 @@ public class Heart extends SherlockFragmentActivity {
     void changeRec(Long id);
   }
 
-  public void graphMe(View v) {
+  private void startGraph() {
     Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
                                .authority("ca.daly.android.heart")
 			       .build();
     Intent i = new Intent(Intent.ACTION_VIEW,uri);
-    i.putExtra(Intent.EXTRA_TITLE, "Test Title");
-    i.putExtra("com.googlecode.chartdroid.intent.extra.SERIES_LABELS",new String[] {"Systolic"});
+    i.putExtra(Intent.EXTRA_TITLE, "Blood Pressure");
+
+    // TODO -- continue to try to get heart rate to display correctly as a secondary Y axis
+    //i.putExtra("com.googlecode.chartdroid.intent.extra.SERIES_LABELS",new String[] {"Systolic","Diastolic","Pulse"});
+    //i.putExtra("com.googlecode.chartdroid.intent.extra.SERIES_AXIS_SELECTION",new int[] {1,1,2});
+
+    i.putExtra("com.googlecode.chartdroid.intent.extra.SERIES_LABELS",new String[] {"Systolic","Diastolic"});
 
     ArrayList<String> axisTitles = new ArrayList<String>();
     axisTitles.add(""); // date
-    axisTitles.add("value");
+    axisTitles.add("mmHg");
+    //axisTitles.add("Rate");
     i.putExtra("com.googlecode.chartdroid.intent.extra.AXIS_TITLES",axisTitles);
     i.putExtra("com.googlecode.chartdroid.intent.extra.FORMAT_STRING_Y","%.0f");
+    //i.putExtra("com.googlecode.chartdroid.intent.extra.FORMAT_STRING_Y_SECONDARY","%.0f");
     startActivity(i);
   }
 }
