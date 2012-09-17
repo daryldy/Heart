@@ -146,6 +146,11 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
       new DeleteDialog().show(getActivity().getSupportFragmentManager(),"delete");
       return(true);
     }
+    if (item.getItemId() == R.id.add) {
+      Log.d("debug","selected add");
+      doAdd();
+      return(true);
+    }
     return(super.onOptionsItemSelected(item));
   }
 
@@ -256,5 +261,12 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   private void setDateTimeText() {
     date_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_DATE));
     time_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
+  }
+
+  private void doAdd() {
+    // create new record
+    doSave();  // save existing if needed
+    initData();
+    initScreenValues();
   }
 }
