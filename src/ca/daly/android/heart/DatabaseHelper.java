@@ -218,8 +218,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
       vals = params[0];
 
-      if (vals.getAsLong(ID) == null) {
+      if (vals.getAsLong(ID) == 0) {
         Log.d ("debug", "SaveRecordTask: new record");
+	vals.remove(ID);
 	result = getWritableDatabase().insert(TABLE,null,vals);
       } else {
         Log.d ("debug", "SaveRecordTask: update record");

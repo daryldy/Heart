@@ -29,17 +29,19 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
                                                               Heart.EditListener,
 							      DialogInterface.OnClickListener,
 							      View.OnClickListener {
-  TextView date_field;
-  TextView time_field;
-  TextView notes_field;
-  NumberPicker systolic_field;
-  NumberPicker diastolic_field;
-  NumberPicker rate_field;
-  RadioGroup location;
-  RadioGroup side;
-  ContentValues rec_orig;
-  Long id = null;  // current record's id
-  Calendar date_time = Calendar.getInstance();
+  private static final int SYSTOLIC_INIT_VAL = 120;
+  private static final int DIASTOLIC_INIT_VAL = 80;
+  private static final int PULSE_INIT_VAL = 70;
+  private TextView date_field;
+  private TextView time_field;
+  private TextView notes_field;
+  private NumberPicker systolic_field;
+  private NumberPicker diastolic_field;
+  private NumberPicker rate_field;
+  private RadioGroup location;
+  private RadioGroup side;
+  private Long id = 0L; // current record's id  (0 = not set)
+  private Calendar date_time = Calendar.getInstance();
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
                            ViewGroup container,
   			   Bundle savedInstanceState) {
     View result = inflater.inflate(R.layout.editfrag, container);
+    initData();
 
     date_field = (Button)result.findViewById(R.id.date);
     date_field.setOnClickListener(this);
@@ -71,7 +74,17 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     rate_field.setMinValue(40);    // TODO -- what is a reasonable min?
     location = (RadioGroup)result.findViewById(R.id.location);
     side = (RadioGroup)result.findViewById(R.id.side);
-    doReset();
+    initScreenValues();
+
+    if (savedInstanceState != null) {
+      // restore saved state (data & screen)
+      id = savedInstanceState.getLong(DatabaseHelper.ID);
+      date_time.setTimeInMillis(savedInstanceState.getLong(DatabaseHelper.DATE));
+      setDateTimeText();
+      systolic_field.setValue(savedInstanceState.getInt(DatabaseHelper.SYSTOLIC));
+      diastolic_field.setValue(savedInstanceState.getInt(DatabaseHelper.DIASTOLIC));
+      rate_field.setValue(savedInstanceState.getInt(DatabaseHelper.RATE));
+    }
 
     return(result);
   }
@@ -84,37 +97,44 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   }
 
   public void setRecord(ContentValues rec) {
-    rec_orig = rec;
-    date_time.setTimeInMillis(rec_orig.getAsLong(DatabaseHelper.DATE));
-    showDateTime();
-    systolic_field.setValue(rec_orig.getAsInteger(DatabaseHelper.SYSTOLIC).intValue());
-    diastolic_field.setValue(rec_orig.getAsInteger(DatabaseHelper.DIASTOLIC).intValue());
-    rate_field.setValue(rec_orig.getAsInteger(DatabaseHelper.RATE).intValue());
-    notes_field.setText(rec_orig.getAsString(DatabaseHelper.NOTES));
-    location.check(rec_orig.getAsBoolean(DatabaseHelper.LOCATION) ? R.id.upperarm : R.id.forearm);
-    side.check(rec_orig.getAsBoolean(DatabaseHelper.SIDE) ? R.id.left : R.id.right);
+    Log.d("debug","setRecord");
+    date_time.setTimeInMillis(rec.getAsLong(DatabaseHelper.DATE));
+    setDateTimeText();
+    systolic_field.setValue(rec.getAsInteger(DatabaseHelper.SYSTOLIC).intValue());
+    diastolic_field.setValue(rec.getAsInteger(DatabaseHelper.DIASTOLIC).intValue());
+    rate_field.setValue(rec.getAsInteger(DatabaseHelper.RATE).intValue());
+    notes_field.setText(rec.getAsString(DatabaseHelper.NOTES));
+    location.check(rec.getAsBoolean(DatabaseHelper.LOCATION) ? R.id.upperarm : R.id.forearm);
+    side.check(rec.getAsBoolean(DatabaseHelper.SIDE) ? R.id.left : R.id.right);
   }
 
   public void setId(Long id) {
+    Log.d("debug","setId: id = " + id);
     this.id = id;
   }
 
   @Override
-  public void onPause() {
+  public void onStop() {
+    Log.d("debug","onStop: id = " + id);
+
     doSave();
-
-    Log.d("debug","onPause: id = " + id);
-
-    super.onPause();
+    super.onStop();
   }
 
   @Override
-  public void onResume() {
-    super.onResume();
-    Log.d("debug","onResume: id = " + id);
+  public void onSaveInstanceState(Bundle state) {
+    super.onSaveInstanceState(state);
+
+    Log.d("debug","onSaveInstanceState");
+    state.putLong(DatabaseHelper.ID,id);
+    state.putInt(DatabaseHelper.SYSTOLIC,systolic_field.getValue());
+    state.putInt(DatabaseHelper.DIASTOLIC,diastolic_field.getValue());
+    state.putInt(DatabaseHelper.RATE,rate_field.getValue());
+    state.putLong(DatabaseHelper.DATE,date_time.getTimeInMillis());
   }
 
   public void changeRec(Long id) {
+    Log.d("debug","changeRec: id = " + id);
     this.id = id;
     DatabaseHelper.getInstance(getActivity()).getRecordAsync(id, this);
   }
@@ -147,32 +167,29 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     }
   }
 
-  private void doReset() {
-    showDateTime();
-
-    rec_orig = new ContentValues();
-    rec_orig.put(DatabaseHelper.DATE,date_time.getTimeInMillis());
-    rec_orig.put(DatabaseHelper.SYSTOLIC,120);
-    rec_orig.put(DatabaseHelper.DIASTOLIC,80);
-    rec_orig.put(DatabaseHelper.RATE,70);     // TODO -- what is a reasonable init value?
-    rec_orig.put(DatabaseHelper.NOTES,"");
-    rec_orig.put(DatabaseHelper.LOCATION,true);   // TRUE = upperarm, FALSE = forearm
-    rec_orig.put(DatabaseHelper.SIDE,true);       // TRUE = left, FALSE = right
-    notes_field.setText("");   // TODO - s/b getting value from rec_orig
-    systolic_field.setValue(120);   // TODO - s/b getting value from rec_orig
-    diastolic_field.setValue(80);   // TODO - s/b getting value from rec_orig
-    rate_field.setValue(70);   // TODO - s/b getting value from rec_orig
-    location.check(rec_orig.getAsBoolean(DatabaseHelper.LOCATION) ? R.id.upperarm : R.id.forearm);
-    side.check(rec_orig.getAsBoolean(DatabaseHelper.SIDE) ? R.id.left : R.id.right);
-    id = null;
+  private void initData() {
+    Log.d("debug","initData");
+    date_time.setTime(new Date());   // today now
+    id = 0L;
   }
-
+  private void initScreenValues() {
+    Log.d("debug","initScreenValues");
+    notes_field.setText("");
+    systolic_field.setValue(SYSTOLIC_INIT_VAL);
+    diastolic_field.setValue(DIASTOLIC_INIT_VAL);
+    rate_field.setValue(PULSE_INIT_VAL);
+    location.check(R.id.upperarm);
+    side.check(R.id.left);
+    setDateTimeText();
+  }
+  
   private void doDelete() {
 
-    if (id != null) {
+    if (id != 0) {
       DatabaseHelper.getInstance(getActivity()).deleteRecordAsync(id);
     }
-    doReset();
+    initData();
+    initScreenValues();
   }
   
   private void doSave() {
@@ -188,20 +205,16 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
       rec.put(DatabaseHelper.LOCATION,location.getCheckedRadioButtonId() == R.id.upperarm);
       rec.put(DatabaseHelper.SIDE,side.getCheckedRadioButtonId() == R.id.left);
       DatabaseHelper.getInstance(getActivity()).saveRecordAsync(this, rec);
+      Toast.makeText(getActivity().getApplicationContext(), "Saved Entry", Toast.LENGTH_SHORT).show();
+                         //TODO -- change above UI text to resource
     }
   }
 
   private boolean isDirty() {
-    // TODO -- need to enhance this -- what about other fields???
-    return (! (notes_field.getText().toString().equals(rec_orig.getAsString(DatabaseHelper.NOTES))
-               && systolic_field.getValue() == rec_orig.getAsInteger(DatabaseHelper.SYSTOLIC).intValue()
-               && diastolic_field.getValue() == rec_orig.getAsInteger(DatabaseHelper.DIASTOLIC).intValue()
-               && rate_field.getValue() == rec_orig.getAsInteger(DatabaseHelper.RATE).intValue()
-	       && rec_orig.getAsLong(DatabaseHelper.DATE) == date_time.getTimeInMillis()
-               && rec_orig.getAsBoolean(DatabaseHelper.LOCATION) == (location.getCheckedRadioButtonId() == R.id.upperarm)
-               && rec_orig.getAsBoolean(DatabaseHelper.SIDE) == (side.getCheckedRadioButtonId() == R.id.left)
-	       ));
-    //return (notes_field.isDirty());  // TODO this requires API Level 11 -- probably need to make more generic
+    // if main values are different then their "new" record values then assume record is dirty
+    return (systolic_field.getValue() != SYSTOLIC_INIT_VAL
+              || diastolic_field.getValue() != DIASTOLIC_INIT_VAL
+	      || rate_field.getValue() != PULSE_INIT_VAL);
   }
 
   public void chooseDate(View v) {
@@ -219,7 +232,7 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
        date_time.set(Calendar.YEAR, year);
        date_time.set(Calendar.MONTH, monthOfYear);
        date_time.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-       showDateTime();
+       setDateTimeText();
     }
   };
   
@@ -236,11 +249,11 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
                           int minute) {
        date_time.set(Calendar.HOUR_OF_DAY, hourOfDay);
        date_time.set(Calendar.MINUTE, minute);
-       showDateTime();
+       setDateTimeText();
     }
   };
   
-  private void showDateTime() {
+  private void setDateTimeText() {
     date_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_DATE));
     time_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
   }
