@@ -197,7 +197,7 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     initScreenValues();
   }
   
-  private void doSave() {
+  public void doSave() {
     if (isDirty()) {
       Log.d ("debug","saving id: " + id);
       ContentValues rec = new ContentValues();

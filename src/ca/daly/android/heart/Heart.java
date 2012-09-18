@@ -35,11 +35,13 @@ public class Heart extends SherlockFragmentActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     Intent i = null;
 
+    EditFragment editfrag = (EditFragment)getSupportFragmentManager().findFragmentById(R.id.editfrag);
     switch (item.getItemId()) {
       case android.R.id.home:
 	return (true);
       case R.id.edit:
         i=new Intent(this, ListActivity.class);
+	editfrag.doSave();   // ensure current record is updated to db so list can show it
 	startActivityForResult(i,REC_REQUEST);
 	return (true);
       case R.id.about:
@@ -51,6 +53,7 @@ public class Heart extends SherlockFragmentActivity {
 	startActivity(i);
 	return (true);
       case R.id.graph:
+	editfrag.doSave();   // ensure current record is updated to db so it can be graphed
         startGraph();
     }
 
