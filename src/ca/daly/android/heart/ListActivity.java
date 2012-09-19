@@ -10,7 +10,10 @@ public class ListActivity extends SherlockFragmentActivity
   @Override 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.list);
+    if (getSupportFragmentManager().findFragmentById(android.R.id.content)==null) {
+      getSupportFragmentManager().beginTransaction()
+                                 .add(android.R.id.content, new ListFragment()).commit();
+    }
   }
 
   public void RecordSelect(long id) {

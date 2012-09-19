@@ -22,6 +22,10 @@ public class Heart extends SherlockFragmentActivity {
   {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
+    if (getSupportFragmentManager().findFragmentById(R.id.editfrag_container)==null) {
+      getSupportFragmentManager().beginTransaction()
+                                 .add(R.id.editfrag_container, new EditFragment()).commit();
+    }
   }
 
   @Override
@@ -35,7 +39,7 @@ public class Heart extends SherlockFragmentActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     Intent i = null;
 
-    EditFragment editfrag = (EditFragment)getSupportFragmentManager().findFragmentById(R.id.editfrag);
+    EditFragment editfrag = (EditFragment)getSupportFragmentManager().findFragmentById(R.id.editfrag_container);
     switch (item.getItemId()) {
       case android.R.id.home:
 	return (true);
@@ -64,7 +68,7 @@ public class Heart extends SherlockFragmentActivity {
   public void onActivityResult(int requestCode, int resultCode, Intent data){
     if (requestCode == REC_REQUEST && resultCode == SherlockFragmentActivity.RESULT_OK) {
       Log.d ("debug", "got activity result: " + data.getExtras().get("ca.daly.android.heart.REC_ID"));
-      EditFragment editfrag = (EditFragment)getSupportFragmentManager().findFragmentById(R.id.editfrag);
+      EditFragment editfrag = (EditFragment)getSupportFragmentManager().findFragmentById(R.id.editfrag_container);
       editfrag.changeRec(data.getLongExtra("ca.daly.android.heart.REC_ID",0));
     }
   }

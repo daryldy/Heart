@@ -20,7 +20,9 @@ public class DeleteDialog extends DialogFragment { // implements DialogInterface
 
     //return(builder.setTitle(R.string.delete_dlg_title).setView(dia)
     return(builder.setMessage(R.string.delete_dlg_title)
-                  .setPositiveButton(android.R.string.ok, (DialogInterface.OnClickListener)getActivity().getSupportFragmentManager().findFragmentById(R.id.editfrag)) //this)
+                  .setPositiveButton(android.R.string.ok, (DialogInterface.OnClickListener)getActivity()
+		                                                 .getSupportFragmentManager()
+								 .findFragmentById(R.id.editfrag_container))
 		  .setNegativeButton(android.R.string.cancel, null).create());
   }
 

@@ -55,7 +55,7 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   public View onCreateView(LayoutInflater inflater,
                            ViewGroup container,
   			   Bundle savedInstanceState) {
-    View result = inflater.inflate(R.layout.editfrag, container);
+    View result = inflater.inflate(R.layout.editfrag, null, false);
     initData();
 
     date_field = (Button)result.findViewById(R.id.date);
