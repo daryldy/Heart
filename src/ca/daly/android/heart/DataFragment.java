@@ -19,7 +19,7 @@ public class DataFragment extends SherlockFragment
   public Calendar date_time = Calendar.getInstance();
   public Integer systolic;
   public Integer diastolic;
-  public Integer rate;
+  public Integer pulse;
   public String notes;
   public Boolean location;
   public Boolean side;
@@ -62,7 +62,7 @@ public class DataFragment extends SherlockFragment
     date_time.setTimeInMillis(new_data.getAsLong(DatabaseHelper.DATE));
     systolic = new_data.getAsInteger(DatabaseHelper.SYSTOLIC);
     diastolic = new_data.getAsInteger(DatabaseHelper.DIASTOLIC);
-    rate = new_data.getAsInteger(DatabaseHelper.RATE);
+    pulse = new_data.getAsInteger(DatabaseHelper.PULSE);
     notes = new_data.getAsString(DatabaseHelper.NOTES);
     location = new_data.getAsBoolean(DatabaseHelper.LOCATION);
     side = new_data.getAsBoolean(DatabaseHelper.SIDE);
@@ -82,7 +82,7 @@ public class DataFragment extends SherlockFragment
     rec.put(DatabaseHelper.DATE,date_time.getTimeInMillis());
     rec.put(DatabaseHelper.SYSTOLIC,systolic);
     rec.put(DatabaseHelper.DIASTOLIC,diastolic);
-    rec.put(DatabaseHelper.RATE,rate);
+    rec.put(DatabaseHelper.PULSE,pulse);
     rec.put(DatabaseHelper.NOTES,notes);
     rec.put(DatabaseHelper.LOCATION,location);
     rec.put(DatabaseHelper.SIDE,side);
@@ -123,21 +123,21 @@ public class DataFragment extends SherlockFragment
     Log.d("debug","DataFragment: isDirty curr data: date_time:" + date_time.getTimeInMillis()
                                         + " systolic:" + systolic
 					+ " diastolic: " + diastolic
-					+ " rate: " + rate
+					+ " pulse: " + pulse
 					+ " notes: " + notes
 					+ " location: " + location
 					+ " side: " + side);
     Log.d("debug","DataFragment: isDirty data to save: date_time:" + rec.getAsLong(DatabaseHelper.DATE)
                                         + " systolic:" + rec.getAsInteger(DatabaseHelper.SYSTOLIC)
 					+ " diastolic: " + rec.getAsInteger(DatabaseHelper.DIASTOLIC)
-					+ " rate: " + rec.getAsInteger(DatabaseHelper.RATE)
+					+ " pulse: " + rec.getAsInteger(DatabaseHelper.PULSE)
 					+ " notes: " + rec.getAsString(DatabaseHelper.NOTES)
 					+ " location: " + rec.getAsBoolean(DatabaseHelper.LOCATION)
 					+ " side: " + rec.getAsBoolean(DatabaseHelper.SIDE));
     dirty = (date_time.getTimeInMillis() != rec.getAsLong(DatabaseHelper.DATE)
              || !systolic.equals(rec.getAsInteger(DatabaseHelper.SYSTOLIC))
 	     || !diastolic.equals(rec.getAsInteger(DatabaseHelper.DIASTOLIC))
-	     || !rate.equals(rec.getAsInteger(DatabaseHelper.RATE))
+	     || !pulse.equals(rec.getAsInteger(DatabaseHelper.PULSE))
 	     || !notes.equals(rec.getAsString(DatabaseHelper.NOTES))
 	     || !location.equals(rec.getAsBoolean(DatabaseHelper.LOCATION))
 	     || !side.equals(rec.getAsBoolean(DatabaseHelper.SIDE)));
@@ -149,7 +149,7 @@ public class DataFragment extends SherlockFragment
     date_time.setTime(new Date());  // today now
     systolic = 121;
     diastolic = 81;
-    rate = 71;
+    pulse = 71;
     notes = "";
     location = true;
     side = true;

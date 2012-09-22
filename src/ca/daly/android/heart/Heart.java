@@ -110,7 +110,7 @@ public class Heart extends SherlockFragmentActivity {
     Intent i = new Intent(Intent.ACTION_VIEW,uri);
     i.putExtra(Intent.EXTRA_TITLE, "Blood Pressure");
 
-    // TODO -- continue to try to get heart rate to display correctly as a secondary Y axis
+    // TODO -- continue to try to get pulse to display correctly as a secondary Y axis
     //i.putExtra("com.googlecode.chartdroid.intent.extra.SERIES_LABELS",new String[] {"Systolic","Diastolic","Pulse"});
     //i.putExtra("com.googlecode.chartdroid.intent.extra.SERIES_AXIS_SELECTION",new int[] {1,1,2});
 
@@ -119,7 +119,7 @@ public class Heart extends SherlockFragmentActivity {
     ArrayList<String> axisTitles = new ArrayList<String>();
     axisTitles.add(""); // date
     axisTitles.add("mmHg");
-    //axisTitles.add("Rate");
+    //axisTitles.add("Pulse");
     i.putExtra("com.googlecode.chartdroid.intent.extra.AXIS_TITLES",axisTitles);
     i.putExtra("com.googlecode.chartdroid.intent.extra.FORMAT_STRING_Y","%.0f");
     //i.putExtra("com.googlecode.chartdroid.intent.extra.FORMAT_STRING_Y_SECONDARY","%.0f");

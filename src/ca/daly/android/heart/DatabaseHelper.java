@@ -15,7 +15,7 @@ import android.text.format.DateUtils;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
   private static final String DATABASE_NAME="heart.db";
-  private static final int SCHEMA_VERSION=3;
+  private static final int SCHEMA_VERSION=4;
   private static DatabaseHelper singleton=null;
   private Context ctxt=null;
   static final String TABLE="heart";
@@ -23,7 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   static final String DATE="date";
   static final String SYSTOLIC="systolic";
   static final String DIASTOLIC="diastolic";
-  static final String RATE="heart_rate";
+  static final String PULSE="pulse";
   static final String NOTES="notes";
   static final String LOCATION="location";
   static final String SIDE="side";
@@ -46,7 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	  // side     : True = left, False = right
     try {
       db.beginTransaction();
-      db.execSQL("create table heart (_id integer primary key autoincrement, date datetime, systolic integer, notes varchar(50), diastolic integer, heart_rate integer, location boolean, side boolean);");
+      db.execSQL("create table heart (_id integer primary key autoincrement, date datetime, systolic integer, notes varchar(50), diastolic integer, pulse integer, location boolean, side boolean);");
       db.setTransactionSuccessful();
     }
     finally {
@@ -81,6 +81,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	db.endTransaction();
       }
     }
+    if (newVersion == 4) {
+      // not a good conversion -- okay for now because versions prior to 4 were never deployed
+      try {
+	db.beginTransaction();
+	db.execSQL("drop table heart_v2;");
+	db.execSQL("alter table heart rename to heart_v2;");
+        db.execSQL("create table heart (_id integer primary key autoincrement, date datetime, systolic integer, notes varchar(50), diastolic integer, pulse integer, location boolean, side boolean);");
+	db.setTransactionSuccessful();
+      }
+      finally {
+	db.endTransaction();
+      }
+    }
   }
 
   interface RecordListener{
@@ -99,7 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   private class LoadListTask extends AsyncTask<Void, Void, Void> {
     private Cursor heartCursor = null;
     private ListAdapterListener listener = null;
-    private String[] columns = {SYSTOLIC,DIASTOLIC,RATE,DATE};
+    private String[] columns = {SYSTOLIC,DIASTOLIC,PULSE,DATE};
 
     LoadListTask (ListAdapterListener listener) {
       this.listener = listener;
@@ -107,7 +120,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     protected Void doInBackground(Void... params) {
-      heartCursor = getReadableDatabase().query(TABLE,new String[] {ID,SYSTOLIC,DIASTOLIC,RATE,DATE},null,null,null,null,"date desc");
+      heartCursor = getReadableDatabase().query(TABLE,new String[] {ID,SYSTOLIC,DIASTOLIC,PULSE,DATE},null,null,null,null,"date desc");
                                         // TODO -- should really be using columns value plus ID
 				        //         -- java seems make this harder then it should be!!!!
       heartCursor.getCount();  // force query to execute
@@ -124,7 +137,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	                                R.layout.row,
 					heartCursor, 
 					columns,
-					new int[] {R.id.systolic,R.id.diastolic,R.id.heart_rate,R.id.date}
+					new int[] {R.id.systolic,R.id.diastolic,R.id.pulse,R.id.date}
 					, 0) {
 			    @Override
 			    public void setViewText(TextView v, String text) {
@@ -136,7 +149,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				        R.layout.row,
 					heartCursor, 
 					columns,
-					new int[] {R.id.systolic,R.id.diastolic,R.id.heart_rate,R.id.date}
+					new int[] {R.id.systolic,R.id.diastolic,R.id.pulse,R.id.date}
 					) {
 			    @Override
 			    public void setViewText(TextView v, String text) {
@@ -175,7 +188,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       String[] args={params[0].toString()};
 
       Log.d ("debug", "GetRecordTask: doInBackground args[0]: " + args[0]);
-      Cursor c = getReadableDatabase().query(TABLE,new String[] {ID,DATE,SYSTOLIC,NOTES,DIASTOLIC,RATE,LOCATION,SIDE},"_id = ?",args,null,null,null,"1");
+      Cursor c = getReadableDatabase().query(TABLE,new String[] {ID,DATE,SYSTOLIC,NOTES,DIASTOLIC,PULSE,LOCATION,SIDE},"_id = ?",args,null,null,null,"1");
       c.moveToFirst();
       if (c.isAfterLast()) {
 	return(null);
@@ -186,7 +199,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       rec.put(SYSTOLIC,c.getInt(2));
       rec.put(NOTES,c.getString(3));
       rec.put(DIASTOLIC,c.getInt(4));
-      rec.put(RATE,c.getInt(5));
+      rec.put(PULSE,c.getInt(5));
       rec.put(LOCATION,c.getInt(6));
       rec.put(SIDE,c.getInt(7));
       c.close();

@@ -37,7 +37,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
   private TextView notes_field;
   private NumberPicker systolic_field;
   private NumberPicker diastolic_field;
-  private NumberPicker rate_field;
+  private NumberPicker pulse_field;
   private RadioGroup location;
   private RadioGroup side;
   private Calendar date_time = Calendar.getInstance();
@@ -69,9 +69,9 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
     diastolic_field = (NumberPicker)result.findViewById(R.id.diastolic);
     diastolic_field.setMaxValue(200);   // TODO -- what is a reasonable max?
     diastolic_field.setMinValue(50);    // TODO -- what is a reasonable min?
-    rate_field = (NumberPicker)result.findViewById(R.id.rate);
-    rate_field.setMaxValue(150);   // TODO -- what is a reasonable max?
-    rate_field.setMinValue(40);    // TODO -- what is a reasonable min?
+    pulse_field = (NumberPicker)result.findViewById(R.id.pulse);
+    pulse_field.setMaxValue(150);   // TODO -- what is a reasonable max?
+    pulse_field.setMinValue(40);    // TODO -- what is a reasonable min?
     location = (RadioGroup)result.findViewById(R.id.location);
     side = (RadioGroup)result.findViewById(R.id.side);
 
@@ -81,7 +81,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
       setDateTimeText();
       systolic_field.setValue(savedInstanceState.getInt(DatabaseHelper.SYSTOLIC));
       diastolic_field.setValue(savedInstanceState.getInt(DatabaseHelper.DIASTOLIC));
-      rate_field.setValue(savedInstanceState.getInt(DatabaseHelper.RATE));
+      pulse_field.setValue(savedInstanceState.getInt(DatabaseHelper.PULSE));
     } else {
       // get data from myData object
       updateView();
@@ -105,7 +105,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
     setDateTimeText();
     systolic_field.setValue(myData.systolic);
     diastolic_field.setValue(myData.diastolic);
-    rate_field.setValue(myData.rate);
+    pulse_field.setValue(myData.pulse);
     notes_field.setText(myData.notes);
     location.check(myData.location ? R.id.upperarm : R.id.forearm);
     side.check(myData.side ? R.id.left : R.id.right);
@@ -124,7 +124,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
     Log.d("debug","onSaveInstanceState");
     state.putInt(DatabaseHelper.SYSTOLIC,systolic_field.getValue());
     state.putInt(DatabaseHelper.DIASTOLIC,diastolic_field.getValue());
-    state.putInt(DatabaseHelper.RATE,rate_field.getValue());
+    state.putInt(DatabaseHelper.PULSE,pulse_field.getValue());
     state.putLong(DatabaseHelper.DATE,date_time.getTimeInMillis());
   }
 
@@ -170,7 +170,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
     screenValues.put(DatabaseHelper.DATE,date_time.getTimeInMillis());
     screenValues.put(DatabaseHelper.SYSTOLIC,new Integer(systolic_field.getValue()));
     screenValues.put(DatabaseHelper.DIASTOLIC,new Integer(diastolic_field.getValue()));
-    screenValues.put(DatabaseHelper.RATE,new Integer(rate_field.getValue()));
+    screenValues.put(DatabaseHelper.PULSE,new Integer(pulse_field.getValue()));
     screenValues.put(DatabaseHelper.NOTES,notes_field.getText().toString());
     screenValues.put(DatabaseHelper.LOCATION,location.getCheckedRadioButtonId() == R.id.upperarm);
     screenValues.put(DatabaseHelper.SIDE,side.getCheckedRadioButtonId() == R.id.left);
