@@ -15,6 +15,9 @@ import java.util.ArrayList;
 
 public class Heart extends SherlockFragmentActivity {
   static final int REC_REQUEST=5001;
+  private static final String DATA_FRAG="Data Fragment";
+  public DataFragment myData;  // TODO -- s/b private
+  public EditFragment myViewer;  // TODO -- s/b private
 
   /** Called when the activity is first created. */
   @Override
@@ -22,9 +25,27 @@ public class Heart extends SherlockFragmentActivity {
   {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
-    if (getSupportFragmentManager().findFragmentById(R.id.editfrag_container)==null) {
+
+    myData = (DataFragment)getSupportFragmentManager().findFragmentByTag(DATA_FRAG);
+    if (myData == null) {
+      Log.d ("debug","Heart Activity: onCreate: setting up new data fragment");
+      myData = new DataFragment();
       getSupportFragmentManager().beginTransaction()
-                                 .add(R.id.editfrag_container, new EditFragment()).commit();
+                                 .add(myData,DATA_FRAG)
+				 .commit();
+    } else {
+      Log.d ("debug","Heart Activity: onCreate: data fragment still exists");
+    }
+
+    myViewer = (EditFragment)getSupportFragmentManager().findFragmentById(R.id.editfrag_container);
+    if (myViewer == null) {
+      Log.d ("debug","Heart Activity: onCreate: setting up new edit fragment");
+      myViewer = new EditFragment();
+      getSupportFragmentManager().beginTransaction()
+                                 .add(R.id.editfrag_container, myViewer)
+				 .commit();
+    } else {
+      Log.d ("debug","Heart Activity: onCreate: edit fragment still exists");
     }
   }
 
@@ -45,7 +66,7 @@ public class Heart extends SherlockFragmentActivity {
 	return (true);
       case R.id.edit:
         i=new Intent(this, ListActivity.class);
-	editfrag.doSave();   // ensure current record is updated to db so list can show it
+	editfrag.doSave(true);   // ensure current record is updated to db so list can show it
 	startActivityForResult(i,REC_REQUEST);
 	return (true);
       case R.id.about:
@@ -57,7 +78,7 @@ public class Heart extends SherlockFragmentActivity {
 	startActivity(i);
 	return (true);
       case R.id.graph:
-	editfrag.doSave();   // ensure current record is updated to db so it can be graphed
+	editfrag.doSave(true);   // ensure current record is updated to db so it can be graphed
         startGraph();
     }
 
@@ -68,13 +89,18 @@ public class Heart extends SherlockFragmentActivity {
   public void onActivityResult(int requestCode, int resultCode, Intent data){
     if (requestCode == REC_REQUEST && resultCode == SherlockFragmentActivity.RESULT_OK) {
       Log.d ("debug", "got activity result: " + data.getExtras().get("ca.daly.android.heart.REC_ID"));
-      EditFragment editfrag = (EditFragment)getSupportFragmentManager().findFragmentById(R.id.editfrag_container);
-      editfrag.changeRec(data.getLongExtra("ca.daly.android.heart.REC_ID",0));
+      myData.newID(data.getLongExtra("ca.daly.android.heart.REC_ID",0));
     }
   }
 
-  interface EditListener {
-    void changeRec(Long id);
+  @Override
+  public void onStop() {
+    super.onStop();
+    Log.d ("debug","Heart Activity: onStop");
+  }
+
+  interface idChangeListener {
+    void newID(Long id);
   }
 
   private void startGraph() {

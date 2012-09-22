@@ -25,8 +25,8 @@ import android.util.Log;
 import java.util.Date;
 import java.util.Calendar;
 
-public class EditFragment extends SherlockFragment implements DatabaseHelper.RecordListener,
-                                                              Heart.EditListener,
+public class EditFragment extends SherlockFragment implements // DatabaseHelper.RecordListener,
+                                                              // Heart.EditListener,
 							      DialogInterface.OnClickListener,
 							      View.OnClickListener {
   private static final int SYSTOLIC_INIT_VAL = 120;
@@ -40,7 +40,6 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   private NumberPicker rate_field;
   private RadioGroup location;
   private RadioGroup side;
-  private Long id = 0L; // current record's id  (0 = not set)
   private Calendar date_time = Calendar.getInstance();
 
   @Override
@@ -55,8 +54,9 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   public View onCreateView(LayoutInflater inflater,
                            ViewGroup container,
   			   Bundle savedInstanceState) {
+
+    setRetainInstance(false);
     View result = inflater.inflate(R.layout.editfrag, null, false);
-    initData();
 
     date_field = (Button)result.findViewById(R.id.date);
     date_field.setOnClickListener(this);
@@ -68,22 +68,23 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     systolic_field.setMinValue(80);    // TODO -- what is a reasonable min?
     diastolic_field = (NumberPicker)result.findViewById(R.id.diastolic);
     diastolic_field.setMaxValue(200);   // TODO -- what is a reasonable max?
-    diastolic_field.setMinValue(80);    // TODO -- what is a reasonable min?
+    diastolic_field.setMinValue(50);    // TODO -- what is a reasonable min?
     rate_field = (NumberPicker)result.findViewById(R.id.rate);
     rate_field.setMaxValue(150);   // TODO -- what is a reasonable max?
     rate_field.setMinValue(40);    // TODO -- what is a reasonable min?
     location = (RadioGroup)result.findViewById(R.id.location);
     side = (RadioGroup)result.findViewById(R.id.side);
-    initScreenValues();
 
     if (savedInstanceState != null) {
       // restore saved state (data & screen)
-      id = savedInstanceState.getLong(DatabaseHelper.ID);
       date_time.setTimeInMillis(savedInstanceState.getLong(DatabaseHelper.DATE));
       setDateTimeText();
       systolic_field.setValue(savedInstanceState.getInt(DatabaseHelper.SYSTOLIC));
       diastolic_field.setValue(savedInstanceState.getInt(DatabaseHelper.DIASTOLIC));
       rate_field.setValue(savedInstanceState.getInt(DatabaseHelper.RATE));
+    } else {
+      // get data from myData object
+      updateView();
     }
 
     return(result);
@@ -96,28 +97,23 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     super.onCreateOptionsMenu(menu, inflater);
   }
 
-  public void setRecord(ContentValues rec) {
-    Log.d("debug","setRecord");
-    date_time.setTimeInMillis(rec.getAsLong(DatabaseHelper.DATE));
+  public void updateView() {
+    Log.d("debug","updateView");
+    DataFragment myData;
+    myData = ((Heart)getActivity()).myData;
+    date_time.setTimeInMillis(myData.date_time.getTimeInMillis());
     setDateTimeText();
-    systolic_field.setValue(rec.getAsInteger(DatabaseHelper.SYSTOLIC).intValue());
-    diastolic_field.setValue(rec.getAsInteger(DatabaseHelper.DIASTOLIC).intValue());
-    rate_field.setValue(rec.getAsInteger(DatabaseHelper.RATE).intValue());
-    notes_field.setText(rec.getAsString(DatabaseHelper.NOTES));
-    location.check(rec.getAsBoolean(DatabaseHelper.LOCATION) ? R.id.upperarm : R.id.forearm);
-    side.check(rec.getAsBoolean(DatabaseHelper.SIDE) ? R.id.left : R.id.right);
-  }
-
-  public void setId(Long id) {
-    Log.d("debug","setId: id = " + id);
-    this.id = id;
+    systolic_field.setValue(myData.systolic);
+    diastolic_field.setValue(myData.diastolic);
+    rate_field.setValue(myData.rate);
+    notes_field.setText(myData.notes);
+    location.check(myData.location ? R.id.upperarm : R.id.forearm);
+    side.check(myData.side ? R.id.left : R.id.right);
   }
 
   @Override
   public void onStop() {
-    Log.d("debug","onStop: id = " + id);
-
-    doSave();
+    doSave(true);
     super.onStop();
   }
 
@@ -126,17 +122,10 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     super.onSaveInstanceState(state);
 
     Log.d("debug","onSaveInstanceState");
-    state.putLong(DatabaseHelper.ID,id);
     state.putInt(DatabaseHelper.SYSTOLIC,systolic_field.getValue());
     state.putInt(DatabaseHelper.DIASTOLIC,diastolic_field.getValue());
     state.putInt(DatabaseHelper.RATE,rate_field.getValue());
     state.putLong(DatabaseHelper.DATE,date_time.getTimeInMillis());
-  }
-
-  public void changeRec(Long id) {
-    Log.d("debug","changeRec: id = " + id);
-    this.id = id;
-    DatabaseHelper.getInstance(getActivity()).getRecordAsync(id, this);
   }
 
   @Override
@@ -148,7 +137,7 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     }
     if (item.getItemId() == R.id.add) {
       Log.d("debug","selected add");
-      doAdd();
+      doSave(false); // this will do everything we need
       return(true);
     }
     return(super.onOptionsItemSelected(item));
@@ -172,54 +161,20 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
     }
   }
 
-  private void initData() {
-    Log.d("debug","initData");
-    date_time.setTime(new Date());   // today now
-    id = 0L;
-  }
-  private void initScreenValues() {
-    Log.d("debug","initScreenValues");
-    notes_field.setText("");
-    systolic_field.setValue(SYSTOLIC_INIT_VAL);
-    diastolic_field.setValue(DIASTOLIC_INIT_VAL);
-    rate_field.setValue(PULSE_INIT_VAL);
-    location.check(R.id.upperarm);
-    side.check(R.id.left);
-    setDateTimeText();
-  }
-  
   private void doDelete() {
-
-    if (id != 0) {
-      DatabaseHelper.getInstance(getActivity()).deleteRecordAsync(id);
-    }
-    initData();
-    initScreenValues();
+    ((Heart)getActivity()).myData.doDelete();
   }
   
-  public void doSave() {
-    if (isDirty()) {
-      Log.d ("debug","saving id: " + id);
-      ContentValues rec = new ContentValues();
-      rec.put(DatabaseHelper.ID,id);
-      rec.put(DatabaseHelper.DATE,date_time.getTimeInMillis());
-      rec.put(DatabaseHelper.SYSTOLIC,new Integer(systolic_field.getValue()));
-      rec.put(DatabaseHelper.DIASTOLIC,new Integer(diastolic_field.getValue()));
-      rec.put(DatabaseHelper.RATE,new Integer(rate_field.getValue()));
-      rec.put(DatabaseHelper.NOTES,notes_field.getText().toString());
-      rec.put(DatabaseHelper.LOCATION,location.getCheckedRadioButtonId() == R.id.upperarm);
-      rec.put(DatabaseHelper.SIDE,side.getCheckedRadioButtonId() == R.id.left);
-      DatabaseHelper.getInstance(getActivity()).saveRecordAsync(this, rec);
-      Toast.makeText(getActivity().getApplicationContext(), "Saved Entry", Toast.LENGTH_SHORT).show();
-                         //TODO -- change above UI text to resource
-    }
-  }
-
-  private boolean isDirty() {
-    // if main values are different then their "new" record values then assume record is dirty
-    return (systolic_field.getValue() != SYSTOLIC_INIT_VAL
-              || diastolic_field.getValue() != DIASTOLIC_INIT_VAL
-	      || rate_field.getValue() != PULSE_INIT_VAL);
+  public void doSave(boolean notify) {
+    ContentValues screenValues = new ContentValues();
+    screenValues.put(DatabaseHelper.DATE,date_time.getTimeInMillis());
+    screenValues.put(DatabaseHelper.SYSTOLIC,new Integer(systolic_field.getValue()));
+    screenValues.put(DatabaseHelper.DIASTOLIC,new Integer(diastolic_field.getValue()));
+    screenValues.put(DatabaseHelper.RATE,new Integer(rate_field.getValue()));
+    screenValues.put(DatabaseHelper.NOTES,notes_field.getText().toString());
+    screenValues.put(DatabaseHelper.LOCATION,location.getCheckedRadioButtonId() == R.id.upperarm);
+    screenValues.put(DatabaseHelper.SIDE,side.getCheckedRadioButtonId() == R.id.left);
+    ((Heart)getActivity()).myData.doSave(screenValues,notify);
   }
 
   public void chooseDate(View v) {
@@ -261,12 +216,5 @@ public class EditFragment extends SherlockFragment implements DatabaseHelper.Rec
   private void setDateTimeText() {
     date_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_DATE));
     time_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
-  }
-
-  private void doAdd() {
-    // create new record
-    doSave();  // save existing if needed
-    initData();
-    initScreenValues();
   }
 }

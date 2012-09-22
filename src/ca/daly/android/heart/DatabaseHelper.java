@@ -175,19 +175,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       String[] args={params[0].toString()};
 
       Log.d ("debug", "GetRecordTask: doInBackground args[0]: " + args[0]);
-      Cursor c = getReadableDatabase().query(TABLE,new String[] {DATE,SYSTOLIC,NOTES,DIASTOLIC,RATE,LOCATION,SIDE},"_id = ?",args,null,null,null,"1");
+      Cursor c = getReadableDatabase().query(TABLE,new String[] {ID,DATE,SYSTOLIC,NOTES,DIASTOLIC,RATE,LOCATION,SIDE},"_id = ?",args,null,null,null,"1");
       c.moveToFirst();
       if (c.isAfterLast()) {
 	return(null);
       }
       ContentValues rec = new ContentValues();
-      rec.put(DATE,c.getLong(0));
-      rec.put(SYSTOLIC,c.getInt(1));
-      rec.put(NOTES,c.getString(2));
-      rec.put(DIASTOLIC,c.getInt(3));
-      rec.put(RATE,c.getInt(4));
-      rec.put(LOCATION,c.getInt(5));
-      rec.put(SIDE,c.getInt(6));
+      rec.put(ID,c.getLong(0));
+      rec.put(DATE,c.getLong(1));
+      rec.put(SYSTOLIC,c.getInt(2));
+      rec.put(NOTES,c.getString(3));
+      rec.put(DIASTOLIC,c.getInt(4));
+      rec.put(RATE,c.getInt(5));
+      rec.put(LOCATION,c.getInt(6));
+      rec.put(SIDE,c.getInt(7));
       c.close();
 
       Log.d ("debug","doInBackground returning: " + rec.getAsString(SYSTOLIC) + " " + rec.getAsString(NOTES));
@@ -233,7 +234,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onPostExecute(Long id) {
-      listener.setId(id);
+      if (listener != null) {
+        listener.setId(id);
+      }
     }
   }
 
