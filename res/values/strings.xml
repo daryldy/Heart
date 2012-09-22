@@ -9,4 +9,6 @@
     <string name="graph">Graph</string>
     <string name="on_upgrade_error">This should not be called</string>
     <string name="delete_dlg_title">Delete Record?</string>
+    <string name="saved_entry">Saved Entry</string>
+    <string name="graph_title">Blood Pressure</string>
 </resources>

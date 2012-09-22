@@ -108,7 +108,7 @@ public class Heart extends SherlockFragmentActivity {
                                .authority("ca.daly.android.heart")
 			       .build();
     Intent i = new Intent(Intent.ACTION_VIEW,uri);
-    i.putExtra(Intent.EXTRA_TITLE, "Blood Pressure");
+    i.putExtra(Intent.EXTRA_TITLE, this.getApplicationContext().getString(R.string.graph_title));
 
     // TODO -- continue to try to get pulse to display correctly as a secondary Y axis
     //i.putExtra("com.googlecode.chartdroid.intent.extra.SERIES_LABELS",new String[] {"Systolic","Diastolic","Pulse"});

@@ -98,7 +98,7 @@ public class DataFragment extends SherlockFragment
     if (isDirty(rec)) {
       rec.put(DatabaseHelper.ID,id);
       DatabaseHelper.getInstance(getActivity()).saveRecordAsync((idNotify ? this : null), rec);
-      Toast.makeText(getActivity().getApplicationContext(), "Saved Entry", Toast.LENGTH_LONG).show();
+      Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.saved_entry), Toast.LENGTH_LONG).show();
       updateData(rec);
                          //TODO -- change above UI text to resource
     }
