@@ -18,7 +18,8 @@ public class ListFragment extends SherlockListFragment implements DatabaseHelper
 
     super.onActivityCreated(savedInstanceState);
 
-    DatabaseHelper.getInstance(getActivity()).loadListAsync(this);
+    updateList();
+    getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
   }
 
   @Override
@@ -33,10 +34,14 @@ public class ListFragment extends SherlockListFragment implements DatabaseHelper
   @Override
   public void onListItemClick(ListView l, View v, int position, long id) {
     Log.d("debug","clicked position: " + position + " id: " + id);
-    ((ListActivity)getActivity()).RecordSelect(id);
+    ((ListSelectListener)getActivity()).RecordSelect(id);
   }
 
   interface ListSelectListener {
     void RecordSelect(long id);
+  }
+
+  public void updateList() {
+    DatabaseHelper.getInstance(getActivity()).loadListAsync(this);
   }
 }

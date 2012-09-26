@@ -13,11 +13,14 @@ import android.net.Uri;
 import android.content.ContentResolver;
 import java.util.ArrayList;
 
-public class Heart extends SherlockFragmentActivity {
+public class Heart extends SherlockFragmentActivity 
+                   implements ListFragment.ListSelectListener,
+		              DatabaseHelper.RecordChangedListener {
   static final int REC_REQUEST=5001;
   private static final String DATA_FRAG="Data Fragment";
   public DataFragment myData;  // TODO -- s/b private
   public EditFragment myViewer;  // TODO -- s/b private
+  public ListFragment myList;  // TODO -- s/b private
 
   /** Called when the activity is first created. */
   @Override
@@ -47,6 +50,18 @@ public class Heart extends SherlockFragmentActivity {
     } else {
       Log.d ("debug","Heart Activity: onCreate: edit fragment still exists");
     }
+
+    myList = (ListFragment)getSupportFragmentManager().findFragmentById(R.id.reclist);
+    if (myList == null && findViewById(R.id.reclist) != null) {
+      Log.d ("debug","Heart Activity: onCreate: setting up new list fragment");
+      myList = new ListFragment();
+      getSupportFragmentManager().beginTransaction()
+                                 .add(R.id.reclist, myList)
+				 .commit();
+      DatabaseHelper.getInstance(this).addRecordChangedListener(this);  // need to keep list updated with record changes
+    } else {
+      Log.d ("debug","Heart Activity: onCreate: edit fragment still exists");
+    }
   }
 
   @Override
@@ -60,13 +75,12 @@ public class Heart extends SherlockFragmentActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     Intent i = null;
 
-    EditFragment editfrag = (EditFragment)getSupportFragmentManager().findFragmentById(R.id.editfrag_container);
     switch (item.getItemId()) {
       case android.R.id.home:
 	return (true);
       case R.id.edit:
         i=new Intent(this, ListActivity.class);
-	editfrag.doSave(true);   // ensure current record is updated to db so list can show it
+	myViewer.doSave(true);   // ensure current record is updated to db so list can show it
 	startActivityForResult(i,REC_REQUEST);
 	return (true);
       case R.id.about:
@@ -78,7 +92,7 @@ public class Heart extends SherlockFragmentActivity {
 	startActivity(i);
 	return (true);
       case R.id.graph:
-	editfrag.doSave(true);   // ensure current record is updated to db so it can be graphed
+	myViewer.doSave(true);   // ensure current record is updated to db so it can be graphed
         startGraph();
     }
 
@@ -124,5 +138,19 @@ public class Heart extends SherlockFragmentActivity {
     i.putExtra("com.googlecode.chartdroid.intent.extra.FORMAT_STRING_Y","%.0f");
     //i.putExtra("com.googlecode.chartdroid.intent.extra.FORMAT_STRING_Y_SECONDARY","%.0f");
     startActivity(i);
+  }
+
+  public void RecordSelect(long id) {
+    myViewer.doSave(false);   // ensure current record is updated to db before switch to another one
+    myData.newID(id);
+  }
+  
+  public void recordChanged(Long id) {
+    // a record (id) has changed (could be value(s) changed or could be deleted)
+    // for now just refresh the list (if there is one)  TODO -- might be better if could just update the given record
+    Log.d ("DEBUG","recordChanged: id = " + id);
+    if (myList != null) {
+      myList.updateList();
+    }
   }
 }

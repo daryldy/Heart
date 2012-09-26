@@ -12,6 +12,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.util.Log;
 import android.text.format.DateUtils;
+import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
   private static final String DATABASE_NAME="heart.db";
@@ -27,6 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   static final String NOTES="notes";
   static final String LOCATION="location";
   static final String SIDE="side";
+  private ArrayList<RecordChangedListener> recordChangedListeners = new ArrayList<RecordChangedListener>();
 
   synchronized static DatabaseHelper getInstance(Context ctxt) {
     if (singleton == null) {
@@ -96,6 +98,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
   }
 
+  interface RecordChangedListener {
+    void recordChanged(Long id);
+  }
+
   interface RecordListener{
     void setRecord(ContentValues rec);
     void setId(Long id);
@@ -103,6 +109,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   interface ListAdapterListener {
     void setListAdapter(ListAdapter adapter);
+  }
+
+  public void addRecordChangedListener(RecordChangedListener listener) {
+    Log.d ("debug", "addRecordChangedListener");
+    recordChangedListeners.add(listener);
   }
 
   void loadListAsync(ListAdapterListener listener) {
@@ -250,6 +261,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       if (listener != null) {
         listener.setId(id);
       }
+
+      for (RecordChangedListener lnr: recordChangedListeners) {
+        lnr.recordChanged(id);
+      }
     }
   }
 
@@ -257,13 +272,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     new DeleteRecordTask().execute(id);
   }
 
-  private class DeleteRecordTask extends AsyncTask<Long, Void, Void> {
+  private class DeleteRecordTask extends AsyncTask<Long, Void, Long> {
     @Override
-    protected Void doInBackground(Long... params) {
-      String[] arg={params[0].toString()};
+    protected Long doInBackground(Long... params) {
+      Long id = params[0];
+      String[] arg={id.toString()};
 
       getWritableDatabase().delete(TABLE,"_id = ?",arg);
-      return(null);
+      return(id);
+    }
+    
+    @Override
+    public void onPostExecute(Long id) {
+      Log.d ("DEBUG","DeleteRecordTask: onPostExecute");
+      for (RecordChangedListener lnr: recordChangedListeners) {
+        Log.d ("DEBUG","DeleteRecordTask: onPostExecute: sending notification");
+        lnr.recordChanged(id);
+      }
     }
   }
 }
