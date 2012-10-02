@@ -12,6 +12,8 @@ import android.util.Log;
 import android.net.Uri;
 import android.content.ContentResolver;
 import java.util.ArrayList;
+import android.support.v4.app.FragmentTransaction;
+
 
 public class Heart extends SherlockFragmentActivity 
                    implements ListFragment.ListSelectListener,
@@ -135,7 +137,15 @@ public class Heart extends SherlockFragmentActivity
   }
 
   public void RecordSelect(long id) {
-    myViewer.doSave(false);   // ensure current record is updated to db before switch to another one
+    //myViewer.doSave(false);   // ensure current record is updated to db before switch to another one
+    Log.d ("DEBUG","RecordSelect: new EditFragment id = " + id);
+    myViewer = new EditFragment();
+				 //.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out,android.R.anim.fade_in,android.R.anim.fade_out)
+				 //.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+    getSupportFragmentManager().beginTransaction()
+				 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                 .replace(R.id.editfrag_container, myViewer)
+				 .commit();
     myData.newID(id);
   }
   

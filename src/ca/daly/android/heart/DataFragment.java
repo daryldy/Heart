@@ -175,6 +175,9 @@ public class DataFragment extends SherlockFragment
   }
 
   private void updateViewer() {
-    ((Heart)getActivity()).myViewer.updateView();
+    // TODO -- probably a better way to do this
+    if (((Heart)getActivity()).myViewer != null) {
+      ((Heart)getActivity()).myViewer.updateView();
+    }
   }
 }
