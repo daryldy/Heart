@@ -25,15 +25,30 @@ public class DataFragment extends SherlockFragment
   public Boolean side;
 
   @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    initialize();
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater,
                            ViewGroup container,
 			   Bundle savedInstanceState) {
-    initialize();
+    setRetainInstance(true);
     if (savedInstanceState != null) {
       // restore saved state (data & screen)
+      Log.d("debug","DataFragment: restoring instance state");
       id = savedInstanceState.getLong(DatabaseHelper.ID);
+      systolic = savedInstanceState.getInt(DatabaseHelper.SYSTOLIC);
+      diastolic = savedInstanceState.getInt(DatabaseHelper.DIASTOLIC);
+      pulse = savedInstanceState.getInt(DatabaseHelper.PULSE);
+      date_time.setTimeInMillis(savedInstanceState.getLong(DatabaseHelper.DATE));
+      notes = savedInstanceState.getString(DatabaseHelper.NOTES);
+      location = savedInstanceState.getBoolean(DatabaseHelper.LOCATION);
+      side = savedInstanceState.getBoolean(DatabaseHelper.SIDE);
     }
 
+    Log.d("debug","DataFragment: onCreateView: date_time: " + date_time.getTimeInMillis());
     return (null);   // this is fragment is for data only -- no UI
   }
 
@@ -43,10 +58,18 @@ public class DataFragment extends SherlockFragment
 
     Log.d("debug","DataFragment: onSaveInstanceState");
     state.putLong(DatabaseHelper.ID,id);
+    state.putInt(DatabaseHelper.SYSTOLIC,systolic);
+    state.putInt(DatabaseHelper.DIASTOLIC,diastolic);
+    state.putInt(DatabaseHelper.PULSE,pulse);
+    state.putLong(DatabaseHelper.DATE,date_time.getTimeInMillis());
+    state.putString(DatabaseHelper.NOTES,notes);
+    state.putBoolean(DatabaseHelper.LOCATION,location);
+    state.putBoolean(DatabaseHelper.SIDE,side);
   }
 
   @Override
   public void onStop() {
+    Log.d("debug","DataFragment: doStop");
     doSave();
     super.onStop();
   }
@@ -145,7 +168,10 @@ public class DataFragment extends SherlockFragment
   }
 
   private void initialize() {
+    Log.d("debug","DataFragment: initialize");
     id = 0L;
+
+    // TODO -- better way to set initial values??
     date_time.setTime(new Date());  // today now
     systolic = 121;
     diastolic = 81;

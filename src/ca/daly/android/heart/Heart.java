@@ -60,7 +60,7 @@ public class Heart extends SherlockFragmentActivity
 				 .commit();
       DatabaseHelper.getInstance(this).addRecordChangedListener(this);  // need to keep list updated with record changes
     } else {
-      Log.d ("debug","Heart Activity: onCreate: edit fragment still exists");
+      Log.d ("debug","Heart Activity: onCreate: list fragment still exists");
     }
   }
 

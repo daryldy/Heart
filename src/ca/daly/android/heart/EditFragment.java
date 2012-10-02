@@ -87,6 +87,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
       updateView();
     }
 
+    Log.d("debug","EditFragment: onCreateView: date_time: " + date_time.getTimeInMillis());
     return(result);
   }
 
@@ -113,6 +114,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
 
   @Override
   public void onStop() {
+    Log.d("debug","EditFragment: doStop");
     doSave(true);
     super.onStop();
   }
