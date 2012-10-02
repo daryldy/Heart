@@ -107,12 +107,6 @@ public class Heart extends SherlockFragmentActivity
     }
   }
 
-  @Override
-  public void onStop() {
-    super.onStop();
-    Log.d ("debug","Heart Activity: onStop");
-  }
-
   interface idChangeListener {
     void newID(Long id);
   }

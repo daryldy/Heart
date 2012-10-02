@@ -67,13 +67,6 @@ public class DataFragment extends SherlockFragment
     state.putBoolean(DatabaseHelper.SIDE,side);
   }
 
-  @Override
-  public void onStop() {
-    Log.d("debug","DataFragment: doStop");
-    doSave();
-    super.onStop();
-  }
-
   public void setRecord(ContentValues new_rec) {
     id = new_rec.getAsLong(DatabaseHelper.ID);
     Log.d("debug","DataFragment: setRecord: id =" + id);

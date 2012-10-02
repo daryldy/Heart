@@ -113,10 +113,10 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
   }
 
   @Override
-  public void onStop() {
-    Log.d("debug","EditFragment: doStop");
+  public void onPause() {
+    Log.d("debug","EditFragment: onPause");
     doSave(true);
-    super.onStop();
+    super.onPause();
   }
 
   @Override
