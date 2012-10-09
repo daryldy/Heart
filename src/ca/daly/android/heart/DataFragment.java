@@ -13,7 +13,7 @@ import java.util.Date;
 
 public class DataFragment extends SherlockFragment 
                           implements DatabaseHelper.RecordListener,
-			             Heart.idChangeListener {
+				     DataStore {
 
   private Long id = 0L;  // current record's id (0 = not set)
   public Calendar date_time = Calendar.getInstance();
@@ -23,6 +23,8 @@ public class DataFragment extends SherlockFragment
   public String notes;
   public Boolean location;
   public Boolean side;
+  private Long currentReqTrackNo;
+  private EditFragment viewer = null;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,20 @@ public class DataFragment extends SherlockFragment
     state.putBoolean(DatabaseHelper.SIDE,side);
   }
 
+  public ContentValues Get() {
+    ContentValues rtrnVal = new ContentValues();
+    Log.d("debug","DataFragment: Get");
+    rtrnVal.put(DatabaseHelper.ID,id);
+    rtrnVal.put(DatabaseHelper.SYSTOLIC,systolic);
+    rtrnVal.put(DatabaseHelper.DIASTOLIC,diastolic);
+    rtrnVal.put(DatabaseHelper.PULSE,pulse);
+    rtrnVal.put(DatabaseHelper.DATE,date_time.getTimeInMillis());
+    rtrnVal.put(DatabaseHelper.NOTES,notes);
+    rtrnVal.put(DatabaseHelper.LOCATION,location);
+    rtrnVal.put(DatabaseHelper.SIDE,side);
+    return rtrnVal;
+  }
+
   public void setRecord(ContentValues new_rec) {
     id = new_rec.getAsLong(DatabaseHelper.ID);
     Log.d("debug","DataFragment: setRecord: id =" + id);
@@ -85,43 +101,32 @@ public class DataFragment extends SherlockFragment
   }
 
 
-  public void setId(Long id) {
-    this.id = id;
+  public void setId(Long id, Long requestTrackNo) {
+    if (currentReqTrackNo.equals(requestTrackNo)) {
+      // still on the sames record
+      this.id = id;
+    }
   }
 
-  public void newID(Long id) {
-    DatabaseHelper.getInstance(getActivity()).getRecordAsync(id, this);
+  public void SwitchRecord(Long id) {
+    Log.d("debug","SwitchRecord: id = " + id);
+    if (id.equals(0L)) {
+      // new record
+      Log.d("debug","SwitchRecord: initializing");
+      initialize();
+    } else {
+      Log.d("debug","SwitchRecord: loading record");
+      DatabaseHelper.getInstance(getActivity()).getRecordAsync(id, this);
+    }
   }
 
-  public void doSave() {
-    ContentValues rec = new ContentValues();
-    rec.put(DatabaseHelper.DATE,date_time.getTimeInMillis());
-    rec.put(DatabaseHelper.SYSTOLIC,systolic);
-    rec.put(DatabaseHelper.DIASTOLIC,diastolic);
-    rec.put(DatabaseHelper.PULSE,pulse);
-    rec.put(DatabaseHelper.NOTES,notes);
-    rec.put(DatabaseHelper.LOCATION,location);
-    rec.put(DatabaseHelper.SIDE,side);
-
-    doSave(rec,true);
-  }
-
-  public void doSave(ContentValues rec) {
-    doSave(rec,true);
-  }
-
-  public void doSave(ContentValues rec,boolean idNotify) {
+  public void Put(ContentValues rec) { 
     if (isDirty(rec)) {
+      Log.d ("debug","doSave: saving record");
       rec.put(DatabaseHelper.ID,id);
-      DatabaseHelper.getInstance(getActivity()).saveRecordAsync((idNotify ? this : null), rec);
+      currentReqTrackNo = DatabaseHelper.getInstance(getActivity()).SaveRecordAsync(this,rec);
       Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.saved_entry), Toast.LENGTH_LONG).show();
       updateData(rec);
-                         //TODO -- change above UI text to resource
-    }
-    if (! idNotify) {
-      // don't want notification so must be finished with this record
-      initialize();
-      updateViewer();
     }
   }
 
@@ -175,9 +180,12 @@ public class DataFragment extends SherlockFragment
   }
 
   private void updateViewer() {
-    // TODO -- probably a better way to do this
-    if (((Heart)getActivity()).myViewer != null) {
-      ((Heart)getActivity()).myViewer.updateView();
+    if (viewer != null) {
+      viewer.updateView();
     }
+  }
+
+  public void SetViewer(EditFragment viewer) {
+    this.viewer = viewer;
   }
 }

@@ -29,6 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   static final String LOCATION="location";
   static final String SIDE="side";
   private ArrayList<RecordChangedListener> recordChangedListeners = new ArrayList<RecordChangedListener>();
+  private Long requestSerialNo = 1L;
 
   synchronized static DatabaseHelper getInstance(Context ctxt) {
     if (singleton == null) {
@@ -104,7 +105,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   interface RecordListener{
     void setRecord(ContentValues rec);
-    void setId(Long id);
+    void setId(Long id,Long requestSerialNo);
   }
 
   interface ListAdapterListener {
@@ -225,15 +226,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
   }
 
-  void saveRecordAsync(RecordListener listener,ContentValues rec) {
-    new SaveRecordTask(listener).execute(rec);
+  public Long SaveRecordAsync(RecordListener listener,ContentValues rec) {
+    Long serialNo = getNewSerialNo();
+    new SaveRecordTask(listener,serialNo).execute(rec);
+    return serialNo;
   }
 
   private class SaveRecordTask extends AsyncTask<ContentValues, Void, Long> {
     private RecordListener listener = null;
+    private Long serialNo;
     
-    SaveRecordTask(RecordListener listener) {
+    SaveRecordTask(RecordListener listener,Long serialNo) {
       this.listener=listener;
+      this.serialNo = serialNo;
     }
 
     @Override
@@ -259,7 +264,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onPostExecute(Long id) {
       if (listener != null) {
-        listener.setId(id);
+        listener.setId(id,serialNo);
       }
 
       for (RecordChangedListener lnr: recordChangedListeners) {
@@ -290,5 +295,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         lnr.recordChanged(id);
       }
     }
+  }
+
+  private Long getNewSerialNo() {
+    requestSerialNo++;
+    Log.d("debug","getNewSerialNo: issued new serial number: " + requestSerialNo);
+    return requestSerialNo;
   }
 }

@@ -41,12 +41,13 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
   private RadioGroup location;
   private RadioGroup side;
   private Calendar date_time = Calendar.getInstance();
+  private DataStore myData;
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
-    setHasOptionsMenu(true);
+    //setHasOptionsMenu(true);
   }
 
 
@@ -56,6 +57,8 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
   			   Bundle savedInstanceState) {
 
     setRetainInstance(false);
+    myData = ((Heart)getActivity()).GetDataStore();
+    myData.SetViewer(this);
     View result = inflater.inflate(R.layout.editfrag, null, false);
 
     date_field = (Button)result.findViewById(R.id.date);
@@ -91,31 +94,32 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
     return(result);
   }
 
-  @Override
-  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.edit_actions, menu);
+  //@Override
+  //public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    //inflater.inflate(R.menu.edit_actions, menu);
 
-    super.onCreateOptionsMenu(menu, inflater);
-  }
+    //super.onCreateOptionsMenu(menu, inflater);
+  //}
 
   public void updateView() {
     Log.d("debug","updateView");
-    DataFragment myData;
-    myData = ((Heart)getActivity()).myData;
-    date_time.setTimeInMillis(myData.date_time.getTimeInMillis());
+
+    ContentValues dataValues;
+    dataValues = myData.Get();
+    date_time.setTimeInMillis(dataValues.getAsLong(DatabaseHelper.DATE));
     setDateTimeText();
-    systolic_field.setValue(myData.systolic);
-    diastolic_field.setValue(myData.diastolic);
-    pulse_field.setValue(myData.pulse);
-    notes_field.setText(myData.notes);
-    location.check(myData.location ? R.id.upperarm : R.id.forearm);
-    side.check(myData.side ? R.id.left : R.id.right);
+    systolic_field.setValue(dataValues.getAsInteger(DatabaseHelper.SYSTOLIC));
+    diastolic_field.setValue(dataValues.getAsInteger(DatabaseHelper.DIASTOLIC));
+    pulse_field.setValue(dataValues.getAsInteger(DatabaseHelper.PULSE));
+    notes_field.setText(dataValues.getAsString(DatabaseHelper.NOTES));
+    location.check(dataValues.getAsBoolean(DatabaseHelper.LOCATION) ? R.id.upperarm : R.id.forearm);
+    side.check(dataValues.getAsBoolean(DatabaseHelper.SIDE) ? R.id.left : R.id.right);
   }
 
   @Override
   public void onPause() {
     Log.d("debug","EditFragment: onPause");
-    doSave(true);
+    doSave();
     super.onPause();
   }
 
@@ -132,23 +136,25 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.delete) {
-      Log.d("debug","selected delete");
-      new DeleteDialog().show(getActivity().getSupportFragmentManager(),"delete");
-      return(true);
-    }
-    if (item.getItemId() == R.id.add) {
-      Log.d("debug","selected add");
-      doSave(false); // this will do everything we need
-      return(true);
-    }
+    // TODO -- reimplement in Heart Activity
+    //if (item.getItemId() == R.id.delete) {
+      //Log.d("debug","selected delete");
+      //new DeleteDialog().show(getActivity().getSupportFragmentManager(),"delete");
+      //return(true);
+    //}
+    //if (item.getItemId() == R.id.add) {
+      //Log.d("debug","selected add");
+      //doSave(false); // this will do everything we need
+      //return(true);
+    //}
     return(super.onOptionsItemSelected(item));
   }
 
   @Override
   public void onClick(DialogInterface dialog, int which) {
     // assuming that this is for the delete dialog -- TODO -- how to ensure it is??
-    doDelete();
+    // TODO -- reimplement in Heart Activity
+    //((Heart)getActivity()).myData.doDelete();
   }
 
   @Override
@@ -163,11 +169,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
     }
   }
 
-  private void doDelete() {
-    ((Heart)getActivity()).myData.doDelete();
-  }
-  
-  public void doSave(boolean notify) {
+  public void doSave() {
     ContentValues screenValues = new ContentValues();
     screenValues.put(DatabaseHelper.DATE,date_time.getTimeInMillis());
     screenValues.put(DatabaseHelper.SYSTOLIC,new Integer(systolic_field.getValue()));
@@ -176,7 +178,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
     screenValues.put(DatabaseHelper.NOTES,notes_field.getText().toString());
     screenValues.put(DatabaseHelper.LOCATION,location.getCheckedRadioButtonId() == R.id.upperarm);
     screenValues.put(DatabaseHelper.SIDE,side.getCheckedRadioButtonId() == R.id.left);
-    ((Heart)getActivity()).myData.doSave(screenValues,notify);
+    myData.Put(screenValues);
   }
 
   public void chooseDate(View v) {
@@ -218,5 +220,9 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
   private void setDateTimeText() {
     date_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_DATE));
     time_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
+  }
+
+  interface DataStorage {
+    DataStore GetDataStore();
   }
 }

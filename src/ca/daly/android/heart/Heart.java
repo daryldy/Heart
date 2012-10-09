@@ -17,30 +17,31 @@ import android.support.v4.app.FragmentTransaction;
 
 public class Heart extends SherlockFragmentActivity 
                    implements ListFragment.ListSelectListener,
+		              EditFragment.DataStorage,
 		              DatabaseHelper.RecordChangedListener {
   static final int REC_REQUEST=5001;
   private static final String DATA_FRAG="Data Fragment";
-  public DataFragment myData;  // TODO -- s/b private
-  public EditFragment myViewer;  // TODO -- s/b private
-  public ListFragment myList;  // TODO -- s/b private
+  private DataStore myData;
+  private EditFragment myViewer;
+  private ListFragment myList;
 
-  /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
 
-    myData = (DataFragment)getSupportFragmentManager().findFragmentByTag(DATA_FRAG);
-    if (myData == null) {
+    DataFragment myDataFrag = (DataFragment)getSupportFragmentManager().findFragmentByTag(DATA_FRAG);
+    if (myDataFrag == null) {
       Log.d ("debug","Heart Activity: onCreate: setting up new data fragment");
-      myData = new DataFragment();
+      myDataFrag = new DataFragment();
       getSupportFragmentManager().beginTransaction()
-                                 .add(myData,DATA_FRAG)
+                                 .add(myDataFrag,DATA_FRAG)
 				 .commit();
     } else {
       Log.d ("debug","Heart Activity: onCreate: data fragment still exists");
     }
+    myData = (DataStore)myDataFrag;
 
     myViewer = (EditFragment)getSupportFragmentManager().findFragmentById(R.id.editfrag_container);
     if (myViewer == null) {
@@ -82,7 +83,7 @@ public class Heart extends SherlockFragmentActivity
 	return (true);
       case R.id.edit:
         i=new Intent(this, ListActivity.class);
-	myViewer.doSave(true);   // ensure current record is updated to db so list can show it
+	myViewer.doSave();   // ensure current record is updated to db so list can show it
 	startActivityForResult(i,REC_REQUEST);
 	return (true);
       case R.id.about:
@@ -94,8 +95,10 @@ public class Heart extends SherlockFragmentActivity
 	startActivity(i);
 	return (true);
       case R.id.graph:
-	myViewer.doSave(true);   // ensure current record is updated to db so it can be graphed
+	myViewer.doSave();   // ensure current record is updated to db so it can be graphed
         startGraph();
+      case R.id.add:
+	RecordSelect(0L);
     }
 
     return(super.onOptionsItemSelected(item));
@@ -105,12 +108,8 @@ public class Heart extends SherlockFragmentActivity
   public void onActivityResult(int requestCode, int resultCode, Intent data){
     if (requestCode == REC_REQUEST && resultCode == SherlockFragmentActivity.RESULT_OK) {
       Log.d ("debug", "got activity result: " + data.getExtras().get("ca.daly.android.heart.REC_ID"));
-      myData.newID(data.getLongExtra("ca.daly.android.heart.REC_ID",0));
+      myData.SwitchRecord(data.getLongExtra("ca.daly.android.heart.REC_ID",0));
     }
-  }
-
-  interface idChangeListener {
-    void newID(Long id);
   }
 
   private void startGraph() {
@@ -139,6 +138,11 @@ public class Heart extends SherlockFragmentActivity
   public void RecordSelect(long id) {
     //myViewer.doSave(false);   // ensure current record is updated to db before switch to another one
     Log.d ("DEBUG","RecordSelect: new EditFragment id = " + id);
+    switchNewEditFrag();
+    myData.SwitchRecord(id);
+  }
+  
+  private void switchNewEditFrag() {
     myViewer = new EditFragment();
 				 //.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out,android.R.anim.fade_in,android.R.anim.fade_out)
 				 //.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -146,9 +150,9 @@ public class Heart extends SherlockFragmentActivity
 				 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                                  .replace(R.id.editfrag_container, myViewer)
 				 .commit();
-    myData.newID(id);
   }
-  
+
+
   public void recordChanged(Long id) {
     // a record (id) has changed (could be value(s) changed or could be deleted)
     // for now just refresh the list (if there is one)  TODO -- might be better if could just update the given record
@@ -156,5 +160,9 @@ public class Heart extends SherlockFragmentActivity
     if (myList != null) {
       myList.updateList();
     }
+  }
+
+  public DataStore GetDataStore() {
+    return myData;
   }
 }
