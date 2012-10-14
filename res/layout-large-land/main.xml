@@ -9,11 +9,22 @@
     android:layout_weight="30"
     android:layout_width="0px"
     android:layout_height="match_parent"
+    android:layout_marginRight="5dp"
   />
+  <ImageView
+    android:src="@drawable/divider_vertical_holo_dark"
+    android:layout_width="1dp"
+    android:layout_height="fill_parent"
+    android:scaleType="fitXY"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp" />
   <FrameLayout
     android:id="@+id/editfrag_container"
-    android:layout_weight="70"
+    android:layout_weight="65"
     android:layout_width="0px"
     android:layout_height="match_parent"
+    android:layout_marginLeft="5dp"
   />
 </LinearLayout>
