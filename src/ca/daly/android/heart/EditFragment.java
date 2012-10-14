@@ -29,6 +29,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
                                                               // Heart.EditListener,
 							      DialogInterface.OnClickListener,
 							      View.OnClickListener {
+  private static final String TAG = "EditFragment";
   private static final int SYSTOLIC_INIT_VAL = 120;
   private static final int DIASTOLIC_INIT_VAL = 80;
   private static final int PULSE_INIT_VAL = 70;
@@ -41,13 +42,13 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
   private RadioGroup location;
   private RadioGroup side;
   private Calendar date_time = Calendar.getInstance();
-  private DataStore myData;
+  private EditData myData;
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
-    //setHasOptionsMenu(true);
+    setHasOptionsMenu(true);
   }
 
 
@@ -56,9 +57,13 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
                            ViewGroup container,
   			   Bundle savedInstanceState) {
 
-    setRetainInstance(false);
-    myData = ((Heart)getActivity()).GetDataStore();
-    myData.SetViewer(this);
+    setRetainInstance(true);
+    Long id = 0L;
+    if (getArguments() != null) {
+      id = getArguments().getLong("id",0L);
+    }
+    myData = new EditData(getActivity(),id, this);
+
     View result = inflater.inflate(R.layout.editfrag, null, false);
 
     date_field = (Button)result.findViewById(R.id.date);
@@ -90,19 +95,19 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
       updateView();
     }
 
-    Log.d("debug","EditFragment: onCreateView: date_time: " + date_time.getTimeInMillis());
+    Log.v(TAG,"onCreateView: date_time: " + date_time.getTimeInMillis());
     return(result);
   }
 
-  //@Override
-  //public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    //inflater.inflate(R.menu.edit_actions, menu);
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.edit_actions, menu);
 
-    //super.onCreateOptionsMenu(menu, inflater);
-  //}
+    super.onCreateOptionsMenu(menu, inflater);
+  }
 
   public void updateView() {
-    Log.d("debug","updateView");
+    Log.v(TAG,"updateView");
 
     ContentValues dataValues;
     dataValues = myData.Get();
@@ -118,7 +123,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
 
   @Override
   public void onPause() {
-    Log.d("debug","EditFragment: onPause");
+    Log.v(TAG,"onPause");
     doSave();
     super.onPause();
   }
@@ -127,7 +132,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
   public void onSaveInstanceState(Bundle state) {
     super.onSaveInstanceState(state);
 
-    Log.d("debug","onSaveInstanceState");
+    Log.v(TAG,"onSaveInstanceState");
     state.putInt(DatabaseHelper.SYSTOLIC,systolic_field.getValue());
     state.putInt(DatabaseHelper.DIASTOLIC,diastolic_field.getValue());
     state.putInt(DatabaseHelper.PULSE,pulse_field.getValue());
@@ -136,25 +141,22 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    // TODO -- reimplement in Heart Activity
-    //if (item.getItemId() == R.id.delete) {
-      //Log.d("debug","selected delete");
-      //new DeleteDialog().show(getActivity().getSupportFragmentManager(),"delete");
-      //return(true);
-    //}
-    //if (item.getItemId() == R.id.add) {
-      //Log.d("debug","selected add");
-      //doSave(false); // this will do everything we need
-      //return(true);
-    //}
+    if (item.getItemId() == R.id.delete) {
+      Log.v(TAG,"selected delete");
+      new DeleteDialog().show(getActivity().getSupportFragmentManager(),"delete");
+      return(true);
+    }
     return(super.onOptionsItemSelected(item));
   }
 
   @Override
   public void onClick(DialogInterface dialog, int which) {
     // assuming that this is for the delete dialog -- TODO -- how to ensure it is??
-    // TODO -- reimplement in Heart Activity
-    //((Heart)getActivity()).myData.doDelete();
+    myData.doDelete();
+    myData = new EditData(getActivity(),0L,this); // new data object for now new record
+        // TODO should this really be implemented in the Heart activity so
+	//      edit fragment can be transitioned to a new one???
+    updateView();
   }
 
   @Override
@@ -222,7 +224,4 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
     time_field.setText(DateUtils.formatDateTime(getActivity(), date_time.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
   }
 
-  interface DataStorage {
-    DataStore GetDataStore();
-  }
 }

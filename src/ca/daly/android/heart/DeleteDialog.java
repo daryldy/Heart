@@ -9,16 +9,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class DeleteDialog extends DialogFragment { // implements DialogInterface.OnClickListener {
+public class DeleteDialog extends DialogFragment {
   private View dia=null;
 
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
-    //dia = getActivity().getLayoutInflater().inflate(R.layout.delete_dialog, null);
 
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-    //return(builder.setTitle(R.string.delete_dlg_title).setView(dia)
     return(builder.setMessage(R.string.delete_dlg_title)
                   .setPositiveButton(android.R.string.ok, (DialogInterface.OnClickListener)getActivity()
 		                                                 .getSupportFragmentManager()

@@ -15,6 +15,7 @@ import android.text.format.DateUtils;
 import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+  private static final String TAG = "DatabaseHelper";
   private static final String DATABASE_NAME="heart.db";
   private static final int SCHEMA_VERSION=4;
   private static DatabaseHelper singleton=null;
@@ -105,7 +106,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   interface RecordListener{
     void setRecord(ContentValues rec);
-    void setId(Long id,Long requestSerialNo);
+    void setId(Long id);
   }
 
   interface ListAdapterListener {
@@ -113,8 +114,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   }
 
   public void addRecordChangedListener(RecordChangedListener listener) {
-    Log.d ("debug", "addRecordChangedListener");
     recordChangedListeners.add(listener);
+    Log.v (TAG, "addRecordChangedListener: size = " + recordChangedListeners.size());
+  }
+
+  public void removeRecordChangedListener(RecordChangedListener listener) {
+    recordChangedListeners.remove(listener);
+    Log.v (TAG, "removeRecordChangedListener: size = " + recordChangedListeners.size());
   }
 
   void loadListAsync(ListAdapterListener listener) {
@@ -133,8 +139,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     protected Void doInBackground(Void... params) {
       heartCursor = getReadableDatabase().query(TABLE,new String[] {ID,SYSTOLIC,DIASTOLIC,PULSE,DATE},null,null,null,null,"date desc");
-                                        // TODO -- should really be using columns value plus ID
-				        //         -- java seems make this harder then it should be!!!!
+                               // TODO -- should really be using columns value plus ID
+			       //         -- java seems make this harder then it should be!!!!
       heartCursor.getCount();  // force query to execute
 
       return(null);
@@ -199,7 +205,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     protected ContentValues doInBackground (Long... params) {
       String[] args={params[0].toString()};
 
-      Log.d ("debug", "GetRecordTask: doInBackground args[0]: " + args[0]);
+      Log.v (TAG, "GetRecordTask: doInBackground args[0]: " + args[0]);
       Cursor c = getReadableDatabase().query(TABLE,new String[] {ID,DATE,SYSTOLIC,NOTES,DIASTOLIC,PULSE,LOCATION,SIDE},"_id = ?",args,null,null,null,"1");
       c.moveToFirst();
       if (c.isAfterLast()) {
@@ -216,7 +222,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       rec.put(SIDE,c.getInt(7));
       c.close();
 
-      Log.d ("debug","doInBackground returning: " + rec.getAsString(SYSTOLIC) + " " + rec.getAsString(NOTES));
+      Log.v (TAG,"doInBackground returning: " + rec.getAsString(SYSTOLIC) + " " + rec.getAsString(NOTES));
       return (rec);
     }
 
@@ -249,22 +255,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       vals = params[0];
 
       if (vals.getAsLong(ID) == 0) {
-        Log.d ("debug", "SaveRecordTask: new record");
+        Log.v (TAG, "SaveRecordTask: new record");
 	vals.remove(ID);
 	result = getWritableDatabase().insert(TABLE,null,vals);
       } else {
-        Log.d ("debug", "SaveRecordTask: update record");
+        Log.v (TAG, "SaveRecordTask: update record");
 	result = getWritableDatabase().replace(TABLE,null,vals);
       }
 
-      Log.d("debug","Finished insert/replace: result = " + result.toString());
+      Log.v(TAG,"Finished insert/replace: result = " + result.toString());
       return(result);
     }
 
     @Override
     public void onPostExecute(Long id) {
       if (listener != null) {
-        listener.setId(id,serialNo);
+        listener.setId(id);
       }
 
       for (RecordChangedListener lnr: recordChangedListeners) {
@@ -289,9 +295,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     
     @Override
     public void onPostExecute(Long id) {
-      Log.d ("DEBUG","DeleteRecordTask: onPostExecute");
+      Log.v (TAG,"DeleteRecordTask: onPostExecute");
       for (RecordChangedListener lnr: recordChangedListeners) {
-        Log.d ("DEBUG","DeleteRecordTask: onPostExecute: sending notification");
+        Log.v (TAG,"DeleteRecordTask: onPostExecute: sending notification");
         lnr.recordChanged(id);
       }
     }
@@ -299,7 +305,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   private Long getNewSerialNo() {
     requestSerialNo++;
-    Log.d("debug","getNewSerialNo: issued new serial number: " + requestSerialNo);
+    Log.v(TAG,"getNewSerialNo: issued new serial number: " + requestSerialNo);
     return requestSerialNo;
   }
 }

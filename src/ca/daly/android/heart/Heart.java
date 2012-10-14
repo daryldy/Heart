@@ -14,14 +14,15 @@ import android.content.ContentResolver;
 import java.util.ArrayList;
 import android.support.v4.app.FragmentTransaction;
 
-
+/**
+ * Main application activity
+ */
 public class Heart extends SherlockFragmentActivity 
                    implements ListFragment.ListSelectListener,
-		              EditFragment.DataStorage,
 		              DatabaseHelper.RecordChangedListener {
+  private static final String TAG = "Heart";
   static final int REC_REQUEST=5001;
   private static final String DATA_FRAG="Data Fragment";
-  private DataStore myData;
   private EditFragment myViewer;
   private ListFragment myList;
 
@@ -31,39 +32,26 @@ public class Heart extends SherlockFragmentActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
 
-    DataFragment myDataFrag = (DataFragment)getSupportFragmentManager().findFragmentByTag(DATA_FRAG);
-    if (myDataFrag == null) {
-      Log.d ("debug","Heart Activity: onCreate: setting up new data fragment");
-      myDataFrag = new DataFragment();
-      getSupportFragmentManager().beginTransaction()
-                                 .add(myDataFrag,DATA_FRAG)
-				 .commit();
-    } else {
-      Log.d ("debug","Heart Activity: onCreate: data fragment still exists");
-    }
-    myData = (DataStore)myDataFrag;
-
     myViewer = (EditFragment)getSupportFragmentManager().findFragmentById(R.id.editfrag_container);
     if (myViewer == null) {
-      Log.d ("debug","Heart Activity: onCreate: setting up new edit fragment");
+      Log.v (TAG,"onCreate: setting up new edit fragment");
       myViewer = new EditFragment();
       getSupportFragmentManager().beginTransaction()
                                  .add(R.id.editfrag_container, myViewer)
 				 .commit();
     } else {
-      Log.d ("debug","Heart Activity: onCreate: edit fragment still exists");
+      Log.v (TAG,"onCreate: edit fragment still exists");
     }
 
     myList = (ListFragment)getSupportFragmentManager().findFragmentById(R.id.reclist);
     if (myList == null && findViewById(R.id.reclist) != null) {
-      Log.d ("debug","Heart Activity: onCreate: setting up new list fragment");
+      Log.v (TAG,"onCreate: setting up new list fragment");
       myList = new ListFragment();
       getSupportFragmentManager().beginTransaction()
                                  .add(R.id.reclist, myList)
 				 .commit();
-      DatabaseHelper.getInstance(this).addRecordChangedListener(this);  // need to keep list updated with record changes
     } else {
-      Log.d ("debug","Heart Activity: onCreate: list fragment still exists");
+      Log.v (TAG,"onCreate: list fragment still exists");
     }
   }
 
@@ -98,6 +86,7 @@ public class Heart extends SherlockFragmentActivity
 	myViewer.doSave();   // ensure current record is updated to db so it can be graphed
         startGraph();
       case R.id.add:
+	myList.unselectCurr();
 	RecordSelect(0L);
     }
 
@@ -107,9 +96,21 @@ public class Heart extends SherlockFragmentActivity
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data){
     if (requestCode == REC_REQUEST && resultCode == SherlockFragmentActivity.RESULT_OK) {
-      Log.d ("debug", "got activity result: " + data.getExtras().get("ca.daly.android.heart.REC_ID"));
-      myData.SwitchRecord(data.getLongExtra("ca.daly.android.heart.REC_ID",0));
+      Log.v (TAG, "got activity result: " + data.getExtras().get("ca.daly.android.heart.REC_ID"));
+      switchNewEditFrag(data.getLongExtra("ca.daly.android.heart.REC_ID",0));
     }
+  }
+
+  @Override 
+  protected void onStart() {
+    super.onStart();
+    DatabaseHelper.getInstance(this).addRecordChangedListener(this);  // need to keep list updated with record changes
+  }
+
+  @Override 
+  protected void onStop() {
+    super.onStop();
+    DatabaseHelper.getInstance(this).removeRecordChangedListener(this);
   }
 
   private void startGraph() {
@@ -135,34 +136,47 @@ public class Heart extends SherlockFragmentActivity
     startActivity(i);
   }
 
+  /**
+   * receiver for a record selected event from ListFragment
+   *   - also handles an Add user request (with id of 0) 
+   */
   public void RecordSelect(long id) {
-    //myViewer.doSave(false);   // ensure current record is updated to db before switch to another one
-    Log.d ("DEBUG","RecordSelect: new EditFragment id = " + id);
-    switchNewEditFrag();
-    myData.SwitchRecord(id);
+    Log.v (TAG,"RecordSelect: new EditFragment id = " + id);
+    switchNewEditFrag(id);
   }
-  
-  private void switchNewEditFrag() {
+ 
+  /**
+   * switch to new edit fragment for display/edit of a new record
+   */
+  private void switchNewEditFrag(long id) {
+    Bundle args = new Bundle();
+    args.putLong("id",id);
     myViewer = new EditFragment();
-				 //.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out,android.R.anim.fade_in,android.R.anim.fade_out)
-				 //.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+    myViewer.setArguments(args);
+			       /*
+			         .setCustomAnimations(android.R.anim.fade_in,
+			             android.R.anim.fade_out,
+				     android.R.anim.fade_in,
+				     android.R.anim.fade_out)
+				 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+			       */
     getSupportFragmentManager().beginTransaction()
 				 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                                  .replace(R.id.editfrag_container, myViewer)
 				 .commit();
   }
 
-
+  /**
+   * receiver of record changed event from DatabaseHelper
+   */
   public void recordChanged(Long id) {
     // a record (id) has changed (could be value(s) changed or could be deleted)
-    // for now just refresh the list (if there is one)  TODO -- might be better if could just update the given record
-    Log.d ("DEBUG","recordChanged: id = " + id);
+    // for now just refresh the list (if there is one)  
+    //   TODO -- might be better if could just update the given record
+    Log.v (TAG,"recordChanged: id = " + id);
     if (myList != null) {
       myList.updateList();
     }
   }
 
-  public DataStore GetDataStore() {
-    return myData;
-  }
 }
