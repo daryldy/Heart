@@ -4,7 +4,9 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.widget.TextView;
 import android.content.Intent;
 import android.view.View;
@@ -31,6 +33,13 @@ public class Heart extends SherlockFragmentActivity
   {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
+
+    /*
+    if (BuildConfig.DEBUG
+        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+      StrictMode.setThreadPolicy(buildPolicy());
+    }
+    */
 
     myViewer = (EditFragment)getSupportFragmentManager().findFragmentById(R.id.editfrag_container);
     if (myViewer == null) {
@@ -76,10 +85,14 @@ public class Heart extends SherlockFragmentActivity
 	return (true);
       case R.id.about:
         i=new Intent(this, SimpleContentActivity.class);
+	i.putExtra(SimpleContentActivity.EXTRA_FILE,
+	                   "file:///android_asset/misc/about.html");
 	startActivity(i);
 	return (true);
       case R.id.help:
         i=new Intent(this, SimpleContentActivity.class);
+	i.putExtra(SimpleContentActivity.EXTRA_FILE,
+	                   "file:///android_asset/misc/help.html");
 	startActivity(i);
 	return (true);
       case R.id.graph:
@@ -179,4 +192,9 @@ public class Heart extends SherlockFragmentActivity
     }
   }
 
+  private StrictMode.ThreadPolicy buildPolicy() {
+    Log.v (TAG,"Setting strict mode");
+    return(new StrictMode.ThreadPolicy.Builder().detectAll()
+						.penaltyLog().build());
+ }
 }

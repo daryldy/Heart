@@ -78,6 +78,7 @@ public class EditData implements DatabaseHelper.RecordListener,
    * updates the fields from specified data
    */
   private void updateData(ContentValues new_data) {
+    Log.v(TAG,"updateData: notes data = " + new_data.getAsString(DatabaseHelper.NOTES));
     date_time.setTimeInMillis(new_data.getAsLong(DatabaseHelper.DATE));
     systolic = new_data.getAsInteger(DatabaseHelper.SYSTOLIC);
     diastolic = new_data.getAsInteger(DatabaseHelper.DIASTOLIC);

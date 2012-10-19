@@ -53,16 +53,21 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
 
 
   @Override
-  public View onCreateView(LayoutInflater inflater,
-                           ViewGroup container,
-  			   Bundle savedInstanceState) {
-
+  public void onCreate(Bundle savedInstanceState) {
     setRetainInstance(true);
     Long id = 0L;
     if (getArguments() != null) {
       id = getArguments().getLong("id",0L);
     }
     myData = new EditData(getActivity(),id, this);
+
+    super.onCreate(savedInstanceState);
+  }
+
+  @Override
+  public View onCreateView(LayoutInflater inflater,
+                           ViewGroup container,
+  			   Bundle savedInstanceState) {
 
     View result = inflater.inflate(R.layout.editfrag, null, false);
 
@@ -85,6 +90,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
 
     if (savedInstanceState != null) {
       // restore saved state (data & screen)
+      Log.v(TAG,"onCreateView: loading savedInstanceState");
       date_time.setTimeInMillis(savedInstanceState.getLong(DatabaseHelper.DATE));
       setDateTimeText();
       systolic_field.setValue(savedInstanceState.getInt(DatabaseHelper.SYSTOLIC));
@@ -92,6 +98,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
       pulse_field.setValue(savedInstanceState.getInt(DatabaseHelper.PULSE));
     } else {
       // get data from myData object
+      Log.v(TAG,"onCreateView: no savedInstanceState");
       updateView();
     }
 
