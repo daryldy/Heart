@@ -8,10 +8,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.content.Intent;
 import android.view.View;
 import android.util.Log;
 import android.net.Uri;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import java.util.ArrayList;
 import android.support.v4.app.FragmentTransaction;
@@ -146,7 +148,11 @@ public class Heart extends SherlockFragmentActivity
     i.putExtra("com.googlecode.chartdroid.intent.extra.AXIS_TITLES",axisTitles);
     i.putExtra("com.googlecode.chartdroid.intent.extra.FORMAT_STRING_Y","%.0f");
     //i.putExtra("com.googlecode.chartdroid.intent.extra.FORMAT_STRING_Y_SECONDARY","%.0f");
-    startActivity(i);
+    try {
+      startActivity(i);
+    } catch (ActivityNotFoundException e) {
+      Toast.makeText(this, "ChartDroid app is not available.", Toast.LENGTH_LONG).show();
+    }
   }
 
   /**
