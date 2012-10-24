@@ -148,10 +148,17 @@ public class Heart extends SherlockFragmentActivity
     i.putExtra("com.googlecode.chartdroid.intent.extra.AXIS_TITLES",axisTitles);
     i.putExtra("com.googlecode.chartdroid.intent.extra.FORMAT_STRING_Y","%.0f");
     //i.putExtra("com.googlecode.chartdroid.intent.extra.FORMAT_STRING_Y_SECONDARY","%.0f");
+
+    // TODO -- not the best way to ensure ChartDroid app is installed !!
     try {
       startActivity(i);
     } catch (ActivityNotFoundException e) {
       Toast.makeText(this, "ChartDroid app is not available.", Toast.LENGTH_LONG).show();
+      try {
+	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.googlecode.chartdroid")));
+      } catch (ActivityNotFoundException market_e) {
+	Toast.makeText(this, "Market app is not available.", Toast.LENGTH_LONG).show();
+      }
     }
   }
 
