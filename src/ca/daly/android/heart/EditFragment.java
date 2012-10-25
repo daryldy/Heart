@@ -181,9 +181,9 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
   public void doSave() {
     ContentValues screenValues = new ContentValues();
     screenValues.put(DatabaseHelper.DATE,date_time.getTimeInMillis());
-    screenValues.put(DatabaseHelper.SYSTOLIC,new Integer(systolic_field.getValue()));
-    screenValues.put(DatabaseHelper.DIASTOLIC,new Integer(diastolic_field.getValue()));
-    screenValues.put(DatabaseHelper.PULSE,new Integer(pulse_field.getValue()));
+    screenValues.put(DatabaseHelper.SYSTOLIC,Integer.valueOf(systolic_field.getValue()));
+    screenValues.put(DatabaseHelper.DIASTOLIC,Integer.valueOf(diastolic_field.getValue()));
+    screenValues.put(DatabaseHelper.PULSE,Integer.valueOf(pulse_field.getValue()));
     screenValues.put(DatabaseHelper.NOTES,notes_field.getText().toString());
     screenValues.put(DatabaseHelper.LOCATION,location.getCheckedRadioButtonId() == R.id.upperarm);
     screenValues.put(DatabaseHelper.SIDE,side.getCheckedRadioButtonId() == R.id.left);

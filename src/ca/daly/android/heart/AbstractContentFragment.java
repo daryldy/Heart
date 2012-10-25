@@ -22,7 +22,7 @@ abstract public class AbstractContentFragment extends WebViewFragment {
     View result=
         super.onCreateView(inflater, container, savedInstanceState);
 
-    getWebView().getSettings().setJavaScriptEnabled(true);
+    //getWebView().getSettings().setJavaScriptEnabled(true);
     getWebView().getSettings().setSupportZoom(true);
     getWebView().getSettings().setBuiltInZoomControls(true);
     getWebView().loadUrl(getPage());

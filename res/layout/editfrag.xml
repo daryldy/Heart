@@ -28,19 +28,19 @@
     >
     <TableRow>
       <TextView 
-	android:text="Systolic"
+	android:text="@string/systolic"
 	android:layout_weight="1"
 	android:gravity="center"
 	style="@style/label"
 	/>
       <TextView 
-	android:text="Diastolic"
+	android:text="@string/diastolic"
 	android:layout_weight="1"
 	android:gravity="center"
 	style="@style/label"
 	/>
       <TextView 
-        android:text="Pulse"
+        android:text="@string/pulse"
 	android:layout_weight="1"
 	android:gravity="center"
 	style="@style/label"
@@ -64,11 +64,6 @@
 	/>
     </TableRow>
   </TableLayout>
-  <TableLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
-    <TableRow>
     <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -80,7 +75,7 @@
 	android:layout_alignParentLeft="true"
 	android:layout_centerVertical="true"
 	style="@style/label"
-	android:text="Location"
+	android:text="@string/location"
 	/>
       <RadioGroup
         android:id="@+id/location"
@@ -89,21 +84,18 @@
 	android:layout_height="wrap_content"
 	android:layout_alignParentTop="true"
 	android:layout_toRightOf="@id/location_label"
-	android:layout_weight="1"
-	android:text="tt"
 	>
 	<RadioButton
 	  android:id="@+id/upperarm"
 	  android:layout_width="wrap_content"
 	  android:layout_height="wrap_content"
-	  android:text="Upper Arm"
+	  android:text="@string/upperarm"
 	  />
 	<RadioButton
 	  android:id="@+id/forearm"
 	  android:layout_width="wrap_content"
 	  android:layout_height="wrap_content"
-	  android:layout_below="@id/upperarm"
-	  android:text="Forearm"
+	  android:text="@string/forearm"
 	  />
       </RadioGroup>
       <TextView
@@ -115,7 +107,7 @@
 	android:layout_centerVertical="true"
 	android:layout_marginLeft="20dp"
 	style="@style/label"
-	android:text="Side"
+	android:text="@string/side"
 	/>
       <RadioGroup
         android:id="@+id/side"
@@ -124,29 +116,26 @@
 	android:layout_height="wrap_content"
 	android:layout_alignParentTop="true"
 	android:layout_toRightOf="@id/side_label"
-	android:layout_weight="1"
 	>
 	<RadioButton
 	  android:id="@+id/left"
 	  android:layout_width="wrap_content"
 	  android:layout_height="wrap_content"
-	  android:text="Left"
+	  android:text="@string/left"
 	  />
 	<RadioButton
 	  android:id="@+id/right"
 	  android:layout_width="wrap_content"
 	  android:layout_height="wrap_content"
-	  android:text="Right"
+	  android:text="@string/right"
 	  />
       </RadioGroup>
     </RelativeLayout>
-    </TableRow>
-  </TableLayout>
   <EditText
     android:id="@+id/notes"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:hint="notes"
+    android:hint="@string/notes"
     />
 </LinearLayout>
 

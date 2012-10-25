@@ -40,17 +40,17 @@
       >
       <TableRow>
 	<TextView 
-	  android:text="Systolic"
+	  android:text="@string/systolic"
 	  android:layout_weight="1"
 	  android:gravity="center"
 	  />
 	<TextView 
-	  android:text="Diastolic"
+	  android:text="@string/diastolic"
 	  android:layout_weight="1"
 	  android:gravity="center"
 	  />
 	<TextView 
-	  android:text="Pulse"
+	  android:text="@string/pulse"
 	  android:layout_weight="1"
 	  android:gravity="center"
 	  />
@@ -90,13 +90,13 @@
 	  android:id="@id/upperarm"
 	  android:layout_width="wrap_content"
 	  android:layout_height="wrap_content"
-	  android:text="Upper Arm"
+	  android:text="@string/upperarm"
 	  />
 	<RadioButton
 	  android:id="@+id/forearm"
 	  android:layout_width="wrap_content"
 	  android:layout_height="wrap_content"
-	  android:text="Forearm"
+	  android:text="@string/forearm"
 	  />
       </RadioGroup>
       <RadioGroup
@@ -109,20 +109,20 @@
 	  android:id="@+id/left"
 	  android:layout_width="wrap_content"
 	  android:layout_height="wrap_content"
-	  android:text="Left side"
+	  android:text="@string/leftside"
 	  />
 	<RadioButton
 	  android:id="@+id/right"
 	  android:layout_width="wrap_content"
 	  android:layout_height="wrap_content"
-	  android:text="Right side"
+	  android:text="@string/rightside"
 	  />
       </RadioGroup>
       <EditText
 	android:id="@+id/notes"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:hint="notes"
+	android:hint="@string/notes"
 	/>
     </LinearLayout>
   </RelativeLayout>

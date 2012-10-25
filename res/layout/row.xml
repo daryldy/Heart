@@ -17,7 +17,7 @@
     android:layout_toRightOf="@id/systolic"
     android:textSize="20sp"
     android:textStyle="bold"
-    android:text="/"/>
+    android:text="@string/forwardslashseparator"/>
   <TextView
     android:id="@+id/diastolic"
     android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_toRightOf="@id/diastolic"
-    android:layout_marginLeft="10px"
+    android:layout_marginLeft="10dp"
     android:textSize="20sp"
     android:textStyle="bold"/>
   <TextView

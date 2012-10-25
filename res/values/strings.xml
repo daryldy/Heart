@@ -7,8 +7,21 @@
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="graph">Graph</string>
-    <string name="on_upgrade_error">This should not be called</string>
     <string name="delete_dlg_title">Delete Record?</string>
     <string name="saved_entry">Saved Entry</string>
     <string name="graph_title">Blood Pressure</string>
+    <string name="systolic">Systolic</string>
+    <string name="diastolic">Diastolic</string>
+    <string name="pulse">Pulse</string>
+    <string name="location">Location</string>
+    <string name="side">Side</string>
+    <string name="upperarm">Upper Arm</string>
+    <string name="forearm">Forearm</string>
+    <string name="right">Right</string>
+    <string name="left">Left</string>
+    <string name="rightside">Right Side</string>
+    <string name="leftside">Left Side</string>
+    <string name="notes">notes</string>
+    <string name="layoutdivider">Layout Divider</string>
+    <string name="forwardslashseparator">/</string>
 </resources>
