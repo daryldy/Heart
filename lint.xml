@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- Ignore the ObsoleteLayoutParam issue in the specified files -->
+    <issue id="NewApi">
+        <ignore path="ActionBarSherlock/src/com/actionbarsherlock/internal/widget/AbsActionBarView.java" />
+        <ignore path="/home/daryld/deve/ActionBarSherlock/src/com/actionbarsherlock/internal/widget/AbsActionBarView.java" />
+	<ignore path="/home/daryld/deve/JakeWharton-ActionBarSherlock-88fc341/library/src/com/actionbarsherlock/internal/widget/AbsActionBarView.java" />
+	<ignore path="JakeWharton-ActionBarSherlock-88fc341/library/src/com/actionbarsherlock/internal/widget/AbsActionBarView.java" />
+        <ignore path="../ActionBarSherlock/src/com/actionbarsherlock/internal/widget/AbsActionBarView.java" />
+	<ignore path="../JakeWharton-ActionBarSherlock-88fc341/library/src/com/actionbarsherlock/internal/widget/AbsActionBarView.java" />
+    </issue>
+</lint>
