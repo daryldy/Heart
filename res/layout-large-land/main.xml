@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
   android:orientation="horizontal"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -21,11 +22,23 @@
     android:paddingRight="2dp"
     android:paddingBottom="5dp"
     android:paddingTop="5dp" />
-  <FrameLayout
-    android:id="@+id/editfrag_container"
+  <LinearLayout
+    android:orientation="vertical"
     android:layout_weight="65"
     android:layout_width="0px"
     android:layout_height="match_parent"
-    android:layout_marginLeft="5dp"
-  />
+    android:layout_marginLeft="5dp">
+    <FrameLayout
+      android:id="@+id/editfrag_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+    />
+    <com.google.ads.AdView android:id="@+id/adView"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         ads:adUnitId="a15091dcfdd3381"
+                         ads:adSize="BANNER"
+                         ads:testDevices="TEST_EMULATOR"
+                         ads:loadAdOnCreate="true"/>
+  </LinearLayout>
 </LinearLayout>
