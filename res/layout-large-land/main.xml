@@ -22,7 +22,7 @@
     android:paddingRight="2dp"
     android:paddingBottom="5dp"
     android:paddingTop="5dp" />
-  <LinearLayout
+  <RelativeLayout
     android:orientation="vertical"
     android:layout_weight="65"
     android:layout_width="0px"
@@ -32,13 +32,18 @@
       android:id="@+id/editfrag_container"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
+      android:layout_above="@+id/adView"
     />
-    <com.google.ads.AdView android:id="@+id/adView"
-                         android:layout_width="match_parent"
-                         android:layout_height="wrap_content"
-                         ads:adUnitId="a15091dcfdd3381"
-                         ads:adSize="BANNER"
-                         ads:testDevices="TEST_EMULATOR"
-                         ads:loadAdOnCreate="true"/>
-  </LinearLayout>
+    <com.google.ads.AdView android:id="@id/adView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      ads:adUnitId="@string/adUnitId"
+      ads:adSize="BANNER"
+      ads:testDevices="@string/testDevices"
+      ads:loadAdOnCreate="true"
+      android:layout_alignParentBottom="true"
+      android:layout_alignParentRight="true"
+    />
+  </RelativeLayout>
 </LinearLayout>

@@ -24,4 +24,6 @@
     <string name="notes">notes</string>
     <string name="layoutdivider">Layout Divider</string>
     <string name="forwardslashseparator">/</string>
+    <string name="adUnitId">a15091dcfdd3381</string>
+    <string name="testDevices">TEST_EMULATOR,4B4065883F07B262FAEAE3F3A70E62F0"</string>
 </resources>
