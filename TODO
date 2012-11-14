@@ -1,0 +1,41 @@
+code cleanup
+============
+- remove logging
+
+icons
+=====
+- graph icon - check sizes
+
+privacy policy
+==============
+- write one
+- decide what to do about ads
+-- are ads compatible with my privacy policy?
+
+- "If you choose to use charting, most of the data will be available to the ChartDroid app"
+-- Can it be restricted to ONLY the ChartDroid app?
+---- How to restrict incoming intents to only certain apps?
+
+software license/EULA
+=====================
+- decide how software should be licensed
+- is an EULA needed?
+
+Google Play publish
+===================
+- screenshots
+- promotional text
+- icons?
+
+revenue model
+=============
+- donation???
+- free fully functional app (asks for donation in help or about?)
+- second fully functional app available with a price (Thanks for donation in help and about)
+- both apps would need to share data so user can continue with either app
+- look at app called "Cool Reader" - different "donate" apps for different costs!
+
+review: 
+- http://developer.android.com/tools/publishing/preparing.html
+- http://developer.android.com/distribute/googleplay/publish/preparing.html
+- http://play.google.com/about/developer-distribution-agreement.html
