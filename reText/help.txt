@@ -1,0 +1,45 @@
+=============
+Help
+=============
+Quick Start
+-----------
+When the app is started, a new record is created and ready for new blood
+pressure and pulse values to be entered. 
+
+The new record defaults to the current date and time.
+Both the date and time can be changed by touching their current values.
+
+Systolic, Diastolic, and Pulse values are each changed by selecting the
+approriate value in the number selecter directly under the cooresponding
+title.
+
+To record the location the blood pressure was taken, tap the appropriate
+location (forearm or upper arm) and side (left or right).
+
+Any additional notes about the test can be entered in the *notes* section.
+
+The record is saved automatically when you leave the app.
+
+
+Graph
+-----
+Graphing requires that the ChartDroid app be installed. If it is not
+installed, pressing |graph| will attempt to take you to Google Play so you
+can install it.
+
+Once ChartDroid is installed, pressing |graph| will launch the CharDroid app
+and show you a graph of Systolic and Diastolic values you have previously
+entered.
+
+How To ...
+----------
+Quickly add multiple records
+++++++++++++++++++++++++++++
+1. Start app
+2. Change Systolic, Diastolic, Pulse, Location and Side values as needed
+3. Press |add button|
+4. Repeat steps 2 and 3 until finished
+
+.. |add button| image:: images/ic_menu_add.png 
+
+.. |graph| image:: images/ic_action_graph.png

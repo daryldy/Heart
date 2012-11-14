@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="custom_rules">
+    <target name="-pre-build">
+        <echo>create html files</echo>
+        <exec dir="reText"
+              executable="rst2html2" 
+	      failonerror="true" >
+          <arg value="help.txt" />
+          <arg value="../assets/misc/help.html" />
+        </exec>
+        <exec dir="reText"
+              executable="rst2html2" 
+	      failonerror="true" >
+          <arg value="about.txt" />
+          <arg value="../assets/misc/about.html" />
+        </exec>
+    </target>
+</project>
