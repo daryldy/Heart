@@ -115,12 +115,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   public void addRecordChangedListener(RecordChangedListener listener) {
     recordChangedListeners.add(listener);
-    Log.v (TAG, "addRecordChangedListener: size = " + recordChangedListeners.size());
+    if (BuildConfig.DEBUG) {
+      Log.v (TAG, "addRecordChangedListener: size = " + recordChangedListeners.size());
+    }
   }
 
   public void removeRecordChangedListener(RecordChangedListener listener) {
     recordChangedListeners.remove(listener);
-    Log.v (TAG, "removeRecordChangedListener: size = " + recordChangedListeners.size());
+    if (BuildConfig.DEBUG) {
+      Log.v (TAG, "removeRecordChangedListener: size = " + recordChangedListeners.size());
+    }
   }
 
   void loadListAsync(ListAdapterListener listener) {
@@ -205,7 +209,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     protected ContentValues doInBackground (Long... params) {
       String[] args={params[0].toString()};
 
-      Log.v (TAG, "GetRecordTask: doInBackground args[0]: " + args[0]);
+      if (BuildConfig.DEBUG) {
+	Log.v (TAG, "GetRecordTask: doInBackground args[0]: " + args[0]);
+      }
       Cursor c = getReadableDatabase().query(TABLE,new String[] {ID,DATE,SYSTOLIC,NOTES,DIASTOLIC,PULSE,LOCATION,SIDE},"_id = ?",args,null,null,null,"1");
       c.moveToFirst();
       if (c.isAfterLast()) {
@@ -222,7 +228,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       rec.put(SIDE,c.getInt(7));
       c.close();
 
-      Log.v (TAG,"doInBackground returning: " + rec.getAsString(SYSTOLIC) + " " + rec.getAsString(NOTES));
+      if (BuildConfig.DEBUG) {
+	Log.v (TAG,"doInBackground returning: " + rec.getAsString(SYSTOLIC) + " " + rec.getAsString(NOTES));
+      }
       return (rec);
     }
 
@@ -255,15 +263,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       vals = params[0];
 
       if (vals.getAsLong(ID) == 0) {
-        Log.v (TAG, "SaveRecordTask: new record");
+	if (BuildConfig.DEBUG) {
+	  Log.v (TAG, "SaveRecordTask: new record");
+	}
 	vals.remove(ID);
 	result = getWritableDatabase().insert(TABLE,null,vals);
       } else {
-        Log.v (TAG, "SaveRecordTask: update record");
+	if (BuildConfig.DEBUG) {
+	  Log.v (TAG, "SaveRecordTask: update record");
+	}
 	result = getWritableDatabase().replace(TABLE,null,vals);
       }
 
-      Log.v(TAG,"Finished insert/replace: result = " + result.toString());
+      if (BuildConfig.DEBUG) {
+	Log.v(TAG,"Finished insert/replace: result = " + result.toString());
+      }
       return(result);
     }
 
@@ -295,9 +309,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     
     @Override
     public void onPostExecute(Long id) {
-      Log.v (TAG,"DeleteRecordTask: onPostExecute");
+      if (BuildConfig.DEBUG) {
+	Log.v (TAG,"DeleteRecordTask: onPostExecute");
+      }
       for (RecordChangedListener lnr: recordChangedListeners) {
-        Log.v (TAG,"DeleteRecordTask: onPostExecute: sending notification");
+	if (BuildConfig.DEBUG) {
+	  Log.v (TAG,"DeleteRecordTask: onPostExecute: sending notification");
+	}
         lnr.recordChanged(id);
       }
     }
@@ -305,7 +323,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   private Long getNewSerialNo() {
     requestSerialNo++;
-    Log.v(TAG,"getNewSerialNo: issued new serial number: " + requestSerialNo);
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"getNewSerialNo: issued new serial number: " + requestSerialNo);
+    }
     return requestSerialNo;
   }
 }

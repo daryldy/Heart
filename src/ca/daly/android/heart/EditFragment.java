@@ -90,7 +90,9 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
 
     if (savedInstanceState != null) {
       // restore saved state (data & screen)
-      Log.v(TAG,"onCreateView: loading savedInstanceState");
+      if (BuildConfig.DEBUG) {
+	Log.v(TAG,"onCreateView: loading savedInstanceState");
+      }
       date_time.setTimeInMillis(savedInstanceState.getLong(DatabaseHelper.DATE));
       setDateTimeText();
       systolic_field.setValue(savedInstanceState.getInt(DatabaseHelper.SYSTOLIC));
@@ -98,11 +100,15 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
       pulse_field.setValue(savedInstanceState.getInt(DatabaseHelper.PULSE));
     } else {
       // get data from myData object
-      Log.v(TAG,"onCreateView: no savedInstanceState");
+      if (BuildConfig.DEBUG) {
+	Log.v(TAG,"onCreateView: no savedInstanceState");
+      }
       updateView();
     }
 
-    Log.v(TAG,"onCreateView: date_time: " + date_time.getTimeInMillis());
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"onCreateView: date_time: " + date_time.getTimeInMillis());
+    }
     return(result);
   }
 
@@ -114,7 +120,9 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
   }
 
   public void updateView() {
-    Log.v(TAG,"updateView");
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"updateView");
+    }
 
     ContentValues dataValues;
     dataValues = myData.Get();
@@ -130,7 +138,9 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
 
   @Override
   public void onPause() {
-    Log.v(TAG,"onPause");
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"onPause");
+    }
     doSave();
     super.onPause();
   }
@@ -139,7 +149,9 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
   public void onSaveInstanceState(Bundle state) {
     super.onSaveInstanceState(state);
 
-    Log.v(TAG,"onSaveInstanceState");
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"onSaveInstanceState");
+    }
     state.putInt(DatabaseHelper.SYSTOLIC,systolic_field.getValue());
     state.putInt(DatabaseHelper.DIASTOLIC,diastolic_field.getValue());
     state.putInt(DatabaseHelper.PULSE,pulse_field.getValue());
@@ -149,7 +161,9 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.delete) {
-      Log.v(TAG,"selected delete");
+      if (BuildConfig.DEBUG) {
+	Log.v(TAG,"selected delete");
+      }
       new DeleteDialog().show(getActivity().getSupportFragmentManager(),"delete");
       return(true);
     }

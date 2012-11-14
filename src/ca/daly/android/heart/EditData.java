@@ -38,7 +38,9 @@ public class EditData implements DatabaseHelper.RecordListener,
    */
   public ContentValues Get() {
     ContentValues rtrnVal = new ContentValues();
-    Log.v(TAG,"Get");
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"Get");
+    }
     rtrnVal.put(DatabaseHelper.ID,id);
     rtrnVal.put(DatabaseHelper.SYSTOLIC,systolic);
     rtrnVal.put(DatabaseHelper.DIASTOLIC,diastolic);
@@ -55,7 +57,9 @@ public class EditData implements DatabaseHelper.RecordListener,
    */
   public void Put(ContentValues rec) { 
     if (isDirty(rec)) {
-      Log.v (TAG,"Put: is dirty");
+      if (BuildConfig.DEBUG) {
+	Log.v (TAG,"Put: is dirty");
+      }
       rec.put(DatabaseHelper.ID,id);
       DatabaseHelper.getInstance(ctxt).SaveRecordAsync(this,rec);
       Toast.makeText(ctxt.getApplicationContext(), ctxt.getApplicationContext().getString(R.string.saved_entry), Toast.LENGTH_LONG).show();
@@ -69,7 +73,9 @@ public class EditData implements DatabaseHelper.RecordListener,
    */
   public void setRecord(ContentValues new_rec) {
     id = new_rec.getAsLong(DatabaseHelper.ID);
-    Log.v(TAG,"setRecord: id =" + id);
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"setRecord: id =" + id);
+    }
     updateData(new_rec);
     updateViewer();
   }
@@ -78,7 +84,9 @@ public class EditData implements DatabaseHelper.RecordListener,
    * updates the fields from specified data
    */
   private void updateData(ContentValues new_data) {
-    Log.v(TAG,"updateData: notes data = " + new_data.getAsString(DatabaseHelper.NOTES));
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"updateData: notes data = " + new_data.getAsString(DatabaseHelper.NOTES));
+    }
     date_time.setTimeInMillis(new_data.getAsLong(DatabaseHelper.DATE));
     systolic = new_data.getAsInteger(DatabaseHelper.SYSTOLIC);
     diastolic = new_data.getAsInteger(DatabaseHelper.DIASTOLIC);
@@ -109,20 +117,22 @@ public class EditData implements DatabaseHelper.RecordListener,
    * Determines if the given values differ from the current field values
    */
   private boolean isDirty(ContentValues rec) {
-    Log.v(TAG,"isDirty curr data: date_time:" + date_time.getTimeInMillis()
-                                        + " systolic:" + systolic
-					+ " diastolic: " + diastolic
-					+ " pulse: " + pulse
-					+ " notes: " + notes
-					+ " location: " + location
-					+ " side: " + side);
-    Log.v(TAG,"isDirty data to save: date_time:" + rec.getAsLong(DatabaseHelper.DATE)
-                                        + " systolic:" + rec.getAsInteger(DatabaseHelper.SYSTOLIC)
-					+ " diastolic: " + rec.getAsInteger(DatabaseHelper.DIASTOLIC)
-					+ " pulse: " + rec.getAsInteger(DatabaseHelper.PULSE)
-					+ " notes: " + rec.getAsString(DatabaseHelper.NOTES)
-					+ " location: " + rec.getAsBoolean(DatabaseHelper.LOCATION)
-					+ " side: " + rec.getAsBoolean(DatabaseHelper.SIDE));
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"isDirty curr data: date_time:" + date_time.getTimeInMillis()
+					  + " systolic:" + systolic
+					  + " diastolic: " + diastolic
+					  + " pulse: " + pulse
+					  + " notes: " + notes
+					  + " location: " + location
+					  + " side: " + side);
+      Log.v(TAG,"isDirty data to save: date_time:" + rec.getAsLong(DatabaseHelper.DATE)
+					  + " systolic:" + rec.getAsInteger(DatabaseHelper.SYSTOLIC)
+					  + " diastolic: " + rec.getAsInteger(DatabaseHelper.DIASTOLIC)
+					  + " pulse: " + rec.getAsInteger(DatabaseHelper.PULSE)
+					  + " notes: " + rec.getAsString(DatabaseHelper.NOTES)
+					  + " location: " + rec.getAsBoolean(DatabaseHelper.LOCATION)
+					  + " side: " + rec.getAsBoolean(DatabaseHelper.SIDE));
+    }
     boolean dirty = (date_time.getTimeInMillis() != rec.getAsLong(DatabaseHelper.DATE)
              || !systolic.equals(rec.getAsInteger(DatabaseHelper.SYSTOLIC))
 	     || !diastolic.equals(rec.getAsInteger(DatabaseHelper.DIASTOLIC))

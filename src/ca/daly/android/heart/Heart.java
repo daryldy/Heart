@@ -45,24 +45,32 @@ public class Heart extends SherlockFragmentActivity
 
     myViewer = (EditFragment)getSupportFragmentManager().findFragmentById(R.id.editfrag_container);
     if (myViewer == null) {
-      Log.v (TAG,"onCreate: setting up new edit fragment");
+      if (BuildConfig.DEBUG) {
+	Log.v (TAG,"onCreate: setting up new edit fragment");
+      }
       myViewer = new EditFragment();
       getSupportFragmentManager().beginTransaction()
                                  .add(R.id.editfrag_container, myViewer)
 				 .commit();
     } else {
-      Log.v (TAG,"onCreate: edit fragment still exists");
+      if (BuildConfig.DEBUG) {
+	Log.v (TAG,"onCreate: edit fragment still exists");
+      }
     }
 
     myList = (ListFragment)getSupportFragmentManager().findFragmentById(R.id.reclist);
     if (myList == null && findViewById(R.id.reclist) != null) {
-      Log.v (TAG,"onCreate: setting up new list fragment");
+      if (BuildConfig.DEBUG) {
+	Log.v (TAG,"onCreate: setting up new list fragment");
+      }
       myList = new ListFragment();
       getSupportFragmentManager().beginTransaction()
                                  .add(R.id.reclist, myList)
 				 .commit();
     } else {
-      Log.v (TAG,"onCreate: list fragment still exists");
+      if (BuildConfig.DEBUG) {
+	Log.v (TAG,"onCreate: list fragment still exists");
+      }
     }
   }
 
@@ -111,7 +119,9 @@ public class Heart extends SherlockFragmentActivity
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data){
     if (requestCode == REC_REQUEST && resultCode == SherlockFragmentActivity.RESULT_OK) {
-      Log.v (TAG, "got activity result: " + data.getExtras().get("ca.daly.android.heart.REC_ID"));
+      if (BuildConfig.DEBUG) {
+	Log.v (TAG, "got activity result: " + data.getExtras().get("ca.daly.android.heart.REC_ID"));
+      }
       switchNewEditFrag(data.getLongExtra("ca.daly.android.heart.REC_ID",0));
     }
   }
@@ -167,7 +177,9 @@ public class Heart extends SherlockFragmentActivity
    *   - also handles an Add user request (with id of 0) 
    */
   public void RecordSelect(long id) {
-    Log.v (TAG,"RecordSelect: new EditFragment id = " + id);
+    if (BuildConfig.DEBUG) {
+      Log.v (TAG,"RecordSelect: new EditFragment id = " + id);
+    }
     switchNewEditFrag(id);
   }
  
@@ -199,14 +211,18 @@ public class Heart extends SherlockFragmentActivity
     // a record (id) has changed (could be value(s) changed or could be deleted)
     // for now just refresh the list (if there is one)  
     //   TODO -- might be better if could just update the given record
-    Log.v (TAG,"recordChanged: id = " + id);
+    if (BuildConfig.DEBUG) {
+      Log.v (TAG,"recordChanged: id = " + id);
+    }
     if (myList != null) {
       myList.updateList();
     }
   }
 
   private StrictMode.ThreadPolicy buildPolicy() {
-    Log.v (TAG,"Setting strict mode");
+    if (BuildConfig.DEBUG) {
+      Log.v (TAG,"Setting strict mode");
+    }
     return(new StrictMode.ThreadPolicy.Builder().detectAll()
 						.penaltyLog().build());
  }

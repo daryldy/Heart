@@ -25,28 +25,38 @@ public class ListFragment extends SherlockListFragment
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
-    Log.v(TAG,"onActivityCreated");
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"onActivityCreated");
+    }
     updateList();
     getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
   }
 
   @Override
   public void onViewCreated(View view, Bundle savedInstanceState) {
-    Log.v(TAG,"onViewCreated");
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"onViewCreated");
+    }
   }
 
   @Override
   public void onDestroy() {
     super.onDestroy();
 
-    Log.v(TAG,"starting destroy");
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"starting destroy");
+    }
     ((SimpleCursorAdapter)getListAdapter()).getCursor().close();
-    Log.v(TAG,"finished destroy");
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"finished destroy");
+    }
   }
 
   @Override
   public void onListItemClick(ListView l, View v, int position, long id) {
-    Log.v(TAG,"clicked position: " + position + " id: " + id);
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"clicked position: " + position + " id: " + id);
+    }
     ((ListSelectListener)getActivity()).RecordSelect(id);
     currID = id;
     currPos = position;
@@ -54,7 +64,9 @@ public class ListFragment extends SherlockListFragment
 
   @Override
   public void setListAdapter(ListAdapter adapter) {
-    Log.v(TAG,"setListAdapter");
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"setListAdapter");
+    }
     super.setListAdapter(adapter);
     // cannot use currPos here because sometimes the currPos does not
     // match with the currID on the new adapter (this occurs when adding
@@ -71,7 +83,9 @@ public class ListFragment extends SherlockListFragment
   }
 
   public void updateList() {
-    Log.v(TAG,"updateList");
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"updateList");
+    }
     DatabaseHelper.getInstance(getActivity()).loadListAsync(this);
   }
  

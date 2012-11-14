@@ -31,10 +31,14 @@ public class Provider extends ContentProvider {
   @Override
   public Cursor query(Uri url, String[] projection, String selection,
                         String[] selectionArgs, String sort) {
-    Log.v(TAG,"running query");
+    if (BuildConfig.DEBUG) {
+      Log.v(TAG,"running query");
+    }
     if ("axes".equals(url.getQueryParameter("aspect") )) {
       // serve the axes metadata
-      Log.v(TAG,"query:axes");
+      if (BuildConfig.DEBUG) {
+	Log.v(TAG,"query:axes");
+      }
 
       // TODO -- continue to try to get pulse to display correctly as a secondary Y axis
       //MatrixCursor c = new MatrixCursor(new String[] {"_id","COLUMN_AXIS_LABEL","COLUMN_AXIS_ROLE","COLUMN_AXIS_MIN","COLUMN_AXIS_MAX"});
@@ -51,7 +55,9 @@ public class Provider extends ContentProvider {
       return (null);
     } else if ("series".equals(url.getQueryParameter("aspect") )) {
       // serve the series metadata
-      Log.v(TAG,"query:series");
+      if (BuildConfig.DEBUG) {
+	Log.v(TAG,"query:series");
+      }
 
       // TODO -- continue to try to get pulse to display correctly as a secondary Y axis
 
@@ -68,7 +74,9 @@ public class Provider extends ContentProvider {
 
       return (null);
     } else {
-      Log.v(TAG,"query:data");
+      if (BuildConfig.DEBUG) {
+	Log.v(TAG,"query:data");
+      }
 
       // TODO -- continue to try to get pulse to display correctly as a secondary Y axis
       //Cursor c = DatabaseHelper.getInstance(getContext()).getReadableDatabase().rawQuery("Select _id,1 as COLUMN_SERIES_INDEX,date as AXIS_A, systolic as AXIS_B from heart union all select _id,2 as COLUMN_SERIES_INDEX,date as AXIS_A, diastolic as AXIS_B from heart union all select _id,3 as COLUMN_SERIES_INDEX,date as AXIS_A, pulse as AXIS_C from heart",null);
