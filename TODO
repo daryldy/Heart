@@ -3,7 +3,31 @@ code cleanup
 
 icons
 =====
-- graph icon - check sizes
+- launcher icon
+-- 32 bit png
+-- with alpha channel for transparency
+-- 4 pixel padding on each edge
+-- ldpi - 36x36 px
+-- mdpi - 48x48 px
+-- hdpi - 72x72 px
+-- xhdpi - 96x96 px
+- ic_menu_account_list
+-- use standard icon or check sizes or ???
+- cleanup - ensure no extra png files are hanging around
+-- no icons in ldpi???
+
+menu/action bar
+===============
+- redo res/menu/options.xml to corespond with res/menu-large/options.xml
+
+test
+====
+- smaller/less density screens
+- older versions (this will not work)
+
+writing guidelines
+==================
+see: http://developer.android.com/design/style/writing.html
 
 privacy policy
 ==============
@@ -19,6 +43,7 @@ software license/EULA
 =====================
 - decide how software should be licensed
 - is an EULA needed?
+- Remove admob library?? -- compatible with GPL???
 
 Google Play publish
 ===================
