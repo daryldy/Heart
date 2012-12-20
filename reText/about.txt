@@ -1,11 +1,52 @@
-Heart Watcher
+Heart Observe
 =============
 
-Copyright |copy| 2012 Daryl Daly, all rights reserved
+:Author: Daryl Daly  with Artwork by Elliot Daly and Inez Daly
+:Contact: daryldaly@gmail.com
+:Copyright: |copy| 2012 Daryl Daly, all rights reserved
+
+.. To God be the Glory
+
+.. contents::
+
+Notice
+------
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+See full text of license below or at <http://www.gnu.org/licenses/>.
+
+Privacy
+-------
+
+Heart Observe stores heart pressure, pulse and related data that you provide. This
+data is stored only on your device.
+It does not
+associate any other personal identifiable information with the heart data
+other that what you could include in the -notes- field.
+All the heart data is visible to you through the app and you may delete any or
+all the information whenever you like. If you uninstall the application,
+all the heart data is removed as well ***VERIFY THIS***
+The graphing of your heart data is provided by a different app. To make this
+possible, you need to allow Heart Observe to make your heart data available to
+other apps on this device. The primary app that would use your data is
+ChartDroid but other apps may be able to use it as well. You can turn off this
+feature at any time in the Preferences.
+No ads are used in Heart Observe. Please support this policy by purchasing the Heart Observe
+(donate) app.
 
 License
 -------
+.. include:: ../COPYING
+   :literal:
 
-To God be the Glory
 
 .. include:: <isonum.txt>
