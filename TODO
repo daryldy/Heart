@@ -38,12 +38,23 @@ privacy policy
 - "If you choose to use charting, most of the data will be available to the ChartDroid app"
 -- Can it be restricted to ONLY the ChartDroid app?
 ---- How to restrict incoming intents to only certain apps?
+http://developer.android.com/guide/topics/security/permissions.html
+http://developer.android.com/training/articles/security-tips.html
+
+-- make this an option - if user wants to turn this on make sure they are aware that this may allow other apps on this device to access the heart data 
+- TODO - make provider information configurable
+
+- User should have to grant permission to allow ChartDroid to be used.
+- Should have some sort of configurable option to specify how long before the app asks for permission again. (Once granted access does not mean that the user will forever want to contine with the access).
+- Needs "Setting" to allow for user to turn off access permission at any time.
+- if ChartDroid is not available then ask if want to go to the market to get it.
+
+- if users want it, add ability to encrypt the database with a password/phrase of their choice (maybe add note in privacy policy asking if it is wanted)
 
 software license/EULA
 =====================
-- decide how software should be licensed
+- decide how software should be licensed - done - GPLv3
 - is an EULA needed?
-- Remove admob library?? -- compatible with GPL???
 
 Google Play publish
 ===================
@@ -63,3 +74,5 @@ review:
 - http://developer.android.com/tools/publishing/preparing.html
 - http://developer.android.com/distribute/googleplay/publish/preparing.html
 - http://play.google.com/about/developer-distribution-agreement.html
+
+
