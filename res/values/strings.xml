@@ -24,4 +24,5 @@
     <string name="notes">notes</string>
     <string name="layoutdivider">Layout Divider</string>
     <string name="forwardslashseparator">/</string>
+    <string name="no_graph_data">Nothing to Graph</string>
 </resources>

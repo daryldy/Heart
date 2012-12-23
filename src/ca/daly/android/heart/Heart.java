@@ -126,7 +126,7 @@ public class Heart extends SherlockFragmentActivity
 	return (true);
       case R.id.graph:
 	myViewer.doSave();   // ensure current record is updated to db so it can be graphed
-        startGraph();
+        doGraph();
       case R.id.add:
 	myList.unselectCurr();
 	RecordSelect(0L);
@@ -157,37 +157,13 @@ public class Heart extends SherlockFragmentActivity
     DatabaseHelper.getInstance(this).removeRecordChangedListener(this);
   }
 
-  private void startGraph() {
-    Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
-                               .authority("ca.daly.android.heart")
-			       .build();
-    Intent i = new Intent(Intent.ACTION_VIEW,uri);
-    i.putExtra(Intent.EXTRA_TITLE, this.getApplicationContext().getString(R.string.graph_title));
-
-    // TODO -- continue to try to get pulse to display correctly as a secondary Y axis
-    //i.putExtra("com.googlecode.chartdroid.intent.extra.SERIES_LABELS",new String[] {"Systolic","Diastolic","Pulse"});
-    //i.putExtra("com.googlecode.chartdroid.intent.extra.SERIES_AXIS_SELECTION",new int[] {1,1,2});
-
-    i.putExtra("com.googlecode.chartdroid.intent.extra.SERIES_LABELS",new String[] {"Systolic","Diastolic"});
-
-    ArrayList<String> axisTitles = new ArrayList<String>();
-    axisTitles.add(""); // date
-    axisTitles.add("mmHg");
-    //axisTitles.add("Pulse");
-    i.putExtra("com.googlecode.chartdroid.intent.extra.AXIS_TITLES",axisTitles);
-    i.putExtra("com.googlecode.chartdroid.intent.extra.FORMAT_STRING_Y","%.0f");
-    //i.putExtra("com.googlecode.chartdroid.intent.extra.FORMAT_STRING_Y_SECONDARY","%.0f");
-
-    // TODO -- not the best way to ensure ChartDroid app is installed !!
-    try {
-      startActivity(i);
-    } catch (ActivityNotFoundException e) {
-      Toast.makeText(this, "ChartDroid app is not available.", Toast.LENGTH_LONG).show();
-      try {
-	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.googlecode.chartdroid")));
-      } catch (ActivityNotFoundException market_e) {
-	Toast.makeText(this, "Market app is not available.", Toast.LENGTH_LONG).show();
-      }
+  private void doGraph() {
+    TimePressureGraph graph = TimePressureGraph.getInstance(this);
+    Intent i = graph.getIntent();
+    if ( i != null ) {
+      startActivity(graph.getIntent());
+    } else {
+      Toast.makeText(this.getApplicationContext(), this.getApplicationContext().getString(R.string.no_graph_data), Toast.LENGTH_LONG).show();
     }
   }
 

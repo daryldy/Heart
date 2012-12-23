@@ -28,5 +28,6 @@
     <activity android:name=".SimpleContentActivity">
     </activity>
     <activity android:name=".ListActivity" />
+    <activity android:name="org.achartengine.GraphicalActivity" />
   </application>
 </manifest>
