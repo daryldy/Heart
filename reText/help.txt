@@ -1,6 +1,6 @@
+Heart Observe
 =============
-Help
-=============
+
 Quick Start
 -----------
 When the app is started, a new record is created and ready for new blood
@@ -21,16 +21,6 @@ Any additional notes about the test can be entered in the *notes* section.
 The record is saved automatically when you leave the app.
 
 
-Graph
------
-Graphing requires that the ChartDroid app be installed. If it is not
-installed, pressing |graph| will attempt to take you to Google Play so you
-can install it.
-
-Once ChartDroid is installed, pressing |graph| will launch the CharDroid app
-and show you a graph of Systolic and Diastolic values you have previously
-entered.
-
 How To ...
 ----------
 Quickly add multiple records
@@ -40,6 +30,4 @@ Quickly add multiple records
 3. Press |add button|
 4. Repeat steps 2 and 3 until finished
 
-.. |add button| image:: images/ic_menu_add.png 
-
-.. |graph| image:: images/ic_action_graph.png
+.. |add button| image:: images/ic_content_new.png 

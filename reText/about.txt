@@ -9,6 +9,13 @@ Heart Observe
 
 .. contents::
 
+Introduction
+------------
+
+Heart Observe is a simple app for tracking blood pressure and pulse values
+over time.
+
+
 Notice
 ------
 
@@ -34,14 +41,12 @@ associate any other personal identifiable information with the heart data
 other that what you could include in the -notes- field.
 All the heart data is visible to you through the app and you may delete any or
 all the information whenever you like. If you uninstall the application,
-all the heart data is removed as well ***VERIFY THIS***
-The graphing of your heart data is provided by a different app. To make this
-possible, you need to allow Heart Observe to make your heart data available to
-other apps on this device. The primary app that would use your data is
-ChartDroid but other apps may be able to use it as well. You can turn off this
-feature at any time in the Preferences.
-No ads are used in Heart Observe. Please support this policy by purchasing the Heart Observe
-(donate) app.
+all the heart data is removed as well.
+
+To help protect your privay, no advertising is used in Heart Observe.
+Please support this policy by purchasing the Heart Observe
+(donate) app. This allows for ongoing development of this app and others like
+it.
 
 License
 -------
