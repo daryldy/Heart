@@ -12,7 +12,7 @@ Heart Observe
 Introduction
 ------------
 
-Heart Observe is a simple app for tracking blood pressure and pulse values
+Heart Observe tracks blood pressure and pulse values
 over time.
 
 
@@ -29,7 +29,11 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-See full text of license below or at <http://www.gnu.org/licenses/>.
+See full text of license_ below or at <http://www.gnu.org/licenses/>.
+
+The charting funtionality of this program is provided by the 
+AChartEngine_ library. AChartEngine_ is licensed under the terms of the Apache
+License. See `AChartEngine License`_ section for your reference.
 
 Privacy
 -------
@@ -38,7 +42,7 @@ Heart Observe stores heart pressure, pulse and related data that you provide. Th
 data is stored only on your device.
 It does not
 associate any other personal identifiable information with the heart data
-other that what you could include in the -notes- field.
+other that what you could include in the *notes* field.
 All the heart data is visible to you through the app and you may delete any or
 all the information whenever you like. If you uninstall the application,
 all the heart data is removed as well.
@@ -53,5 +57,13 @@ License
 .. include:: ../COPYING
    :literal:
 
+AChartEngine License
+--------------------
+.. include:: ../achartengine.LICENSE-2.0.txt
+   :literal:
+
 
 .. include:: <isonum.txt>
+
+.. _AChartEngine: http://www.achartengine.org
+
