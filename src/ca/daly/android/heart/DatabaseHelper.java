@@ -71,6 +71,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     try {
       db.beginTransaction();
       db.execSQL("create table heart (_id integer primary key autoincrement, date datetime, systolic integer, notes varchar(50), diastolic integer, pulse integer, location boolean, side boolean);");
+      if (BuildConfig.DEBUG) {
+	loadTestData(db);
+      }
       db.setTransactionSuccessful();
     }
     finally {
@@ -348,5 +351,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       Log.v(TAG,"getNewSerialNo: issued new serial number: " + requestSerialNo);
     }
     return requestSerialNo;
+  }
+
+  /**
+   * loads a set of testing data -- should only be used when debuging
+   */
+  private void loadTestData(SQLiteDatabase db) {
+    Log.v (TAG, "Loading test data");
+    db.execSQL("INSERT INTO heart VALUES(5,1336935642820,138,'',94,70,1,1);");
+    db.execSQL("INSERT INTO heart VALUES(6,1331591422458,138,'shoppers',95,68,1,1);");
+    db.execSQL("INSERT INTO heart VALUES(7,1332031518069,141,'',81,77,1,1);");
+    db.execSQL("INSERT INTO heart VALUES(8,1332113453882,138,'',79,62,1,1);");
+    db.execSQL("INSERT INTO heart VALUES(9,1332372643664,130,'',80,68,0,1);");
+    db.execSQL("INSERT INTO heart VALUES(10,1334090149590,139,'',94,74,1,1);");
+    db.execSQL("INSERT INTO heart VALUES(11,1334090706629,145,'save-on',92,78,1,1);");
+    db.execSQL("INSERT INTO heart VALUES(12,1335136515538,140,'London drugs',87,69,1,1);");
+    db.execSQL("INSERT INTO heart VALUES(13,1338263140748,133,'save-on',91,65,1,1);");
+    db.execSQL("INSERT INTO heart VALUES(14,1341279953183,126,'',84,64,1,1);");
+    db.execSQL("INSERT INTO heart VALUES(15,1344639656326,120,'',85,65,1,1);");
+    db.execSQL("INSERT INTO heart VALUES(16,1345402833499,124,'',84,59,1,1);");
+    db.execSQL("INSERT INTO heart VALUES(17,1346094002525,130,'',90,65,1,1);");
+    db.execSQL("INSERT INTO heart VALUES(18,1348540232095,133,'',84,77,1,1);");
+    db.execSQL("INSERT INTO heart VALUES(19,1354492804768,126,'home',80,63,1,0);");
+    db.execSQL("INSERT INTO heart VALUES(20,1355453153722,135,'save on @ 203 st',96,70,1,1);");
+    db.execSQL("INSERT INTO heart VALUES(21,1356235604625,135,'home',87,71,1,1);");
+    db.execSQL("INSERT INTO heart VALUES(22,1356310832056,137,'',89,67,1,1);");
   }
 }
