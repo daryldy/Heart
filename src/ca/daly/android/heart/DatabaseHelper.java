@@ -227,6 +227,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     protected ContentValues doInBackground (Long... params) {
+      ContentValues rec = null;
       String[] args={params[0].toString()};
 
       if (BuildConfig.DEBUG) {
@@ -234,23 +235,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       }
       Cursor c = getReadableDatabase().query(TABLE,new String[] {ID,DATE,SYSTOLIC,NOTES,DIASTOLIC,PULSE,LOCATION,SIDE},"_id = ?",args,null,null,null,"1");
       c.moveToFirst();
-      if (c.isAfterLast()) {
-	return(null);
-      }
-      ContentValues rec = new ContentValues();
-      rec.put(ID,c.getLong(0));
-      rec.put(DATE,c.getLong(1));
-      rec.put(SYSTOLIC,c.getInt(2));
-      rec.put(NOTES,c.getString(3));
-      rec.put(DIASTOLIC,c.getInt(4));
-      rec.put(PULSE,c.getInt(5));
-      rec.put(LOCATION,c.getInt(6));
-      rec.put(SIDE,c.getInt(7));
-      c.close();
+      if (! c.isAfterLast()) {
+	rec = new ContentValues();
+	rec.put(ID,c.getLong(0));
+	rec.put(DATE,c.getLong(1));
+	rec.put(SYSTOLIC,c.getInt(2));
+	rec.put(NOTES,c.getString(3));
+	rec.put(DIASTOLIC,c.getInt(4));
+	rec.put(PULSE,c.getInt(5));
+	rec.put(LOCATION,c.getInt(6));
+	rec.put(SIDE,c.getInt(7));
 
-      if (BuildConfig.DEBUG) {
-	Log.v (TAG,"doInBackground returning: " + rec.getAsString(SYSTOLIC) + " " + rec.getAsString(NOTES));
+	if (BuildConfig.DEBUG) {
+	  Log.v (TAG,"doInBackground returning: " + rec.getAsString(SYSTOLIC) + " " + rec.getAsString(NOTES));
+	}
       }
+
+      c.close();
       return (rec);
     }
 
