@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.daly.android.heart;
+package ca.ddaly.android.heart;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -139,9 +139,9 @@ public class Heart extends SherlockFragmentActivity
   public void onActivityResult(int requestCode, int resultCode, Intent data){
     if (requestCode == REC_REQUEST && resultCode == SherlockFragmentActivity.RESULT_OK) {
       if (BuildConfig.DEBUG) {
-	Log.v (TAG, "got activity result: " + data.getExtras().get("ca.daly.android.heart.REC_ID"));
+	Log.v (TAG, "got activity result: " + data.getExtras().get("ca.ddaly.android.heart.REC_ID"));
       }
-      switchNewEditFrag(data.getLongExtra("ca.daly.android.heart.REC_ID",0));
+      switchNewEditFrag(data.getLongExtra("ca.ddaly.android.heart.REC_ID",0));
     }
   }
 

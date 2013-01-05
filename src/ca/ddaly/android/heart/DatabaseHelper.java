@@ -18,7 +18,7 @@
  */
 
 
-package ca.daly.android.heart;
+package ca.ddaly.android.heart;
 
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;

@@ -18,41 +18,25 @@
  */
 
 
-package ca.daly.android.heart;
+package ca.ddaly.android.heart;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v4.app.Fragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-abstract public class AbstractContentFragment extends WebViewFragment {
-  abstract String getPage();
+public class SimpleContentActivity extends SherlockFragmentActivity {
+  public static final String EXTRA_FILE="file";
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    setRetainInstance(true);
-  }
+    if (getSupportFragmentManager().findFragmentById(android.R.id.content)==null) {
+      String file=getIntent().getStringExtra(EXTRA_FILE);
+      Fragment f=SimpleContentFragment.newInstance(file);
 
-  @Override
-  public View onCreateView(LayoutInflater inflater,
-                           ViewGroup container,
-                           Bundle savedInstanceState) {
-    View result=
-        super.onCreateView(inflater, container, savedInstanceState);
-
-    //getWebView().getSettings().setJavaScriptEnabled(true);
-    getWebView().getSettings().setSupportZoom(true);
-    getWebView().getSettings().setBuiltInZoomControls(true);
-    getWebView().loadUrl(getPage());
-
-    return(result);
-  }
-
-  @Override
-  public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    setUserVisibleHint(true);
+      getSupportFragmentManager().beginTransaction()
+				 .add(android.R.id.content, f).commit();
+    }
   }
 }

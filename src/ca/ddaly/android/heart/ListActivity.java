@@ -18,26 +18,29 @@
  */
 
 
-package ca.daly.android.heart;
+package ca.ddaly.android.heart;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import android.os.Bundle;
+import android.content.Intent;
 
-public class SimpleContentFragment extends AbstractContentFragment {
-  private static final String KEY_FILE="file";
+public class ListActivity extends SherlockFragmentActivity 
+      implements ListFragment.ListSelectListener {
 
-  protected static SimpleContentFragment newInstance(String file) {
-    SimpleContentFragment f=new SimpleContentFragment();
-
-    Bundle args=new Bundle();
-
-    args.putString(KEY_FILE, file);
-    f.setArguments(args);
-
-    return(f);
+  @Override 
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (getSupportFragmentManager().findFragmentById(android.R.id.content)==null) {
+      getSupportFragmentManager().beginTransaction()
+                                 .add(android.R.id.content, new ListFragment()).commit();
+    }
   }
 
-  @Override
-  String getPage() {
-    return(getArguments().getString(KEY_FILE));
+  public void RecordSelect(long id) {
+    Intent result=new Intent();
+
+    result.putExtra("ca.ddaly.android.heart.REC_ID",id);
+    setResult(RESULT_OK,result);
+    finish();
   }
 }

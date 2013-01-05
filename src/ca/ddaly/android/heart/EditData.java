@@ -18,7 +18,7 @@
  */
 
 
-package ca.daly.android.heart;
+package ca.ddaly.android.heart;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import android.content.ContentValues;

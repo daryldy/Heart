@@ -18,7 +18,7 @@
  */
 
 
-package ca.daly.android.heart;
+package ca.ddaly.android.heart;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;

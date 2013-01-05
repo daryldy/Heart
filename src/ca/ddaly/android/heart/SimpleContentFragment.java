@@ -18,25 +18,26 @@
  */
 
 
-package ca.daly.android.heart;
+package ca.ddaly.android.heart;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-public class SimpleContentActivity extends SherlockFragmentActivity {
-  public static final String EXTRA_FILE="file";
+public class SimpleContentFragment extends AbstractContentFragment {
+  private static final String KEY_FILE="file";
+
+  protected static SimpleContentFragment newInstance(String file) {
+    SimpleContentFragment f=new SimpleContentFragment();
+
+    Bundle args=new Bundle();
+
+    args.putString(KEY_FILE, file);
+    f.setArguments(args);
+
+    return(f);
+  }
 
   @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    if (getSupportFragmentManager().findFragmentById(android.R.id.content)==null) {
-      String file=getIntent().getStringExtra(EXTRA_FILE);
-      Fragment f=SimpleContentFragment.newInstance(file);
-
-      getSupportFragmentManager().beginTransaction()
-				 .add(android.R.id.content, f).commit();
-    }
+  String getPage() {
+    return(getArguments().getString(KEY_FILE));
   }
 }

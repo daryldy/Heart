@@ -37,7 +37,7 @@
 
 //package android.webkit;
 //package com.commonsware.empublite;
-package ca.daly.android.heart;
+package ca.ddaly.android.heart;
 
 import android.annotation.TargetApi;
 import android.os.Build;
