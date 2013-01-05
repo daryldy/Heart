@@ -29,7 +29,10 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-See full text of license_ below or at <http://www.gnu.org/licenses/>.
+See full text of license_ below or at `gnu.org
+<http://www.gnu.org/licenses/>`_.
+
+Source code for this program is available on `GitHub <http://github.com/daryldy/Heart>`_
 
 The charting funtionality of this program is provided by the 
 AChartEngine_ library. AChartEngine_ is licensed under the terms of the Apache
