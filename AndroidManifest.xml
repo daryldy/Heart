@@ -13,9 +13,11 @@
     android:theme="@style/Theme.Sherlock"
     android:hardwareAccelerated="true"
     >
-    <provider
-      android:name=".Provider"
-      android:authorities="ca.ddaly.android.heart"/>
+    <!-- currently a privacy risk
+      <provider
+	android:name=".Provider"
+	android:authorities="ca.ddaly.android.heart"/>
+    -->
     <activity android:name=".Heart"
 	      android:label="@string/app_name"
 	      android:windowSoftInputMode="stateHidden|adjustPan"

@@ -1,7 +1,6 @@
 TODO
 ====
 
-- remove Provider -- no longer needed and is a privacy risk
 
 - Should not require an actual record save during a config change. Active record should be separated from edit fragment so it can survive the config change and be redisplayed in the (new) edit fragment like the normal fields that android redisplays itself.
 
