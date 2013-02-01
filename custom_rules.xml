@@ -2,17 +2,17 @@
 <project name="custom_rules">
     <target name="-pre-build">
         <echo>create html files</echo>
-        <exec dir="reText"
+        <exec dir="misc/reText"
               executable="rst2html2" 
 	      failonerror="true" >
           <arg value="help.txt" />
-          <arg value="../assets/misc/help.html" />
+          <arg value="../../assets/misc/help.html" />
         </exec>
-        <exec dir="reText"
+        <exec dir="misc/reText"
               executable="rst2html2" 
 	      failonerror="true" >
           <arg value="about.txt" />
-          <arg value="../assets/misc/about.html" />
+          <arg value="../../assets/misc/about.html" />
         </exec>
     </target>
 </project>

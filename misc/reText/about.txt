@@ -57,12 +57,12 @@ it.
 
 License
 -------
-.. include:: ../COPYING
+.. include:: ../../COPYING
    :literal:
 
 AChartEngine License
 --------------------
-.. include:: ../achartengine.LICENSE-2.0.txt
+.. include:: ../../achartengine.LICENSE-2.0.txt
    :literal:
 
 
