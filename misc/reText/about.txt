@@ -15,10 +15,6 @@ Introduction
 Heart Observe tracks blood pressure and pulse values
 over time.
 
-If this app is useful to you, please consider a donation to the developer to
-help support this app. Donations can be made by purchasing the **Heart Observe
-(Donate)** app.
-
 
 Notice
 ------
