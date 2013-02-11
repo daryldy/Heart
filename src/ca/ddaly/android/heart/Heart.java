@@ -48,6 +48,7 @@ public class Heart extends SherlockFragmentActivity
   private static final String DATA_FRAG="Data Fragment";
   private EditFragment myViewer;
   private ListFragment myList;
+  private Long switchToRecID = null;
 
   @Override
   public void onCreate(Bundle savedInstanceState)
@@ -88,7 +89,7 @@ public class Heart extends SherlockFragmentActivity
 				 .commit();
     } else {
       if (BuildConfig.DEBUG) {
-	Log.v (TAG,"onCreate: list fragment still exists");
+	Log.v (TAG,"onCreate: list fragment not created");
       }
     }
   }
@@ -107,7 +108,7 @@ public class Heart extends SherlockFragmentActivity
     switch (item.getItemId()) {
       case android.R.id.home:
 	return (true);
-      case R.id.edit:
+      case R.id.list:
         i=new Intent(this, ListActivity.class);
 	myViewer.doSave();   // ensure current record is updated to db so list can show it
 	startActivityForResult(i,REC_REQUEST);
@@ -127,9 +128,13 @@ public class Heart extends SherlockFragmentActivity
       case R.id.graph:
 	myViewer.doSave();   // ensure current record is updated to db so it can be graphed
         doGraph();
+	return (true);
       case R.id.add:
-	myList.unselectCurr();
+	if (myList != null) {
+	  myList.unselectCurr();
+	}
 	RecordSelect(0L);
+	return (true);
     }
 
     return(super.onOptionsItemSelected(item));
@@ -141,20 +146,50 @@ public class Heart extends SherlockFragmentActivity
       if (BuildConfig.DEBUG) {
 	Log.v (TAG, "got activity result: " + data.getExtras().get("ca.ddaly.android.heart.REC_ID"));
       }
-      switchNewEditFrag(data.getLongExtra("ca.ddaly.android.heart.REC_ID",0));
+
+      Long newRecID = data.getLongExtra("ca.ddaly.android.heart.REC_ID",0);
+      if (myList != null) {
+	// list fragment exists
+	// update the edit fragment
+	switchNewEditFrag(newRecID);
+      } else {
+        // postpone the edit fragment switch until this activity has been restarted
+	switchToRecID = newRecID;
+      }
     }
   }
 
   @Override 
   protected void onStart() {
+    if (BuildConfig.DEBUG) {
+      Log.v (TAG, "onStart");
+    }
     super.onStart();
-    DatabaseHelper.getInstance(this).addRecordChangedListener(this);  // need to keep list updated with record changes
+
+    if (myList != null) {
+      // list fragment exists
+      DatabaseHelper.getInstance(this).addRecordChangedListener(this);  // need to keep list updated with record changes
+    } else {
+      // check if need to bring up a particular record id
+      if (switchToRecID != null) {
+        // do previously postponed edit fragment switch
+	switchNewEditFrag(switchToRecID);
+	switchToRecID = null;
+      }
+    }
   }
 
   @Override 
   protected void onStop() {
+    if (BuildConfig.DEBUG) {
+      Log.v (TAG, "onStop");
+    }
     super.onStop();
-    DatabaseHelper.getInstance(this).removeRecordChangedListener(this);
+
+    if (myList != null) {
+      // list fragment exists
+      DatabaseHelper.getInstance(this).removeRecordChangedListener(this);
+    }
   }
 
   private void doGraph() {
