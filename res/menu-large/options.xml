@@ -2,25 +2,23 @@
 
   <item
     android:id="@+id/graph"
-    android:icon="@drawable/ic_action_graph"
+    android:icon="@drawable/ab_graph"
     android:showAsAction="ifRoom"
     android:title="@string/graph">
   </item>
   <item
     android:id="@+id/add"
-    android:icon="@drawable/ic_content_new"
+    android:icon="@drawable/ab_add"
     android:showAsAction="ifRoom"
     android:title="@string/add">
   </item>
   <item
     android:id="@+id/help"
-    android:icon="@drawable/ic_action_help"
     android:showAsAction="never"
     android:title="@string/help">
   </item>
   <item
     android:id="@+id/about"
-    android:icon="@drawable/ic_action_about"
     android:showAsAction="never"
     android:title="@string/about">
   </item>

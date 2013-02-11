@@ -1,14 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
   <item
-    android:id="@+id/edit"
-    android:icon="@drawable/ic_menu_account_list"
+    android:id="@+id/list"
+    android:icon="@drawable/ab_list"
     android:showAsAction="ifRoom"
     android:title="@string/edit">
   </item>
   <item
     android:id="@+id/graph"
-    android:icon="@drawable/ic_action_graph"
+    android:icon="@drawable/ab_graph"
     android:showAsAction="ifRoom"
     android:title="@string/graph">
   </item>

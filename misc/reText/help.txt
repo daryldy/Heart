@@ -30,4 +30,5 @@ Quickly add multiple records
 3. Press |add button|
 4. Repeat steps 2 and 3 until finished
 
-.. |add button| image:: images/ic_content_new.png 
+.. |add button| image:: images/ab_add_neg.png
+
