@@ -16,8 +16,8 @@ Heart Observe tracks blood pressure and pulse values
 over time.
 
 If this app is useful to you, please consider a donation to the developer to
-help support this app. Donations can be made by purchasing the **Heart Observe
-(Donate)** app.
+help support this app. Donations can be made by purchasing the `Heart Observe
+(Donate)`_ app or at `Heart Observe`_
 
 Notice
 ------
@@ -73,3 +73,6 @@ AChartEngine License
 
 .. _AChartEngine: http://www.achartengine.org
 
+.. _Heart Observe: http://daryldy.github.com/Heart
+
+.. _Heart Observe (Donate): https://play.google.com/store/apps/details?id=ca.ddaly.android.heart_donate
