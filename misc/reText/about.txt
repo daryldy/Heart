@@ -44,19 +44,7 @@ License. See `AChartEngine License`_ section for your reference.
 Privacy
 -------
 
-Heart Observe stores heart pressure, pulse and related data that you provide. This
-data is stored only on your device.
-It does not
-associate any other personal identifiable information with the heart data
-other that what you could include in the *notes* field.
-All the heart data is visible to you through the app and you may delete any or
-all the information whenever you like. If you uninstall the application,
-all the heart data is removed as well.
-
-To help protect your privay, no advertising is used in Heart Observe.
-Please support this policy by purchasing the Heart Observe
-(donate) app. This allows for ongoing development of this app and others like
-it.
+see Privacy_
 
 License
 -------
@@ -76,3 +64,5 @@ AChartEngine License
 .. _Heart Observe: http://daryldy.github.com/Heart
 
 .. _Heart Observe (Donate): https://play.google.com/store/apps/details?id=ca.ddaly.android.heart_donate
+
+.. _Privacy: http://daryldy.github.com/Heart/privacy.html
