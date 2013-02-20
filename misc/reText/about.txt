@@ -3,7 +3,7 @@ Heart Observe
 
 :Author: Daryl Daly  with Artwork by Elliot Daly and Inez Daly
 :Contact: daryldaly@gmail.com
-:Copyright: |copy| 2012 Daryl Daly, all rights reserved
+:Copyright: |copy| 2013 Daryl Daly, all rights reserved
 
 .. To God be the Glory
 
