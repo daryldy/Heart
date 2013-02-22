@@ -31,7 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
-import android.widget.NumberPicker;
+//import android.widget.NumberPicker;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.text.format.DateUtils;
@@ -44,6 +44,7 @@ import android.view.View;
 import android.util.Log;
 import java.util.Date;
 import java.util.Calendar;
+import net.simonvt.widget.NumberPicker;
 
 public class EditFragment extends SherlockFragment implements // DatabaseHelper.RecordListener,
                                                               // Heart.EditListener,

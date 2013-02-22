@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <style name="Theme.Heart" parent="Theme.Sherlock">
+    <item name="numberPickerUpButtonStyle">@style/NPWidget.Holo.ImageButton.NumberPickerUpButton</item>
+    <item name="numberPickerDownButtonStyle">@style/NPWidget.Holo.ImageButton.NumberPickerDownButton</item>
+    <item name="numberPickerInputTextStyle">@style/NPWidget.Holo.EditText.NumberPickerInputText</item>
+    <item name="numberPickerStyle">@style/NPWidget.Holo.NumberPicker</item>
+  </style>
   <style name="label">
     <item name="android:textStyle">bold</item>
   </style>

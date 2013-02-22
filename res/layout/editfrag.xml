@@ -47,17 +47,17 @@
 	/>
     </TableRow>
     <TableRow>
-      <NumberPicker
+      <net.simonvt.widget.NumberPicker
 	android:id="@+id/systolic"
 	android:layout_weight="1"
 	android:gravity="center"
 	/>
-      <NumberPicker
+      <net.simonvt.widget.NumberPicker
 	android:id="@+id/diastolic"
 	android:layout_weight="1"
 	android:gravity="center"
 	/>
-      <NumberPicker
+      <net.simonvt.widget.NumberPicker
 	android:id="@+id/pulse"
 	android:layout_weight="1"
 	android:gravity="center"

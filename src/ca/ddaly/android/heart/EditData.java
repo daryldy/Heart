@@ -112,8 +112,12 @@ public class EditData implements DatabaseHelper.RecordListener,
     diastolic = new_data.getAsInteger(DatabaseHelper.DIASTOLIC);
     pulse = new_data.getAsInteger(DatabaseHelper.PULSE);
     notes = new_data.getAsString(DatabaseHelper.NOTES);
-    location = new_data.getAsBoolean(DatabaseHelper.LOCATION);
-    side = new_data.getAsBoolean(DatabaseHelper.SIDE);
+    //location = new_data.getAsBoolean(DatabaseHelper.LOCATION);  -- doesn't work in android version 2.3
+    String value = new_data.getAsString(DatabaseHelper.LOCATION); // work-around for above
+    location = value.equals("true") || value.equals("1");         // work-around for above
+    //side = new_data.getAsBoolean(DatabaseHelper.SIDE);  -- doesn't work in android version 2.3
+    value = new_data.getAsString(DatabaseHelper.SIDE);    // work-around for above
+    side = value.equals("true") || value.equals("1");     // work-around for above
   }
 
 
