@@ -4,6 +4,7 @@ Heart Observe
 :Author: Daryl Daly  with Artwork by Elliot Daly and Inez Daly
 :Contact: daryldaly@gmail.com
 :Copyright: |copy| 2013 Daryl Daly, all rights reserved
+:Version: 1.0.1
 
 .. To God be the Glory
 
@@ -39,7 +40,11 @@ Source code for this program is available on `GitHub <http://github.com/daryldy/
 
 The charting funtionality of this program is provided by the 
 AChartEngine_ library. AChartEngine_ is licensed under the terms of the Apache
-License. See `AChartEngine License`_ section for your reference.
+License. See `Apache License`_ section for your reference.
+
+Additional libaries have also been used which are licensed under the terms of the
+same Apache License. These include ActionBarSherlock_ and `SimonVT's
+android-numberpicker`_
 
 Privacy
 -------
@@ -51,8 +56,8 @@ License
 .. include:: ../../COPYING
    :literal:
 
-AChartEngine License
---------------------
+Apache License
+--------------
 .. include:: ../../achartengine.LICENSE-2.0.txt
    :literal:
 
@@ -66,3 +71,7 @@ AChartEngine License
 .. _Heart Observe (Donate): https://play.google.com/store/apps/details?id=ca.ddaly.android.heart_donate
 
 .. _Privacy: http://daryldy.github.com/Heart/privacy.html
+
+.. _ActionBarSherlock: http://actionbarsherlock.com
+
+.. _SimonVT's android-numberpicker: https://github.com/SimonVT/android-numberpicker

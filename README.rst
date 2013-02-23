@@ -12,6 +12,11 @@ ActionBarSherlock
 - Download from `ActionBarSherlock <http://actionbarsherlock.com>`_
 - Setup as needed
 
+SimonVT's android-numberpicker
+++++++++++++++++++++++++++++++
+
+- Download from `android-numberpicker <https://github.com/SimonVT/android-numberpicker>`_
+
 Build Instructions
 ------------------
 
@@ -31,7 +36,7 @@ This assumes that you have setup the Android development environment. The instru
 
 - Build and install on emulator or available device
 
-  - Build assumes that the ActionBarSherlock is installed in the same directory as Heart. If it isn't, edit project.properties as needed.
+  - Build assumes that the ActionBarSherlock and SimonVT's android-numberpicker are installed in the same directory as Heart. If they are not then edit project.properties as needed.
 
 
 .. code-block:: sh
