@@ -130,6 +130,8 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
     if (BuildConfig.DEBUG) {
       Log.v(TAG,"onCreateView: date_time: " + date_time.getTimeInMillis());
     }
+
+    notes_field.requestFocus();
     return(result);
   }
 
