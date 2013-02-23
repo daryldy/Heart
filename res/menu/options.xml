@@ -13,6 +13,12 @@
     android:title="@string/graph">
   </item>
   <item
+    android:id="@+id/add"
+    android:icon="@drawable/ab_add"
+    android:showAsAction="ifRoom"
+    android:title="@string/add">
+  </item>
+  <item
     android:id="@+id/help"
     android:icon="@android:drawable/ic_menu_help"
     android:showAsAction="never"
