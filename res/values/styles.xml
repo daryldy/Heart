@@ -9,4 +9,6 @@
   <style name="label">
     <item name="android:textStyle">bold</item>
   </style>
+  <style name="activated" parent="Theme.Sherlock">
+  </style>
 </resources>
