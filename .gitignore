@@ -2,3 +2,4 @@ bin
 build.xml
 gen
 local.properties
+assets
