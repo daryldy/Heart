@@ -17,7 +17,7 @@ Heart Observe tracks blood pressure and pulse values
 over time.
 
 If this app is useful to you, please consider a donation to the developer to
-help support this app. Donations can be made by purchasing the `Heart Observe
+help support it. Donations can be made by purchasing the `Heart Observe
 (Donate)`_ app or at `Heart Observe`_
 
 Notice
@@ -43,13 +43,24 @@ AChartEngine_ library. AChartEngine_ is licensed under the terms of the Apache
 License. See `Apache License`_ section for your reference.
 
 Additional libaries have also been used which are licensed under the terms of the
-same Apache License. These include ActionBarSherlock_ and `SimonVT's
+same `Apache License`_. These include ActionBarSherlock_ and `SimonVT's
 android-numberpicker`_
 
 Privacy
 -------
 
 see Privacy_
+
+Dedication
+----------
+
+.. epigraph::
+
+  to the only God, our Savior, through Jesus Christ our
+  Lord, be glory, majesty, dominion, and authority, before all time and now and
+  forever. Amen.
+
+  -- Jude 25 (ESV)
 
 License
 -------
