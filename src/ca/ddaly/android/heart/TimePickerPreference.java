@@ -144,12 +144,12 @@ public class TimePickerPreference extends DialogPreference {
 
   /**
    * returns myPicker's value in this preference's storage format
+   *      storage format = HH:mm (US Locale)
    * @return formatted String
    */
   private String formatForStorage() {
     if (myPicker != null) {
-      Locale locale = null;
-      return String.format(locale,"%02d:%02d",myPicker.getCurrentHour(),myPicker.getCurrentMinute());
+      return String.format(Locale.US,"%02d:%02d",myPicker.getCurrentHour(),myPicker.getCurrentMinute());
     } else {
       return "";
     }

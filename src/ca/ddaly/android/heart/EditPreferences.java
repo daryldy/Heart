@@ -30,6 +30,7 @@ import android.util.Log;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 public class EditPreferences extends SherlockPreferenceActivity
                              implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -87,7 +88,7 @@ public class EditPreferences extends SherlockPreferenceActivity
     if (key.equals(START_TIME_KEY) || key.equals(END_TIME_KEY)) {
       Preference pref = findPreference(key);
       String time = sharedPreferences.getString(key,"");
-      DateFormat parseDF = new SimpleDateFormat("HH:mm"); // to create Date from time preference
+      DateFormat parseDF = new SimpleDateFormat("HH:mm",Locale.US); // to create Date from time preference
       DateFormat displayDF;                               // for display of time
 
       if (is24Hour) {
@@ -113,7 +114,7 @@ public class EditPreferences extends SherlockPreferenceActivity
     if (key.equals(START_DATE_KEY) || key.equals(END_DATE_KEY)) {
       Preference pref = findPreference(key);
       String date = sharedPreferences.getString(key,"");
-      DateFormat parseDF = new SimpleDateFormat("yyyy-MM-dd"); // to create Date from date preference
+      DateFormat parseDF = new SimpleDateFormat("yyyy-MM-dd",Locale.US); // to create Date from date preference
       DateFormat displayDF = DateFormat.getDateInstance();     // for display of Date (using Locale default)
 
       if (BuildConfig.DEBUG) {

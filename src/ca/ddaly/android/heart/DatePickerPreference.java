@@ -162,12 +162,12 @@ public class DatePickerPreference extends DialogPreference {
 
   /**
    * returns myPicker's value in this preference's storage format
+   *      storage format = yyyy-MM-dd (US Locale)
    * @return formatted String
    */
   private String formatForStorage() {
     if (myPicker != null) {
-      Locale locale = null;
-      return String.format(locale,"%04d-%02d-%02d",myPicker.getYear(),(myPicker.getMonth() + 1),myPicker.getDayOfMonth());
+      return String.format(Locale.US,"%04d-%02d-%02d",myPicker.getYear(),(myPicker.getMonth() + 1),myPicker.getDayOfMonth());
                                // picker uses zero based month numbers
     } else {
       return "";
