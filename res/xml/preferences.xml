@@ -1,0 +1,25 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+      android:key="preferences">
+  <CheckBoxPreference
+    android:key="time_filter"
+    android:summary="@string/time_filter_summary"
+    android:title="@string/time_filter_title"/>
+  <ca.ddaly.android.heart.TimePickerPreference
+    android:key="start_time"
+    android:defaultValue="00:00"
+    android:title="@string/start_time_title"/>
+  <ca.ddaly.android.heart.TimePickerPreference
+    android:key="end_time"
+    android:defaultValue="23:59"
+    android:title="@string/end_time_title"/>
+  <CheckBoxPreference
+    android:key="date_filter"
+    android:summary="@string/date_filter_summary"
+    android:title="@string/date_filter_title"/>
+  <ca.ddaly.android.heart.DatePickerPreference
+    android:key="start_date"
+    android:title="@string/start_date_title"/>
+  <ca.ddaly.android.heart.DatePickerPreference
+    android:key="end_date"
+    android:title="@string/end_date_title"/>
+</PreferenceScreen>

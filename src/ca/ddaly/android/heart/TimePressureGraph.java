@@ -22,9 +22,11 @@ package ca.ddaly.android.heart;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.Calendar;
@@ -143,6 +145,36 @@ public class TimePressureGraph {
     TimeSeries systolic = new TimeSeries(ctxt.getString(R.string.systolic));
     TimeSeries diastolic = new TimeSeries(ctxt.getString(R.string.diastolic));
 
+    String filter = "where 1 = 1";   // TODO  = "";
+    // TODO -- should be off of the UI thread
+    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
+
+    // TODO  remove next block
+    if (prefs.getBoolean(EditPreferences.TIME_FILTER_KEY,false)) {
+      String startTime = prefs.getString(EditPreferences.START_TIME_KEY,"00:00");
+      String endTime = prefs.getString(EditPreferences.END_TIME_KEY,"23:59");
+      filter = filter + " and time(heart.date/1000,'unixepoch') between '"
+                      + startTime 
+		      + "' and '"
+		      + endTime
+		      + "'";
+    }
+
+    // TODO  modify next block -- use range startDate - 1 day to endDate + 1 day   just doing this to reduce the result set rather then trying to get exact filter
+    if (prefs.getBoolean("date_filter",false)) {
+      String startDate = prefs.getString(EditPreferences.START_DATE_KEY,"1970-01-01");
+      String endDate = prefs.getString(EditPreferences.END_DATE_KEY,"2070-01-01");
+      filter = filter + " and date(heart.date/1000,'unixepoch') between '"
+                      + startDate
+		      + "' and '"
+		      + endDate
+		      + "'";
+    }
+
+    if (BuildConfig.DEBUG) {
+      Log.v (TAG,"getDataset: filter = " + filter);
+    }
+
     // TODO -- should be off of the UI thread
     Cursor result = DatabaseHelper.getInstance(ctxt).getReadableDatabase().rawQuery(
                     "Select "
@@ -150,6 +182,7 @@ public class TimePressureGraph {
 		  + "       systolic, "
 		  + "       diastolic "
 		  + "From heart "
+		  + filter + " "
 		  + "Order by date",
 		  null);
 
@@ -159,13 +192,15 @@ public class TimePressureGraph {
 	Integer systolic_val = result.getInt(1);
 	Integer diastolic_val = result.getInt(2);
 
+        // TODO    if date in range and time in range then 
 	systolic.add(date,systolic_val);
 	diastolic.add(date,diastolic_val);
       }
 
-
+      // TODO  if length(systolic) (or diastolic doesn't matter or use a counter ???) then 
       dataset.addSeries(systolic);
       dataset.addSeries(diastolic);
+      // TODO   else dataset = null;
     } else {
       dataset = null;
     }

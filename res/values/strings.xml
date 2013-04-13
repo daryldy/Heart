@@ -24,5 +24,16 @@
     <string name="notes">notes</string>
     <string name="layoutdivider">Layout Divider</string>
     <string name="forwardslashseparator">/</string>
-    <string name="no_graph_data">Nothing to Graph</string>
+    <string name="no_graph_data">Nothing to graph. Check settings</string>
+    <string name="preferences">Settings</string>
+    <string name="time_filter_summary">Limit time range on graph?</string>
+    <string name="time_filter_title">Time filter</string>
+    <string name="start_time_title">Start Time</string>
+    <string name="end_time_title">End Time</string>
+    <string name="date_filter_summary">Limit date range on graph?</string>
+    <string name="date_filter_title">Date filter</string>
+    <string name="start_date_title">Start Date</string>
+    <string name="end_date_title">End Date</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

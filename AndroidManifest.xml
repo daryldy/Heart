@@ -37,5 +37,6 @@
     </activity>
     <activity android:name=".ListActivity" />
     <activity android:name="org.achartengine.GraphicalActivity" />
+    <activity android:name=".EditPreferences" />
   </application>
 </manifest>

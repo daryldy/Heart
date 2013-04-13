@@ -135,6 +135,10 @@ public class Heart extends SherlockFragmentActivity
 	}
 	RecordSelect(0L);
 	return (true);
+      case R.id.preferences:
+        i=new Intent(this, EditPreferences.class);
+	startActivity(i);
+	return (true);
     }
 
     return(super.onOptionsItemSelected(item));
