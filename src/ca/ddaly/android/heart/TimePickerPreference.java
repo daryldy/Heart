@@ -32,22 +32,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TimePicker;
 import java.lang.String;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 
 public class TimePickerPreference extends DialogPreference {
   private static final String TAG = "TimePickerPreference";
+  public static final DateFormat STORAGE_FORMAT_PARSER = new SimpleDateFormat("HH:mm",Locale.US);
   private TimePicker myPicker = null;
-  private String lastTime = null;
+  private String lastTime = null;    // in storage format HH:mm
   private Context ctxt = null;
-
-  public static int getHour(String time) {
-    return(Integer.parseInt(time.split(":")[0]));
-  }
-
-  public static int getMinute(String time) {
-    return(Integer.parseInt(time.split(":")[1]));
-  }
 
   public TimePickerPreference(Context context, AttributeSet attrs) {
     super(context,attrs);
@@ -74,8 +72,7 @@ public class TimePickerPreference extends DialogPreference {
       if (BuildConfig.DEBUG) {
 	Log.v (TAG,"onBindDialogView: setting picker values");
       }
-      myPicker.setCurrentHour(getHour(lastTime));
-      myPicker.setCurrentMinute(getMinute(lastTime));
+      updatePicker();
     }
   }
 
@@ -126,6 +123,10 @@ public class TimePickerPreference extends DialogPreference {
 
   @Override
   protected void onRestoreInstanceState(Parcelable state) {
+    if (BuildConfig.DEBUG) {
+      Log.v (TAG,"onRestoreInstanceState");
+    }
+
     // Check whether we saved the state in onSaveInstanceState
     if (state == null || !state.getClass().equals(SavedState.class)) {
         // Didn't save the state, so call superclass
@@ -138,8 +139,8 @@ public class TimePickerPreference extends DialogPreference {
     super.onRestoreInstanceState(myState.getSuperState());
     
     // Set this Preference's widget to reflect the restored state
-    myPicker.setCurrentHour(getHour(myState.value));
-    myPicker.setCurrentMinute(getMinute(myState.value));
+    lastTime = myState.value;
+    updatePicker();
   }
 
   /**
@@ -154,6 +155,24 @@ public class TimePickerPreference extends DialogPreference {
       return "";
     }
   }
+
+  /**
+   * update picker with current time data
+   */
+  private void updatePicker() {
+    if (myPicker != null) {
+      Calendar cal = Calendar.getInstance();
+      try {
+	cal.setTime(STORAGE_FORMAT_PARSER.parse(lastTime));
+      } catch (ParseException e) {
+	e.printStackTrace();
+      }
+
+      myPicker.setCurrentHour(cal.get(Calendar.HOUR_OF_DAY));
+      myPicker.setCurrentMinute(cal.get(Calendar.MINUTE));
+    }
+  }
+
 
   private static class SavedState extends BaseSavedState {
     String value;

@@ -88,19 +88,12 @@ public class EditPreferences extends SherlockPreferenceActivity
     if (key.equals(START_TIME_KEY) || key.equals(END_TIME_KEY)) {
       Preference pref = findPreference(key);
       String time = sharedPreferences.getString(key,"");
-      DateFormat parseDF = new SimpleDateFormat("HH:mm",Locale.US); // to create Date from time preference
-      DateFormat displayDF;                               // for display of time
-
-      if (is24Hour) {
-        displayDF = new SimpleDateFormat("HH:mm");
-      } else {
-        displayDF = new SimpleDateFormat("K:mma");
-      }
+      DateFormat displayDF = DateFormat.getTimeInstance();   // for display of Time (using Locale default)
       if (BuildConfig.DEBUG) {
 	Log.v (TAG,"onSharedPreferenceChanged: time = " + time);
       }
       try {
-        pref.setSummary(displayDF.format(parseDF.parse(time)));
+        pref.setSummary(displayDF.format(TimePickerPreference.STORAGE_FORMAT_PARSER.parse(time)));
       } catch (ParseException e) {
         e.printStackTrace();
       }
@@ -114,14 +107,13 @@ public class EditPreferences extends SherlockPreferenceActivity
     if (key.equals(START_DATE_KEY) || key.equals(END_DATE_KEY)) {
       Preference pref = findPreference(key);
       String date = sharedPreferences.getString(key,"");
-      DateFormat parseDF = new SimpleDateFormat("yyyy-MM-dd",Locale.US); // to create Date from date preference
       DateFormat displayDF = DateFormat.getDateInstance();     // for display of Date (using Locale default)
 
       if (BuildConfig.DEBUG) {
 	Log.v (TAG,"onSharedPreferenceChanged: date = " + date);
       }
       try {
-        pref.setSummary(displayDF.format(parseDF.parse(date)));
+        pref.setSummary(displayDF.format(DatePickerPreference.STORAGE_FORMAT_PARSER.parse(date)));
       } catch (ParseException e) {
         e.printStackTrace();
       }

@@ -32,43 +32,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import java.lang.String;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class DatePickerPreference extends DialogPreference {
   private static final String TAG = "DatePickerPreference";
+  public static final DateFormat STORAGE_FORMAT_PARSER = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
   private DatePicker myPicker = null;
-  private String lastDate = null;
+  private String lastDate = null;     // in storage format yyyy-MM-dd
   private Context ctxt = null;
-
-  public static int getYear(String date) {
-    try {
-      return (Integer.parseInt(date.split("-")[0]));
-    } catch (NumberFormatException e) {
-      return 0;
-    } catch (ArrayIndexOutOfBoundsException e) {
-      return 0;
-    }
-  }
-
-  public static int getMonth(String date) {
-    try {
-      return(Integer.parseInt(date.split("-")[1]));
-    } catch (NumberFormatException e) {
-      return 0;
-    } catch (ArrayIndexOutOfBoundsException e) {
-      return 0;
-    }
-  }
-
-  public static int getDay(String date) {
-    try {
-      return(Integer.parseInt(date.split("-")[2]));
-    } catch (NumberFormatException e) {
-      return 0;
-    } catch (ArrayIndexOutOfBoundsException e) {
-      return 0;
-    }
-  }
 
   public DatePickerPreference(Context context, AttributeSet attrs) {
     super(context,attrs);
@@ -93,8 +69,7 @@ public class DatePickerPreference extends DialogPreference {
       if (BuildConfig.DEBUG) {
 	Log.v (TAG,"onBindDialogView: setting picker values: lastDate = " + lastDate);
       }
-      myPicker.updateDate(getYear(lastDate),getMonth(lastDate) - 1,getDay(lastDate));
-                               // picker uses zero based month numbers
+      updatePicker();
     }
   }
 
@@ -157,7 +132,8 @@ public class DatePickerPreference extends DialogPreference {
     super.onRestoreInstanceState(myState.getSuperState());
     
     // Set this Preference's widget to reflect the restored state
-    myPicker.updateDate(getYear(lastDate),getMonth(lastDate),getDay(lastDate));
+    lastDate = myState.value;
+    updatePicker();
   }
 
   /**
@@ -171,6 +147,22 @@ public class DatePickerPreference extends DialogPreference {
                                // picker uses zero based month numbers
     } else {
       return "";
+    }
+  }
+
+  /**
+   * update picker with current date data
+   */
+  private void updatePicker() {
+    if (myPicker != null) {
+      Calendar cal = Calendar.getInstance();
+      try {
+	cal.setTime(STORAGE_FORMAT_PARSER.parse(lastDate));
+      } catch (ParseException e) {
+	e.printStackTrace();
+      }
+
+      myPicker.updateDate(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
     }
   }
 
