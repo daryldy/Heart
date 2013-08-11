@@ -3,13 +3,13 @@
     <target name="-pre-build">
         <echo>create html files</echo>
         <exec dir="misc/reText"
-              executable="rst2html2" 
+              executable="rst2html" 
 	      failonerror="true" >
           <arg value="help.txt" />
           <arg value="../../assets/misc/help.html" />
         </exec>
         <exec dir="misc/reText"
-              executable="rst2html2" 
+              executable="rst2html" 
 	      failonerror="true" >
           <arg value="about.txt" />
           <arg value="../../assets/misc/about.html" />
