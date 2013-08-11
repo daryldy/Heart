@@ -6,6 +6,11 @@ Heart Observe is an Android app designed to easily track a person's blood pressu
 Dependancies
 ------------
 
+rst2html
+++++++++
+
+- from the python-docutils package
+
 ActionBarSherlock
 +++++++++++++++++
 
