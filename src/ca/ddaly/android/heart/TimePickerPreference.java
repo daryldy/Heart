@@ -66,8 +66,7 @@ public class TimePickerPreference extends DialogPreference {
       Log.v (TAG,"onBindDialogView");
     }
     myPicker = (TimePicker) view.findViewById(R.id.timePicker);
-    myPicker.setIs24HourView(System.getString(ctxt.getContentResolver(),
-                                              System.TIME_12_24).equals("24"));
+    myPicker.setIs24HourView(android.text.format.DateFormat.is24HourFormat(ctxt));
     if (lastTime != null) {
       if (BuildConfig.DEBUG) {
 	Log.v (TAG,"onBindDialogView: setting picker values");

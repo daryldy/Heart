@@ -27,8 +27,7 @@ import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.provider.Settings.System;
 import android.util.Log;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import android.text.format.DateFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -41,18 +40,12 @@ public class EditPreferences extends SherlockPreferenceActivity
   public static final String DATE_FILTER_KEY = "date_filter";
   public static final String START_DATE_KEY = "start_date";
   public static final String END_DATE_KEY = "end_date";
-  private boolean is24Hour = false;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     addPreferencesFromResource(R.xml.preferences);
-
-    is24Hour = System.getString(this.getContentResolver(),System.TIME_12_24).equals("24");
-    if (BuildConfig.DEBUG) {
-      Log.v (TAG,"onCreate: is24Hour = " + is24Hour);
-    }
 
     // set initial preference information
     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -88,7 +81,7 @@ public class EditPreferences extends SherlockPreferenceActivity
     if (key.equals(START_TIME_KEY) || key.equals(END_TIME_KEY)) {
       Preference pref = findPreference(key);
       String time = sharedPreferences.getString(key,"");
-      DateFormat displayDF = DateFormat.getTimeInstance();   // for display of Time (using Locale default)
+      java.text.DateFormat displayDF = DateFormat.getTimeFormat(this);   // for display of Time (using Locale default)
       if (BuildConfig.DEBUG) {
 	Log.v (TAG,"onSharedPreferenceChanged: time = " + time);
       }
@@ -107,7 +100,7 @@ public class EditPreferences extends SherlockPreferenceActivity
     if (key.equals(START_DATE_KEY) || key.equals(END_DATE_KEY)) {
       Preference pref = findPreference(key);
       String date = sharedPreferences.getString(key,"");
-      DateFormat displayDF = DateFormat.getDateInstance();     // for display of Date (using Locale default)
+      java.text.DateFormat displayDF = DateFormat.getDateFormat(this);     // for display of Date (using Locale default)
 
       if (BuildConfig.DEBUG) {
 	Log.v (TAG,"onSharedPreferenceChanged: date = " + date);
