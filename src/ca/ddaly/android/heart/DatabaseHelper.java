@@ -37,7 +37,7 @@ import java.util.ArrayList;
 public class DatabaseHelper extends SQLiteOpenHelper {
   private static final String TAG = "DatabaseHelper";
   private static final String DATABASE_NAME="heart.db";
-  private static final int SCHEMA_VERSION=4;
+  private static final int SCHEMA_VERSION=5;
   private static DatabaseHelper singleton=null;
   private Context ctxt=null;
   static final String TABLE="heart";
@@ -120,6 +120,46 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       finally {
 	db.endTransaction();
       }
+    }
+    if (oldVersion <= 4) {
+      // add new 'sampled_on_utc' field
+      // converted old 'date' field (local timezone) to 'sampled_on_utc' (UTC timezone)
+      try {
+	db.beginTransaction();
+	db.execSQL("alter table heart add column sampled_on timestamp;");
+        //db.execSQL("update heart set sampled_on = datetime(heart.date / 1000,'unixepoch');");
+        Cursor c = db.rawQuery("SELECT _id, date FROM heart", null);
+
+	while (c.moveToNext()) {
+	  long id=c.getLong(0);
+          long old_date = c.getLong(1);
+	  // do something useful with these
+	}
+	c.close();
+
+        /*
+          above uptate converts using local timezone
+          need to convert all times to utc timezone
+
+          do something like:
+          - build a cursor containing all the records (only need ID and date fields)`
+          long 
+          - update each record in the cursor:
+          long 
+            - utc_unixepoch_millis = heart.date + java.util.TimeZone.getOffset(heart.date)
+          long 
+            = sampled_on_utc = datetime(utc_unixepoch_millis / 1000,'unixepoch')
+          long 
+
+        */
+
+	db.setTransactionSuccessful();
+      }
+      finally {
+	db.endTransaction();
+      }
+
+
     }
   }
 
