@@ -83,6 +83,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
+    if (BuildConfig.DEBUG) {
+      Log.v (TAG, "onUpgrade: oldVersion = " + oldVersion + ", newVersion = " + newVersion);
+    }
+
     if (newVersion == 2) {
       try {
 	db.beginTransaction();
@@ -122,37 +126,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       }
     }
     if (oldVersion <= 4) {
-      // add new 'sampled_on_utc' field
-      // converted old 'date' field (local timezone) to 'sampled_on_utc' (UTC timezone)
+      // add new 'sampled_utc' field
+      // converted old 'date' field (local timezone) to 'sampled_utc' (Coordinated Universal Time (UTC))
       try {
 	db.beginTransaction();
-	db.execSQL("alter table heart add column sampled_on timestamp;");
-        //db.execSQL("update heart set sampled_on = datetime(heart.date / 1000,'unixepoch');");
+	db.execSQL("alter table heart add column sampled_utc timestamp;");
         Cursor c = db.rawQuery("SELECT _id, date FROM heart", null);
 
 	while (c.moveToNext()) {
-	  long id=c.getLong(0);
+	  long id = c.getLong(0);
           long old_date = c.getLong(1);
-	  // do something useful with these
+	  java.util.TimeZone tz = java.util.TimeZone.getDefault(); // assuming the current timezone is the one used when the data was stored
+          long utc_unixepoch_millis = old_date + tz.getOffset(old_date);
+          db.execSQL("update heart set sampled_utc = datetime(" + utc_unixepoch_millis + " / 1000,'unixepoch') where _id = " + id);
 	}
 	c.close();
 
-        /*
-          above uptate converts using local timezone
-          need to convert all times to utc timezone
 
-          do something like:
-          - build a cursor containing all the records (only need ID and date fields)`
-          long 
-          - update each record in the cursor:
-          long 
-            - utc_unixepoch_millis = heart.date + java.util.TimeZone.getOffset(heart.date)
-          long 
-            = sampled_on_utc = datetime(utc_unixepoch_millis / 1000,'unixepoch')
-          long 
-
-        */
-
+	if (BuildConfig.DEBUG) {
+          c = db.rawQuery("SELECT _id, date, datetime(date/1000,'unixepoch'), sampled_utc FROM heart", null);
+	  while (c.moveToNext()) {
+	    long id=c.getLong(0);
+            long old_date = c.getLong(1);
+            String old_date_str = c.getString(2);
+            String sampled_utc = c.getString(3);
+	    Log.v (TAG, "id = " + id + ", old_date = " + old_date + "  " + old_date_str + ", sampled_utc = " + sampled_utc);
+	  }
+	  c.close();
+	}
 	db.setTransactionSuccessful();
       }
       finally {
@@ -161,6 +162,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     }
+  }
+
+  @Override
+  public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion){
   }
 
   interface RecordChangedListener {
