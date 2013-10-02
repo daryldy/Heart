@@ -70,7 +70,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	  // side     : True = left, False = right
     try {
       db.beginTransaction();
-      db.execSQL("create table heart (_id integer primary key autoincrement, date datetime, systolic integer, notes varchar(50), diastolic integer, pulse integer, location boolean, side boolean);");
+      db.execSQL("create table heart (_id integer primary key autoincrement, systolic integer, notes varchar(50), diastolic integer, pulse integer, location boolean, side boolean, sampled_utc timestamp);");
       if (BuildConfig.DEBUG) {
 	loadTestData(db);
       }
