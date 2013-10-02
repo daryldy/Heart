@@ -99,9 +99,9 @@ public class Provider extends ContentProvider {
       }
 
       // TODO -- continue to try to get pulse to display correctly as a secondary Y axis
-      //Cursor c = DatabaseHelper.getInstance(getContext()).getReadableDatabase().rawQuery("Select _id,1 as COLUMN_SERIES_INDEX,date as AXIS_A, systolic as AXIS_B from heart union all select _id,2 as COLUMN_SERIES_INDEX,date as AXIS_A, diastolic as AXIS_B from heart union all select _id,3 as COLUMN_SERIES_INDEX,date as AXIS_A, pulse as AXIS_C from heart",null);
+      //Cursor c = DatabaseHelper.getInstance(getContext()).getReadableDatabase().rawQuery("Select _id,1 as COLUMN_SERIES_INDEX,sampled_utc as AXIS_A, systolic as AXIS_B from heart union all select _id,2 as COLUMN_SERIES_INDEX,sampled_utc as AXIS_A, diastolic as AXIS_B from heart union all select _id,3 as COLUMN_SERIES_INDEX,sampled_utc as AXIS_A, pulse as AXIS_C from heart",null);
 
-      Cursor c = DatabaseHelper.getInstance(getContext()).getReadableDatabase().rawQuery("Select _id,1 as COLUMN_SERIES_INDEX,date as AXIS_A, systolic as AXIS_B from heart union all select _id,2 as COLUMN_SERIES_INDEX,date as AXIS_A, diastolic as AXIS_B from heart order by date",null);
+      Cursor c = DatabaseHelper.getInstance(getContext()).getReadableDatabase().rawQuery("Select _id,1 as COLUMN_SERIES_INDEX,sampled_utc as AXIS_A, systolic as AXIS_B from heart union all select _id,2 as COLUMN_SERIES_INDEX,sampled_utc as AXIS_A, diastolic as AXIS_B from heart order by sampled_utc",null);
       return (c);
     }
   }
