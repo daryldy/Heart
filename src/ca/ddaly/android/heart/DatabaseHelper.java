@@ -137,7 +137,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	  long id = c.getLong(0);
           long old_date = c.getLong(1);
 	  java.util.TimeZone tz = java.util.TimeZone.getDefault(); // assuming the current timezone is the one used when the data was stored
-          long utc_unixepoch_millis = old_date + tz.getOffset(old_date);
+          long utc_unixepoch_millis = old_date - tz.getOffset(old_date);
           db.execSQL("update heart set sampled_utc = datetime(" + utc_unixepoch_millis + " / 1000,'unixepoch') where _id = " + id);
 	}
 	c.close();
@@ -202,7 +202,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   private class LoadListTask extends AsyncTask<Void, Void, Void> {
     private Cursor heartCursor = null;
     private ListAdapterListener listener = null;
-    private String[] columns = {SYSTOLIC,DIASTOLIC,PULSE,DATE};
+    private String[] columns = {SYSTOLIC,DIASTOLIC,PULSE,"sampled_utc_secs"};
 
     LoadListTask (ListAdapterListener listener) {
       this.listener = listener;
@@ -210,9 +210,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     protected Void doInBackground(Void... params) {
-      heartCursor = getReadableDatabase().query(TABLE,new String[] {ID,SYSTOLIC,DIASTOLIC,PULSE,DATE},null,null,null,null,"date desc");
-                               // TODO -- should really be using columns value plus ID
-			       //         -- java seems make this harder then it should be!!!!
+      heartCursor = getReadableDatabase().rawQuery("SELECT _id, systolic, diastolic, pulse, strftime('%s',sampled_utc) as sampled_utc_secs FROM heart order by sampled_utc desc", null);
       heartCursor.getCount();  // force query to execute
 
       return(null);
@@ -250,13 +248,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       listener.setListAdapter(adapter);
     }
 
+    /**
+      * Convert text to format appropriate for view
+      */
     private String convText(TextView v, String text) {
 
       switch (v.getId()) {
         case R.id.date:
-		String formatedText = text;
-                formatedText = DateUtils.formatDateTime(ctxt, Long.parseLong(text), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME);
-		return formatedText;
+                // text is assumed to be number of seconds since 1970 (unixtime) in UTC
+                Long utc_millis = Long.parseLong(text) * 1000;
+                String formattedText = DateUtils.formatDateTime(ctxt, utc_millis, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME);
+		return formattedText;
       }
       return text;
     }
