@@ -213,9 +213,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
       switch (v.getId()) {
         case R.id.date:
-		String formatedText = text;
-                formatedText = DateUtils.formatDateTime(ctxt, Long.parseLong(text), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME);
-		return formatedText;
+                String formattedText = DateUtils.formatDateTime(ctxt, Long.parseLong(text), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME);
+		return formattedText;
       }
       return text;
     }
