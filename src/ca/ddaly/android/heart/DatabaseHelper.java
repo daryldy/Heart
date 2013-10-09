@@ -83,6 +83,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
+    if (BuildConfig.DEBUG) {
+      Log.v (TAG, "onUpgrade: oldVersion = " + oldVersion + ", newVersion = " + newVersion);
+    }
+
     if (newVersion == 2) {
       try {
 	db.beginTransaction();
