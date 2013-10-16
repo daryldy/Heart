@@ -150,8 +150,8 @@ public class TimePressureGraph {
     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
 
     if (prefs.getBoolean(EditPreferences.TIME_FILTER_KEY,false)) {
-      String startTime = prefs.getString(EditPreferences.START_TIME_KEY,"00:00");
-      String endTime = prefs.getString(EditPreferences.END_TIME_KEY,"23:59");
+      String startTime = prefs.getString(EditPreferences.START_TIME_KEY,"00:00:00");
+      String endTime = prefs.getString(EditPreferences.END_TIME_KEY,"23:59:59");
       filter = filter + " and time(heart.date/1000,'unixepoch') between '"
                       + startTime 
 		      + "' and '"
@@ -161,7 +161,7 @@ public class TimePressureGraph {
 
     if (prefs.getBoolean("date_filter",false)) {
       String startDate = prefs.getString(EditPreferences.START_DATE_KEY,"1970-01-01");
-      String endDate = prefs.getString(EditPreferences.END_DATE_KEY,"2070-01-01");
+      String endDate = prefs.getString(EditPreferences.END_DATE_KEY,"2999-12-31");
       filter = filter + " and date(heart.date/1000,'unixepoch') between '"
                       + startDate
 		      + "' and '"
