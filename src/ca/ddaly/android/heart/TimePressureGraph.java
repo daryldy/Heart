@@ -180,7 +180,8 @@ public class TimePressureGraph {
                     "Select "
 		  + "       date, "
 		  + "       systolic, "
-		  + "       diastolic "
+		  + "       diastolic, "
+                  + "       datetime(heart.date/1000,'unixepoch') "
 		  + "From heart "
 		  + filter + " "
 		  + "Order by date",
@@ -191,6 +192,11 @@ public class TimePressureGraph {
 	Long date = result.getLong(0);
 	Integer systolic_val = result.getInt(1);
 	Integer diastolic_val = result.getInt(2);
+        String date_str = result.getString(3);
+
+	if (BuildConfig.DEBUG) {
+	   Log.v (TAG,"getDataset: date found = " + date_str);
+	}
 
         // TODO    if date in range and time in range then 
 	systolic.add(date,systolic_val);
