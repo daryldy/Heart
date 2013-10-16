@@ -96,7 +96,7 @@ public class TimePressureGraph {
     renderer.setYAxisMax(getYDataMax(dataset) + 10);
     renderer.setYAxisMin(getYDataMin(dataset) - 10);
 
-    return ChartFactory.getTimeChartIntent(ctxt, getDataset(), renderer,
+    return ChartFactory.getTimeChartIntent(ctxt, dataset, renderer,
                                            "MM/dd/yyyy",
 					   ctxt.getString(R.string.app_name));
   }

@@ -200,7 +200,7 @@ public class Heart extends SherlockFragmentActivity
     TimePressureGraph graph = TimePressureGraph.getInstance(this);
     Intent i = graph.getIntent();
     if ( i != null ) {
-      startActivity(graph.getIntent());
+      startActivity(i);
     } else {
       Toast.makeText(this.getApplicationContext(), this.getApplicationContext().getString(R.string.no_graph_data), Toast.LENGTH_LONG).show();
     }
