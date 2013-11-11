@@ -1,0 +1,15 @@
+
+Heart (SherlockFragmentActivity)
+  |
+  +> myViewer (EditFragment)
+       |
+       +> myData (EditData)
+
+goal: store date as absolute time (i.e. local time). Don't care
+  what the local timezone was at the time of storage.
+  9 pm vancouver time is the same as 9 pm singapore time as far
+  as this app is concerned.
+
+  display of date/time should be in locale format
+
+

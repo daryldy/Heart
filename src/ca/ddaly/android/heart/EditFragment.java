@@ -62,7 +62,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
   private NumberPicker pulse_field;
   private RadioGroup location;
   private RadioGroup side;
-  private Calendar date_time = Calendar.getInstance();
+  private Calendar date_time = MyCalendar.getInstance();
   private EditData myData;
 
   @Override
@@ -114,6 +114,10 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
       if (BuildConfig.DEBUG) {
 	Log.v(TAG,"onCreateView: loading savedInstanceState");
       }
+
+// TODO rather then setting field data directly from savedInstance,
+//        savedInstance should be used to update myData
+//        then call updateView to update the field data from myData
       date_time.setTimeInMillis(savedInstanceState.getLong(DatabaseHelper.DATE));
       setDateTimeText();
       systolic_field.setValue(savedInstanceState.getInt(DatabaseHelper.SYSTOLIC));

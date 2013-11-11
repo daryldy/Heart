@@ -34,7 +34,7 @@ public class EditData implements DatabaseHelper.RecordListener,
 
   private static final String TAG = "EditData";
   private Long id = 0L;  // current record's id (0 = not set)
-  public Calendar date_time = Calendar.getInstance();  // today now
+  public Calendar date_time = MyCalendar.getInstance();  // today now
   public Integer systolic = 120;
   public Integer diastolic = 80;
   public Integer pulse = 65;
