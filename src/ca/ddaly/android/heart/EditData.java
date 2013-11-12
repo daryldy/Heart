@@ -34,7 +34,7 @@ public class EditData implements DatabaseHelper.RecordListener,
 
   private static final String TAG = "EditData";
   private Long id = 0L;  // current record's id (0 = not set)
-  public Calendar date_time = MyCalendar.getInstance();  // today now
+  private Long date_time = 0L;
   public Integer systolic = 120;
   public Integer diastolic = 80;
   public Integer pulse = 65;
@@ -49,12 +49,13 @@ public class EditData implements DatabaseHelper.RecordListener,
     if (id != null && !id.equals(0L)) {
       DatabaseHelper.getInstance(ctxt).getRecordAsync(id, this);
     }
+    this.date_time = Calendar.getInstance().getTimeInMillis()  // today now
     this.ctxt = ctxt;
     this.viewer = viewer;
   }
 
   /**
-   * Returns the current data field values
+   * Returns the current property values
    */
   public ContentValues Get() {
     ContentValues rtrnVal = new ContentValues();
@@ -65,7 +66,7 @@ public class EditData implements DatabaseHelper.RecordListener,
     rtrnVal.put(DatabaseHelper.SYSTOLIC,systolic);
     rtrnVal.put(DatabaseHelper.DIASTOLIC,diastolic);
     rtrnVal.put(DatabaseHelper.PULSE,pulse);
-    rtrnVal.put(DatabaseHelper.DATE,date_time.getTimeInMillis());
+    rtrnVal.put(DatabaseHelper.DATE,date_time);
     rtrnVal.put(DatabaseHelper.NOTES,notes);
     rtrnVal.put(DatabaseHelper.LOCATION,location);
     rtrnVal.put(DatabaseHelper.SIDE,side);
@@ -101,13 +102,13 @@ public class EditData implements DatabaseHelper.RecordListener,
   }
 
   /**
-   * updates the fields from specified data
+   * updates property values with given new data
    */
   private void updateData(ContentValues new_data) {
     if (BuildConfig.DEBUG) {
       Log.v(TAG,"updateData: notes data = " + new_data.getAsString(DatabaseHelper.NOTES));
     }
-    date_time.setTimeInMillis(new_data.getAsLong(DatabaseHelper.DATE));
+    date_time = new_data.getAsLong(DatabaseHelper.DATE);
     systolic = new_data.getAsInteger(DatabaseHelper.SYSTOLIC);
     diastolic = new_data.getAsInteger(DatabaseHelper.DIASTOLIC);
     pulse = new_data.getAsInteger(DatabaseHelper.PULSE);
@@ -142,7 +143,7 @@ public class EditData implements DatabaseHelper.RecordListener,
    */
   private boolean isDirty(ContentValues rec) {
     if (BuildConfig.DEBUG) {
-      Log.v(TAG,"isDirty curr data: date_time:" + date_time.getTimeInMillis()
+      Log.v(TAG,"isDirty curr data: date_time:" + date_time
 					  + " systolic:" + systolic
 					  + " diastolic: " + diastolic
 					  + " pulse: " + pulse
@@ -157,7 +158,7 @@ public class EditData implements DatabaseHelper.RecordListener,
 					  + " location: " + rec.getAsBoolean(DatabaseHelper.LOCATION)
 					  + " side: " + rec.getAsBoolean(DatabaseHelper.SIDE));
     }
-    boolean dirty = (date_time.getTimeInMillis() != rec.getAsLong(DatabaseHelper.DATE)
+    boolean dirty = (date_time != rec.getAsLong(DatabaseHelper.DATE)
              || !systolic.equals(rec.getAsInteger(DatabaseHelper.SYSTOLIC))
 	     || !diastolic.equals(rec.getAsInteger(DatabaseHelper.DIASTOLIC))
 	     || !pulse.equals(rec.getAsInteger(DatabaseHelper.PULSE))

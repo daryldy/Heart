@@ -62,7 +62,7 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
   private NumberPicker pulse_field;
   private RadioGroup location;
   private RadioGroup side;
-  private Calendar date_time = MyCalendar.getInstance();
+  private Calendar date_time = Calendar.getInstance();
   private EditData myData;
 
   @Override
