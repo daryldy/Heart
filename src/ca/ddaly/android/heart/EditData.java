@@ -29,12 +29,16 @@ import android.util.Log;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * record data for a single EditFragment
+ *   -- manages saving and restoring the record
+ */
 public class EditData implements DatabaseHelper.RecordListener,
 		                 DataStore {
 
   private static final String TAG = "EditData";
   private Long id = 0L;  // current record's id (0 = not set)
-  private Long date_time = 0L;
+  private Long date_time = 0L;  // UTC time
   public Integer systolic = 120;
   public Integer diastolic = 80;
   public Integer pulse = 65;
