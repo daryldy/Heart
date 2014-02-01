@@ -53,7 +53,7 @@ public class EditData implements DatabaseHelper.RecordListener,
     if (id != null && !id.equals(0L)) {
       DatabaseHelper.getInstance(ctxt).getRecordAsync(id, this);
     }
-    this.date_time = Calendar.getInstance().getTimeInMillis()  // today now
+    this.date_time = Calendar.getInstance().getTimeInMillis();  // today now
     this.ctxt = ctxt;
     this.viewer = viewer;
   }
