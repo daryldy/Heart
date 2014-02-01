@@ -50,6 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   static final String NOTES="notes";
   static final String LOCATION="location";
   static final String SIDE="side";
+  static final String ZONEOFFSET="zoneoffset";
   private ArrayList<RecordChangedListener> recordChangedListeners = new ArrayList<RecordChangedListener>();
   private Long requestSerialNo = 1L;
 
