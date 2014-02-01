@@ -39,12 +39,12 @@ public class EditData implements DatabaseHelper.RecordListener,
   private static final String TAG = "EditData";
   private Long id = 0L;  // current record's id (0 = not set)
   private Long date_time = 0L;  // UTC time
-  public Integer systolic = 120;
-  public Integer diastolic = 80;
-  public Integer pulse = 65;
-  public String notes = "";
-  public Boolean location = true;
-  public Boolean side = true;
+  private Integer systolic = 120;
+  private Integer diastolic = 80;
+  private Integer pulse = 65;
+  private String notes = "";
+  private Boolean location = true;
+  private Boolean side = true;
   //private Long currentReqTrackNo;
   private EditFragment viewer = null;
   private Context ctxt;
