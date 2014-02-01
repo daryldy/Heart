@@ -33,11 +33,12 @@ import android.widget.TextView;
 import android.util.Log;
 import android.text.format.DateUtils;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
   private static final String TAG = "DatabaseHelper";
   private static final String DATABASE_NAME="heart.db";
-  private static final int SCHEMA_VERSION=4;
+  private static final int SCHEMA_VERSION=10;
   private static DatabaseHelper singleton=null;
   private Context ctxt=null;
   static final String TABLE="heart";
@@ -119,6 +120,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	db.execSQL("drop table heart_v2;");
 	db.execSQL("alter table heart rename to heart_v2;");
         db.execSQL("create table heart (_id integer primary key autoincrement, date datetime, systolic integer, notes varchar(50), diastolic integer, pulse integer, location boolean, side boolean);");
+	db.setTransactionSuccessful();
+      }
+      finally {
+	db.endTransaction();
+      }
+    }
+    if (newVersion == 10) {
+      // add timezone offset field
+      // -- initial value set the current timezone's offset
+      Calendar now = Calendar.getInstance();
+      long zoneOffset = now.get(now.ZONE_OFFSET);
+      try {
+	db.beginTransaction();
+	db.execSQL("alter table heart add column zoneoffset integer;");
+	db.execSQL("update heart set zoneoffset = " + zoneOffset);
 	db.setTransactionSuccessful();
       }
       finally {
