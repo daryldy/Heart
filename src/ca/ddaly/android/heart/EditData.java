@@ -86,7 +86,7 @@ public class EditData implements DatabaseHelper.RecordListener,
 	Log.v (TAG,"Put: is dirty");
       }
       rec.put(DatabaseHelper.ID,id);
-      rec.put(DatabaseHelper.ZONEOFFSET,Calendar.getInstance().get(Calendar.ZONE_OFFSET));
+      rec.put(DatabaseHelper.ZONEOFFSET,Calendar.getInstance().get(Calendar.ZONE_OFFSET));  // current zoneoffset (in milliseconds)
       DatabaseHelper.getInstance(ctxt).SaveRecordAsync(this,rec);
       Toast.makeText(ctxt.getApplicationContext(), ctxt.getApplicationContext().getString(R.string.saved_entry), Toast.LENGTH_LONG).show();
       updateData(rec);
@@ -102,6 +102,7 @@ public class EditData implements DatabaseHelper.RecordListener,
     if (BuildConfig.DEBUG) {
       Log.v(TAG,"setRecord: id =" + id);
     }
+
     updateData(new_rec);
     updateViewer();
   }
