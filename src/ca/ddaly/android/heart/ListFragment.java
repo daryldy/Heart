@@ -48,7 +48,6 @@ public class ListFragment extends SherlockListFragment
     if (BuildConfig.DEBUG) {
       Log.v(TAG,"onActivityCreated");
     }
-    updateList();
     getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
   }
 
@@ -57,6 +56,13 @@ public class ListFragment extends SherlockListFragment
     if (BuildConfig.DEBUG) {
       Log.v(TAG,"onViewCreated");
     }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+
+    updateList();
   }
 
   @Override
