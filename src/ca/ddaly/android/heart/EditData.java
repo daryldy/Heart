@@ -163,7 +163,7 @@ public class EditData implements DatabaseHelper.RecordListener,
 					  + " location: " + rec.getAsBoolean(DatabaseHelper.LOCATION)
 					  + " side: " + rec.getAsBoolean(DatabaseHelper.SIDE));
     }
-    boolean dirty = (date_time != rec.getAsLong(DatabaseHelper.DATE)
+    boolean dirty = (!date_time.equals(rec.getAsLong(DatabaseHelper.DATE))
              || !systolic.equals(rec.getAsInteger(DatabaseHelper.SYSTOLIC))
 	     || !diastolic.equals(rec.getAsInteger(DatabaseHelper.DIASTOLIC))
 	     || !pulse.equals(rec.getAsInteger(DatabaseHelper.PULSE))
