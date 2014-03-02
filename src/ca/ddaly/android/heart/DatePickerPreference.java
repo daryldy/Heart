@@ -41,7 +41,6 @@ import java.util.Locale;
 
 public class DatePickerPreference extends DialogPreference {
   private static final String TAG = "DatePickerPreference";
-  public static final DateFormat STORAGE_FORMAT_PARSER = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
   private DatePicker myPicker = null;
   private String lastDate = null;     // in storage format yyyy-MM-dd
   private Context ctxt = null;
@@ -137,6 +136,16 @@ public class DatePickerPreference extends DialogPreference {
   }
 
   /**
+   * parse a given date string in the storage format "yyyy-MM-dd"
+   * returning the appropriate Date
+   */
+  static public Date parseStorageFormat(String time) throws ParseException {
+    DateFormat storageFormatParser = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+    return storageFormatParser.parse(time);
+  }
+
+
+  /**
    * returns myPicker's value in this preference's storage format
    *      storage format = yyyy-MM-dd (US Locale)
    * @return formatted String
@@ -157,7 +166,7 @@ public class DatePickerPreference extends DialogPreference {
     if (myPicker != null) {
       Calendar cal = Calendar.getInstance();
       try {
-	cal.setTime(STORAGE_FORMAT_PARSER.parse(lastDate));
+	cal.setTime(parseStorageFormat(lastDate));
       } catch (ParseException e) {
 	e.printStackTrace();
       }

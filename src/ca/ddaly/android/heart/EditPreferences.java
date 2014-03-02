@@ -86,9 +86,9 @@ public class EditPreferences extends SherlockPreferenceActivity
 	Log.v (TAG,"onSharedPreferenceChanged: time = " + time);
       }
       try {
-        pref.setSummary(displayDF.format(TimePickerPreference.STORAGE_FORMAT_PARSER.parse(time)));
+        pref.setSummary(displayDF.format(TimePickerPreference.parseStorageFormat(time)));
       } catch (ParseException e) {
-        e.printStackTrace();
+        pref.setSummary("");
       }
     }
 
@@ -106,9 +106,9 @@ public class EditPreferences extends SherlockPreferenceActivity
 	Log.v (TAG,"onSharedPreferenceChanged: date = " + date);
       }
       try {
-        pref.setSummary(displayDF.format(DatePickerPreference.STORAGE_FORMAT_PARSER.parse(date)));
+        pref.setSummary(displayDF.format(DatePickerPreference.parseStorageFormat(date)));
       } catch (ParseException e) {
-        e.printStackTrace();
+        pref.setSummary("");
       }
     }
   }

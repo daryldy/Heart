@@ -42,7 +42,6 @@ import java.util.Locale;
 
 public class TimePickerPreference extends DialogPreference {
   private static final String TAG = "TimePickerPreference";
-  public static final DateFormat STORAGE_FORMAT_PARSER = new SimpleDateFormat("HH:mm",Locale.US);
   private TimePicker myPicker = null;
   private String lastTime = null;    // in storage format HH:mm
   private Context ctxt = null;
@@ -78,10 +77,10 @@ public class TimePickerPreference extends DialogPreference {
   @Override
   protected void onDialogClosed(boolean positiveResult) {
     if (positiveResult) {
-      if (BuildConfig.DEBUG) {
-	Log.v (TAG,"onDialogClosed: persisting time");
-      }
       lastTime = formatForStorage();
+      if (BuildConfig.DEBUG) {
+	Log.v (TAG,"onDialogClosed: persisting time: " + lastTime);
+      }
       persistString(lastTime);
     }
   }
@@ -143,6 +142,16 @@ public class TimePickerPreference extends DialogPreference {
   }
 
   /**
+   * parse a given time string in the storage format "HH:mm"
+   * returning the appropriate Date
+   */
+  static public Date parseStorageFormat(String time) throws ParseException {
+    DateFormat storageFormatParser = new SimpleDateFormat("HH:mm",Locale.US);
+    return storageFormatParser.parse(time);
+  }
+
+
+  /**
    * returns myPicker's value in this preference's storage format
    *      storage format = HH:mm (US Locale)
    * @return formatted String
@@ -162,7 +171,7 @@ public class TimePickerPreference extends DialogPreference {
     if (myPicker != null) {
       Calendar cal = Calendar.getInstance();
       try {
-	cal.setTime(STORAGE_FORMAT_PARSER.parse(lastTime));
+	cal.setTime(parseStorageFormat(lastTime));
       } catch (ParseException e) {
 	e.printStackTrace();
       }
