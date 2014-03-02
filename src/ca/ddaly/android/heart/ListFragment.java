@@ -34,8 +34,8 @@ public class ListFragment extends SherlockListFragment
                           implements DatabaseHelper.ListAdapterListener {
 
   private final static String TAG = "ListFragment";
-  private int currPos = -1;
-  private long currID = -1;
+  private int currPos = -1;  // current position of view in the list
+  private long currID = -1;  // current list row item ID
 
   interface ListSelectListener {
     void RecordSelect(long id);
@@ -72,6 +72,8 @@ public class ListFragment extends SherlockListFragment
     if (BuildConfig.DEBUG) {
       Log.v(TAG,"starting destroy");
     }
+    currPos = -1;  // reset to nothing selected
+    currID = -1;
     ((SimpleCursorAdapter)getListAdapter()).getCursor().close();
     if (BuildConfig.DEBUG) {
       Log.v(TAG,"finished destroy");
