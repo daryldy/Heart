@@ -31,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
-//import android.widget.NumberPicker;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.text.format.DateUtils;
@@ -46,9 +45,7 @@ import java.util.Date;
 import java.util.Calendar;
 import net.simonvt.widget.NumberPicker;
 
-public class EditFragment extends SherlockFragment implements // DatabaseHelper.RecordListener,
-                                                              // Heart.EditListener,
-							      DialogInterface.OnClickListener,
+public class EditFragment extends SherlockFragment implements DialogInterface.OnClickListener,
 							      View.OnClickListener {
   private static final String TAG = "EditFragment";
   private static final int SYSTOLIC_INIT_VAL = 120;
