@@ -37,7 +37,7 @@ public class EditData implements DatabaseHelper.RecordListener,
 		                 DataStore {
 
   private static final String TAG = "EditData";
-  private Long id = 0L;  // current record's id (0 = not set)
+  private Long rec_id = 0L;  // current record's id (0 = not set)
   private Long date_time = 0L;  // UTC time
   private Integer systolic = 120;
   private Integer diastolic = 80;
@@ -49,9 +49,9 @@ public class EditData implements DatabaseHelper.RecordListener,
   private EditFragment viewer = null;
   private Context ctxt;
 
-  public EditData(Context ctxt, Long id, EditFragment viewer) {
-    if (id != null && !id.equals(0L)) {
-      DatabaseHelper.getInstance(ctxt).getRecordAsync(id, this);
+  public EditData(Context ctxt, Long rec_id, EditFragment viewer) {
+    if (rec_id != null && !rec_id.equals(0L)) {
+      DatabaseHelper.getInstance(ctxt).getRecordAsync(rec_id, this);
     }
     this.date_time = Calendar.getInstance().getTimeInMillis();  // today now
     this.ctxt = ctxt;
@@ -66,7 +66,7 @@ public class EditData implements DatabaseHelper.RecordListener,
     if (BuildConfig.DEBUG) {
       Log.v(TAG,"Get");
     }
-    rtrnVal.put(DatabaseHelper.ID,id);
+    rtrnVal.put(DatabaseHelper.ID,rec_id);
     rtrnVal.put(DatabaseHelper.SYSTOLIC,systolic);
     rtrnVal.put(DatabaseHelper.DIASTOLIC,diastolic);
     rtrnVal.put(DatabaseHelper.PULSE,pulse);
@@ -85,7 +85,7 @@ public class EditData implements DatabaseHelper.RecordListener,
       if (BuildConfig.DEBUG) {
 	Log.v (TAG,"Put: is dirty");
       }
-      rec.put(DatabaseHelper.ID,id);
+      rec.put(DatabaseHelper.ID,rec_id);
       rec.put(DatabaseHelper.ZONEOFFSET,Calendar.getInstance().get(Calendar.ZONE_OFFSET));  // current zoneoffset (in milliseconds)
       DatabaseHelper.getInstance(ctxt).SaveRecordAsync(this,rec);
       Toast.makeText(ctxt.getApplicationContext(), ctxt.getApplicationContext().getString(R.string.saved_entry), Toast.LENGTH_LONG).show();
@@ -98,9 +98,9 @@ public class EditData implements DatabaseHelper.RecordListener,
    * sets data from a DatabaseHelper asyncronous return
    */
   public void setRecord(ContentValues new_rec) {
-    id = new_rec.getAsLong(DatabaseHelper.ID);
+    rec_id = new_rec.getAsLong(DatabaseHelper.ID);
     if (BuildConfig.DEBUG) {
-      Log.v(TAG,"setRecord: id =" + id);
+      Log.v(TAG,"setRecord: rec_id =" + rec_id);
     }
 
     updateData(new_rec);
@@ -110,7 +110,7 @@ public class EditData implements DatabaseHelper.RecordListener,
   /**
    * updates property values with given new data
    */
-  private void updateData(ContentValues new_data) {
+  public void updateData(ContentValues new_data) {
     if (BuildConfig.DEBUG) {
       Log.v(TAG,"updateData: notes data = " + new_data.getAsString(DatabaseHelper.NOTES));
     }
@@ -127,20 +127,26 @@ public class EditData implements DatabaseHelper.RecordListener,
     side = value.equals("true") || value.equals("1");     // work-around for above
   }
 
-
   /**
-   * sets id field from a DatabaseHelper asyncronous return
+   * sets record ID field
    */
   public void setId(Long id) {
-    this.id = id;
+    this.rec_id = id;
+  }
+
+  /**
+   * returns the current record ID
+   */
+  public Long getId() {
+    return this.rec_id;
   }
 
   /**
    * Delete this record from the database
    */
   public void doDelete() {
-    if (id != 0) {
-      DatabaseHelper.getInstance(ctxt).deleteRecordAsync(id);
+    if (rec_id != 0) {
+      DatabaseHelper.getInstance(ctxt).deleteRecordAsync(rec_id);
     }
   }
 

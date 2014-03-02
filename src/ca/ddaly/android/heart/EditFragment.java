@@ -115,21 +115,24 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
 	Log.v(TAG,"onCreateView: loading savedInstanceState");
       }
 
-// TODO rather then setting field data directly from savedInstance,
-//        savedInstance should be used to update myData
-//        then call updateView to update the field data from myData
-      date_time.setTimeInMillis(savedInstanceState.getLong(DatabaseHelper.DATE));
-      setDateTimeText();
-      systolic_field.setValue(savedInstanceState.getInt(DatabaseHelper.SYSTOLIC));
-      diastolic_field.setValue(savedInstanceState.getInt(DatabaseHelper.DIASTOLIC));
-      pulse_field.setValue(savedInstanceState.getInt(DatabaseHelper.PULSE));
+      ContentValues rec = new ContentValues();
+      rec.put(DatabaseHelper.DATE,savedInstanceState.getLong(DatabaseHelper.DATE));
+      rec.put(DatabaseHelper.SYSTOLIC,savedInstanceState.getInt(DatabaseHelper.SYSTOLIC));
+      rec.put(DatabaseHelper.DIASTOLIC,savedInstanceState.getInt(DatabaseHelper.DIASTOLIC));
+      rec.put(DatabaseHelper.PULSE,savedInstanceState.getInt(DatabaseHelper.PULSE));
+      rec.put(DatabaseHelper.NOTES,savedInstanceState.getString(DatabaseHelper.NOTES));
+      rec.put(DatabaseHelper.LOCATION,savedInstanceState.getBoolean(DatabaseHelper.LOCATION));
+      rec.put(DatabaseHelper.SIDE,savedInstanceState.getBoolean(DatabaseHelper.SIDE));
+
+      myData.updateData(rec);
+      myData.setId(savedInstanceState.getLong(DatabaseHelper.ID));
     } else {
-      // get data from myData object
       if (BuildConfig.DEBUG) {
 	Log.v(TAG,"onCreateView: no savedInstanceState");
       }
-      updateView();
     }
+    // show data from myData object
+    updateView();
 
     if (BuildConfig.DEBUG) {
       Log.v(TAG,"onCreateView: date_time: " + date_time.getTimeInMillis());
@@ -179,10 +182,14 @@ public class EditFragment extends SherlockFragment implements // DatabaseHelper.
     if (BuildConfig.DEBUG) {
       Log.v(TAG,"onSaveInstanceState");
     }
+    state.putLong(DatabaseHelper.DATE,date_time.getTimeInMillis());
     state.putInt(DatabaseHelper.SYSTOLIC,systolic_field.getValue());
     state.putInt(DatabaseHelper.DIASTOLIC,diastolic_field.getValue());
     state.putInt(DatabaseHelper.PULSE,pulse_field.getValue());
-    state.putLong(DatabaseHelper.DATE,date_time.getTimeInMillis());
+    state.putString(DatabaseHelper.NOTES,notes_field.getText().toString());
+    state.putBoolean(DatabaseHelper.LOCATION,location.getCheckedRadioButtonId() == R.id.upperarm);
+    state.putBoolean(DatabaseHelper.SIDE,side.getCheckedRadioButtonId() == R.id.left);
+    state.putLong(DatabaseHelper.ID,myData.getId());
   }
 
   @Override
