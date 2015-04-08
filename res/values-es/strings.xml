@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Observador Cardíaco</string>
+    <string name="help">Ayuda</string>
+    <string name="about">Acerca</string>
+    <string name="add">Agregar</string>
+    <string name="delete">Borrar</string>
+    <string name="edit">Editar</string>
+    <string name="graph">Graficar</string>
+    <string name="delete_dlg_title">Borrar registro?</string>
+    <string name="saved_entry">Registro guardado</string>
+    <string name="graph_title">Presión arterial</string>
+    <string name="systolic">Sistólica</string>
+    <string name="diastolic">Diastólica</string>
+    <string name="pulse">Pulso</string>
+    <string name="location">Ubicación</string>
+    <string name="side">Lado</string>
+    <string name="upperarm">Parte superior del brazo</string>
+    <string name="forearm">Antebrazo</string>
+    <string name="right">Derecho</string>
+    <string name="left">Izquierdo</string>
+    <string name="rightside">Lado derecho</string>
+    <string name="leftside">Lado izquierdo</string>
+    <string name="notes">Notas</string>
+    <string name="layoutdivider">Layout Divider</string>
+    <string name="forwardslashseparator">/</string>
+    <string name="no_graph_data">Nada para graficar</string>
+</resources>
