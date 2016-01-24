@@ -1,1 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Heart Observe</string>
+    <string name="help">Hilfe</string>
+    <string name="about">Über</string>
+    <string name="add">Hinzufügen</string>
+    <string name="delete">Löschen</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="graph">Diagramm</string>
+    <string name="delete_dlg_title">Eintrag löschen?</string>
+    <string name="saved_entry">Eintrag gespeichert</string>
+    <string name="graph_title">Blut Druck</string>
+    <string name="systolic">Systolisch</string>
+    <string name="diastolic">Diastolisch</string>
+    <string name="pulse">Puls</string>
+    <string name="location">Ort</string>
+    <string name="side">Seite</string>
+    <string name="upperarm">Oberarm</string>
+    <string name="forearm">Unterarm</string>
+    <string name="right">Rechts</string>
+    <string name="left">Links</string>
+    <string name="rightside">Rechte Seite</string>
+    <string name="leftside">Linke Seite</string>
+    <string name="notes">Notizen</string>
+    <string name="layoutdivider">Layout Trennstrich</string>
+    <string name="forwardslashseparator">/</string>
+    <string name="no_graph_data">Keine Daten zum anzeigen vorhanden</string>
+</resources>
 
